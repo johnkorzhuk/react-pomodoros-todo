@@ -8,7 +8,7 @@ module.exports = [
     title: "Finish Cowork Hive member page",
   },
   {
-    active: true,
+    active: false,
     complete: false,
     elapsed: 2990000,
     id: 2,

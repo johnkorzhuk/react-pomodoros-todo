@@ -6,6 +6,7 @@ const styles = {
   pomodoros: {
     position: 'absolute',
     right: '20px',
+    marginTop: '2px'
   },
   pomodoro: {
     display: 'inline-block',

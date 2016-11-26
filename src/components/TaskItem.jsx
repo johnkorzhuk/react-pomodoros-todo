@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Pomodoros from './Pomodoros';
+import ToggleActiveTask from './ToggleActiveTask';
 
 
 const styles = {
@@ -10,19 +11,28 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center'
   },
-  title: {
-    alignSelf: 'flex-start',
+  alignCenter: {
     flex: '1',
+  },
+  title: {
     fontSize: '1.2em'
   }
 };
 
+
+
 const TaskItem = ({task}) => {
+
+
   return (
     <li
       style={styles.taskItem}>
-      {/*TODO uuid shouldn't be generated here. Store it in state*/}
-      <span style={styles.title}>{task.title}</span>
+      <div style={Object.assign({}, styles.alignCenter, styles.title)}>
+        {task.title}
+      </div>
+
+      <ToggleActiveTask active={task.active}/>
+
       <Pomodoros
         elapsed={task.elapsed}
         taskIsActive={task.active}
