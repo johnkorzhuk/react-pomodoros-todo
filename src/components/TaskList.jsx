@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react';
-import Pomodoros from './Pomodoros';
+import TaskItem from './TaskItem';
 import './TaskList.css';
-import uuid from 'uuid';
-// import AddItem from './AddItem';
 
 
 const styles = {
@@ -24,48 +22,35 @@ const styles = {
   }
 };
 
-const TaskList = ({todoTasks}) => {
+const TaskList = ({tasks}) => {
   return (
     <div>
       <ul
         style={styles.taskList}
         className="taskList">
-          {todoTasks.map(({
-            title,
-            elapsed,
-            complete,
-            pomodoros,
-            id,
-            activePomodoro,
-            active,
-          }) =>
-            <li
-              style={styles.taskItem}
-              key={id || uuid.v4()}>
-              {/*TODO uuid shouldn't be generated here. Store it in state*/}
-              <span style={styles.title}>{title}</span>
-              <Pomodoros
-                elapsed={elapsed}
-                taskIsActive={active}
-                taskIsComplete={complete}
-                pomodoros={pomodoros}
-                activePomodoro={activePomodoro}/>
-            </li>
+          {tasks.map((task) =>
+            <TaskItem
+              key={task.id}
+              task={task}/>
           )}
-    </ul>
-
-
+      </ul>
     </div>
   );
 };
 
 TaskList.propTypes = {
-  todoTasks: PropTypes.arrayOf(
+  tasks: PropTypes.arrayOf(
     PropTypes.shape({
-      title: PropTypes.string.isRequired,
+      active: PropTypes.bool,
       complete: PropTypes.bool.isRequired,
+      editing: PropTypes.bool,
       elapsed: PropTypes.number.isRequired,
-      pomodoros: PropTypes.number.isRequired
+      id: PropTypes.oneOfType([
+        PropTypes.string.isRequired,
+        PropTypes.number.isRequired,
+      ]),
+      pomodoros: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
   }))
 };
 

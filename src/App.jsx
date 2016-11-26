@@ -14,17 +14,21 @@ const muiTheme = getMuiTheme({
   },
 });
 
+const styles = {
+  paper: {
+    backgroundColor: grey300,
+    margin: '0 auto',
+    width: '50em',
+  }
+};
+
 const App = () => {
   return (
     <MuiThemeProvider muiTheme={muiTheme}>
       <Paper
-        style={{
-          backgroundColor: grey300,
-          margin: '0 auto',
-          width: '50em'
-        }}
+        style={styles.paper}
         zDepth={3}>
-        <TaskList todoTasks={samples}/>
+        <TaskList tasks={samples}/>
       </Paper>
     </MuiThemeProvider>
   );

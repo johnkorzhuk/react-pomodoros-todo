@@ -26,7 +26,6 @@ const Pomodoro = (props) => {
     isComplete,
   } = props;
 
-
   if (isComplete) {
     return <Lens style={{color: red500}}/>;
   }

@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Pomodoro from './Pomodoro';
 
+
 const styles = {
   pomodoros: {
     position: 'absolute',
@@ -19,7 +20,6 @@ const Pomodoros = ({
 }) => {
   const onePomodoro = 1500000;
   const activePomodoro = Math.trunc(elapsed / onePomodoro);
-
 
   const Pomodoros = [];
   for (let i = 0; i < 5; i++) {
