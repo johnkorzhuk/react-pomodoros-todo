@@ -24,17 +24,15 @@ const styles = {
 
 const TaskList = ({tasks}) => {
   return (
-    <div>
-      <ul
-        style={styles.taskList}
-        className="task-list">
-          {tasks.map((task) =>
-            <TaskItem
-              key={task.id}
-              task={task}/>
-          )}
-      </ul>
-    </div>
+    <ul
+      style={styles.taskList}
+      className="task-list">
+        {tasks.map((task) =>
+          <TaskItem
+            key={task.id}
+            task={task}/>
+        )}
+    </ul>
   );
 };
 

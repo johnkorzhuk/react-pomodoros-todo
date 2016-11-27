@@ -18,7 +18,7 @@ module.exports = [
   {
     active: true,
     complete: false,
-    elapsed: 1498000,
+    elapsed: 1490000,
     id: 3,
     pomodoros: 4,
     title: "Do laundry",
