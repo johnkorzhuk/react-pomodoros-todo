@@ -14,14 +14,11 @@ const styles = {
 };
 
 const Pomodoros = ({
-  elapsed,
+  completedPomodoros,
+  pomodoros,
   taskIsActive,
   taskIsComplete,
-  pomodoros,
 }) => {
-  const onePomodoro = 1500000;
-  const activePomodoro = Math.trunc(elapsed / onePomodoro);
-
   const Pomodoros = [];
   for (let i = 0; i < 5; i++) {
     Pomodoros[i] = (
@@ -30,8 +27,8 @@ const Pomodoros = ({
         key={i}>
         <Pomodoro
           taskIsComplete={taskIsComplete}
-          isComplete={i < activePomodoro}
-          isActive={i === activePomodoro && taskIsActive}
+          isComplete={i < completedPomodoros}
+          isActive={i === completedPomodoros && taskIsActive}
           isTarget={i <= pomodoros-1}/>
       </li>
     );
@@ -45,10 +42,10 @@ const Pomodoros = ({
 };
 
 Pomodoros.propTypes = {
-  elapsed: PropTypes.number.isRequired,
+  completedPomodoros: PropTypes.number.isRequired,
+  pomodoros: PropTypes.number.isRequired,
   taskIsActive: PropTypes.bool.isRequired,
   taskIsComplete: PropTypes.bool.isRequired,
-  pomodoros: PropTypes.number.isRequired,
 };
 
 export default Pomodoros;

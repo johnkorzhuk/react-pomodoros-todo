@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Pomodoros from './Pomodoros';
 import ToggleActiveTask from './ToggleActiveTask';
+import Timebar from './Timebar';
 
 
 const styles = {
@@ -19,26 +20,34 @@ const styles = {
   }
 };
 
-
-
 const TaskItem = ({task}) => {
-
+  const onePomodoro = 1500000;
+  const completedPomodoros = Math.floor(task.elapsed/onePomodoro);
 
   return (
-    <li
-      style={styles.taskItem}>
-      <div style={Object.assign({}, styles.alignCenter, styles.title)}>
-        {task.title}
-      </div>
+    <div className="task-item">
+      <li style={styles.taskItem}>
+        <div style={Object.assign({}, styles.alignCenter, styles.title)}>
+          {task.title}
+        </div>
 
-      <ToggleActiveTask active={task.active}/>
+        <ToggleActiveTask active={task.active}/>
 
-      <Pomodoros
-        elapsed={task.elapsed}
-        taskIsActive={task.active}
-        taskIsComplete={task.complete}
-        pomodoros={task.pomodoros}/>
-    </li>
+        <Pomodoros
+          completedPomodoros={completedPomodoros}
+          elapsed={task.elapsed}
+          taskIsActive={task.active}
+          taskIsComplete={task.complete}
+          pomodoros={task.pomodoros}/>
+      </li>
+      {task.active ?
+        <Timebar
+          completedPomodoros={completedPomodoros}
+          elapsed={task.elapsed}
+          onePomodoro={onePomodoro}/>
+        : null}
+
+    </div>
   );
 };
 

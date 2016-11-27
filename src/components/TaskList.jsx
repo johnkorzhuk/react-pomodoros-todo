@@ -27,7 +27,7 @@ const TaskList = ({tasks}) => {
     <div>
       <ul
         style={styles.taskList}
-        className="taskList">
+        className="task-list">
           {tasks.map((task) =>
             <TaskItem
               key={task.id}
