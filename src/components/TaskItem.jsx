@@ -26,6 +26,9 @@ const styles = {
       height: '40px', width: '40px'
     }
   },
+  pomodoro: {
+    display: 'inline-block',
+  },
 };
 
 const TaskItem = ({task, taskItemStyles}) => {
@@ -51,14 +54,19 @@ const TaskItem = ({task, taskItemStyles}) => {
 
         <Pomodoros>
           <CreatePomodoros amount={5}>
-            {index =>
-              <Pomodoro
-                key={index}
-                taskIsComplete={task.complete}
-                isComplete={index < completedPomodoros}
-                isActive={index === completedPomodoros && task.active}
-                isTarget={index <= task.pomodoros-1}/>
-            }
+            {index => {
+              return (
+                <li
+                  key={index}
+                  style={styles.pomodoro}>
+                  <Pomodoro
+                    taskIsComplete={task.complete}
+                    isComplete={index < completedPomodoros}
+                    isActive={index === completedPomodoros && task.active}
+                    isTarget={index <= task.pomodoros - 1}/>
+                </li>
+              );
+            }}
           </CreatePomodoros>
         </Pomodoros>
       </div>

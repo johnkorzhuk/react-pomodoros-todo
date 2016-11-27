@@ -15,11 +15,8 @@ const CreatePomodoros = ({
   for (let i = 0; i < amount; i++) {
     items.push(children(i));
   }
-  return (
-    <li style={styles.pomodoro}>
-      {items}
-    </li>
-  );
+  return <div>{items}</div>
+
 };
 
 CreatePomodoros.propTypes = {

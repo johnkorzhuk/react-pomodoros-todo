@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import TaskItem from './TaskItem';
-// import AddItem from './AddItem';
+import AddItem from './AddItem';
 import './TaskList.css';
 
 
@@ -29,10 +29,8 @@ const TaskList = ({tasks}) => {
             task={task}
             taskItemStyles={styles.taskItem}/>
         )}
-      <li
-        className="task-item"
-        style={styles.taskItem}>
-        {/*<AddItem/>*/}
+      <li className="task-item">
+        <AddItem taskItemStyles={styles.taskItem}/>
       </li>
     </ul>
   );

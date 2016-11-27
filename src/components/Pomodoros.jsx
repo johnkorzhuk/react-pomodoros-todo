@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Children } from 'react';
 
 
 const styles = {
@@ -12,7 +12,6 @@ const styles = {
 const Pomodoros = ({
   children
 }) => {
-  console.log(children);
   return (
     <ul style={styles.pomodoros}>
       {children}

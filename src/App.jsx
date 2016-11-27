@@ -28,6 +28,7 @@ const App = () => {
       <Paper
         style={styles.paper}
         zDepth={3}>
+        {/*<TaskList tasks={samples.filter(task => task.complete)}/>*/}
         <TaskList tasks={samples}/>
       </Paper>
     </MuiThemeProvider>
