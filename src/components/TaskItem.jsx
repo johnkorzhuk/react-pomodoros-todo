@@ -4,19 +4,10 @@ import { grey600 } from 'material-ui/styles/colors';
 import Pomodoros from './Pomodoros';
 import ToggleActiveTask from './ToggleActiveTask';
 import Timebar from './Timebar';
+import CreatePomodoros from './CreatePomodoros';
 import Pomodoro from './Pomodoro';
 
-/*{
- completedPomodoros,
- pomodoros,
- taskIsActive,
- taskIsComplete,
- }*/
-/*<Pomodoro
-  taskIsComplete={taskIsComplete}
-  isComplete={i < completedPomodoros}
-  isActive={i === completedPomodoros && taskIsActive}
-  isTarget={i <= pomodoros-1}/>*/
+
 const styles = {
   align: {
     flex: '1',
@@ -58,11 +49,18 @@ const TaskItem = ({task, taskItemStyles}) => {
 
         <ToggleActiveTask active={task.active}/>
 
-        <Pomodoros
-          completedPomodoros={completedPomodoros}
-          taskIsActive={task.active}
-          taskIsComplete={task.complete}
-          pomodoros={task.pomodoros}/>
+        <Pomodoros>
+          <CreatePomodoros amount={5}>
+            {index =>
+              <Pomodoro
+                key={index}
+                taskIsComplete={task.complete}
+                isComplete={index < completedPomodoros}
+                isActive={index === completedPomodoros && task.active}
+                isTarget={index <= task.pomodoros-1}/>
+            }
+          </CreatePomodoros>
+        </Pomodoros>
       </div>
       {task.active
         ? <Timebar

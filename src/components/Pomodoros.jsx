@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
-import Pomodoro from './Pomodoro';
-import CreatePomodoros from './CreatePomodoros';
+
 
 const styles = {
   pomodoros: {
@@ -8,38 +7,23 @@ const styles = {
     right: '20px',
     marginTop: '2px'
   },
-  pomodoro: {
-    display: 'inline-block',
-  },
 };
 
 const Pomodoros = ({
-  completedPomodoros,
-  taskIsActive,
-  taskIsComplete,
-  pomodoros,
+  children
 }) => {
+  console.log(children);
   return (
     <ul style={styles.pomodoros}>
-      <CreatePomodoros amount={5}>
-        {(index) =>
-          <Pomodoro
-            key={index}
-            taskIsComplete={taskIsComplete}
-            isComplete={index < completedPomodoros}
-            isActive={index === completedPomodoros && taskIsActive}
-            isTarget={index <= pomodoros-1}/>
-        }
-      </CreatePomodoros>
+      {children}
     </ul>
   );
 };
 
 Pomodoros.propTypes = {
-  completedPomodoros: PropTypes.number.isRequired,
-  pomodoros: PropTypes.number.isRequired,
-  taskIsActive: PropTypes.bool.isRequired,
-  taskIsComplete: PropTypes.bool.isRequired,
+  children: PropTypes.shape(
+    PropTypes.func.isRequired
+  ).isRequired,
 };
 
 export default Pomodoros;

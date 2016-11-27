@@ -23,7 +23,7 @@ const CreatePomodoros = ({
 };
 
 CreatePomodoros.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.func.isRequired,
   amount: PropTypes.number.isRequired,
 };
 
