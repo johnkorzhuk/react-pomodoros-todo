@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import TaskItem from './TaskItem';
+// import AddItem from './AddItem';
 import './TaskList.css';
 
 
@@ -9,29 +10,30 @@ const styles = {
     paddingLeft: 0,
   },
   taskItem: {
-    padding: '20px 220px 20px 70px',
+    padding: '20px 220px 20px 20px',
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  title: {
-    alignSelf: 'flex-start',
-    flex: '1',
-    fontSize: '1.2em'
   }
 };
 
 const TaskList = ({tasks}) => {
   return (
     <ul
-      style={styles.taskList}
-      className="task-list">
-        {tasks.map((task) =>
+      className="task-list"
+      style={styles.taskList}>
+        {tasks.map(task =>
           <TaskItem
             key={task.id}
-            task={task}/>
+            task={task}
+            taskItemStyles={styles.taskItem}/>
         )}
+      <li
+        className="task-item"
+        style={styles.taskItem}>
+        {/*<AddItem/>*/}
+      </li>
     </ul>
   );
 };

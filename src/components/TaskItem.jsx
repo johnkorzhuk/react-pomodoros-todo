@@ -7,13 +7,6 @@ import Timebar from './Timebar';
 
 
 const styles = {
-  taskItem: {
-    padding: '20px 220px 20px 20px',
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
   align: {
     flex: '1',
   },
@@ -31,18 +24,16 @@ const styles = {
       height: '40px', width: '40px'
     }
   },
-
 };
 
-
-const TaskItem = ({task}) => {
+const TaskItem = ({task, taskItemStyles}) => {
   const onePomodoro = 1500000;
   const completedPomodoros = Math.floor(task.elapsed/onePomodoro);
 
   return (
     <li className="task-item">
       <div
-        style={styles.taskItem}
+        style={taskItemStyles}
         className="task-item">
         <Checkbox
           style={styles.toggleComplete.root}
@@ -84,6 +75,7 @@ TaskItem.propTypes = {
       PropTypes.number.isRequired,
     ]),
     pomodoros: PropTypes.number.isRequired,
+    taskItemStyles: PropTypes.object,
     title: PropTypes.string.isRequired,
   }).isRequired,
 };
