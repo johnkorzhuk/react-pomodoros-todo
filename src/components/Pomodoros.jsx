@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Pomodoro from './Pomodoro';
-
+import CreatePomodoros from './CreatePomodoros';
 
 const styles = {
   pomodoros: {
@@ -15,28 +15,22 @@ const styles = {
 
 const Pomodoros = ({
   completedPomodoros,
-  pomodoros,
   taskIsActive,
   taskIsComplete,
+  pomodoros,
 }) => {
-  const Pomodoros = [];
-  for (let i = 0; i < 5; i++) {
-    Pomodoros[i] = (
-      <li
-        style={styles.pomodoro}
-        key={i}>
-        <Pomodoro
-          taskIsComplete={taskIsComplete}
-          isComplete={i < completedPomodoros}
-          isActive={i === completedPomodoros && taskIsActive}
-          isTarget={i <= pomodoros-1}/>
-      </li>
-    );
-  }
-
   return (
     <ul style={styles.pomodoros}>
-      {Pomodoros}
+      <CreatePomodoros amount={5}>
+        {(index) =>
+          <Pomodoro
+            key={index}
+            taskIsComplete={taskIsComplete}
+            isComplete={index < completedPomodoros}
+            isActive={index === completedPomodoros && taskIsActive}
+            isTarget={index <= pomodoros-1}/>
+        }
+      </CreatePomodoros>
     </ul>
   );
 };
