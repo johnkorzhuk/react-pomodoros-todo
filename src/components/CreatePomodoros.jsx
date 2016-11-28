@@ -1,12 +1,6 @@
 import React, { PropTypes } from 'react';
 
 
-const styles = {
-  pomodoro: {
-    display: 'inline-block',
-  },
-};
-
 const CreatePomodoros = ({
   children,
   amount,
@@ -16,7 +10,6 @@ const CreatePomodoros = ({
     items.push(children(i));
   }
   return <div>{items}</div>
-
 };
 
 CreatePomodoros.propTypes = {

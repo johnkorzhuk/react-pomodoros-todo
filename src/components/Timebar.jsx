@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import LinearProgress from 'material-ui/LinearProgress';
+import { red500 } from 'material-ui/styles/colors';
 
 const Timebar = ({
   completedPomodoros,
@@ -9,6 +10,7 @@ const Timebar = ({
   const remainingTime = elapsed-(completedPomodoros*onePomodoro);
   return (
     <LinearProgress
+      color={red500}
       mode='determinate'
       max={onePomodoro}
       value={remainingTime}/>

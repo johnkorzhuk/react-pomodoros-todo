@@ -1,4 +1,4 @@
-import React, { PropTypes, Children } from 'react';
+import React, { PropTypes } from 'react';
 
 
 const styles = {

@@ -5,48 +5,55 @@ import Pomodoros from './Pomodoros';
 import ToggleActiveTask from './ToggleActiveTask';
 import Timebar from './Timebar';
 import CreatePomodoros from './CreatePomodoros';
+import PomodoroProgress from './PomodoroProgress';
 import Pomodoro from './Pomodoro';
 
 
 const styles = {
-  align: {
-    flex: '1',
+  taskItem: {
+    padding: '20px 220px 20px 20px',
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   title: {
-    fontSize: '1.2em'
+    fontSize: '1.1em',
+    flex: '1',
   },
   toggleComplete: {
     root: {
       width: '30px',
     },
     icon: {
-      marginRight: '20px', fill: grey600
+      marginRight: '20px',
+      fill: grey600,
     },
     input: {
       height: '40px', width: '40px'
     }
   },
-  pomodoro: {
-    display: 'inline-block',
-  },
 };
 
-const TaskItem = ({task, taskItemStyles}) => {
+const TaskItem = ({
+  task
+}) => {
   const onePomodoro = 1500000;
   const completedPomodoros = Math.floor(task.elapsed/onePomodoro);
 
   return (
     <li className="task-item">
       <div
-        style={taskItemStyles}
+        style={styles.taskItem}
         className="task-item">
+
         <Checkbox
           style={styles.toggleComplete.root}
           iconStyle={styles.toggleComplete.icon}
           inputStyle={styles.toggleComplete.input}
           checked={task.complete}/>
 
-        <div style={Object.assign({}, styles.align, styles.title)}>
+        <div style={styles.title}>
           {task.title}
         </div>
 
@@ -56,15 +63,12 @@ const TaskItem = ({task, taskItemStyles}) => {
           <CreatePomodoros amount={5}>
             {index => {
               return (
-                <li
-                  key={index}
-                  style={styles.pomodoro}>
-                  <Pomodoro
-                    taskIsComplete={task.complete}
+                <Pomodoro key={index}>
+                  <PomodoroProgress
                     isComplete={index < completedPomodoros}
                     isActive={index === completedPomodoros && task.active}
                     isTarget={index <= task.pomodoros - 1}/>
-                </li>
+                </Pomodoro>
               );
             }}
           </CreatePomodoros>
@@ -91,7 +95,6 @@ TaskItem.propTypes = {
       PropTypes.number.isRequired,
     ]),
     pomodoros: PropTypes.number.isRequired,
-    taskItemStyles: PropTypes.object,
     title: PropTypes.string.isRequired,
   }).isRequired,
 };
