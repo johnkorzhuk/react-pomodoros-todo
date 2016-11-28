@@ -19,6 +19,11 @@ const styles = {
     margin: '0 auto',
     width: '50em',
   },
+  tab: {
+    color: red500,
+    fontWeight: 'bolder',
+    letterSpacing: '.5px'
+  }
 };
 
 class App extends Component {
@@ -36,7 +41,7 @@ class App extends Component {
       <Paper
         style={styles.root}
         zDepth={3}>
-
+        {console.log(Date.now())}
         <DropDownMenu
           value={this.state.value}
           onChange={this.onSort}>
@@ -47,15 +52,20 @@ class App extends Component {
         </DropDownMenu>
 
         <Tabs
-          tabTemplateStyle={grey400}
+          tabItemContainerStyle={{backgroundColor: grey400}}
           inkBarStyle={{backgroundColor: red500}}
           onChange={this.onSwip}
           value={this.state.slideIndex}>
 
-          <Tab label="To do" value={0}/>
+          <Tab
+            label="To do"
+            value={0}
+            style={styles.tab}/>
 
-
-          <Tab label="Completed" value={1} />
+          <Tab
+            label="Completed"
+            value={1}
+            style={styles.tab}/>
         </Tabs>
 
         <BindKeyboardSwipeableViews
