@@ -32,19 +32,18 @@ class App extends Component {
     this.state = {
       slideIndex: 0,
       inverseSort: {
-        ADDED: false,
-        POMODOROS: false,
-        DURATION: false,
+        added: false,
+        pomodoros: false,
+        elapsed: false,
       },
       tasks: samples,
-      value: 'ADDED',
+      value: 'added',
     }
   }
 
   render() {
     const {
       slideIndex,
-      sort,
       tasks,
       value,
     } = this.state;
@@ -58,9 +57,9 @@ class App extends Component {
           value={value}
           onChange={this.onSort}>
 
-          <MenuItem value={'ADDED'} primaryText="Added" />
-          <MenuItem value={'POMODOROS'} primaryText="Pomodoros" />
-          <MenuItem value={'DURATION'} primaryText="Duration" />
+          <MenuItem value={'added'} primaryText="Added" />
+          <MenuItem value={'pomodoros'} primaryText="Pomodoros" />
+          <MenuItem value={'elapsed'} primaryText="Duration" />
         </DropDownMenu>
 
         <Tabs
@@ -111,28 +110,20 @@ class App extends Component {
   onSort = (event, index, value) => {
     this.setState({ value });
 
-    switch (this.state.value) {
-      case 'ADDED':
-        const tasks = [...this.state.tasks];
-        const inverseSort = {...this.state.inverseSort};
+    const tasks = [...this.state.tasks];
+    const inverseSort = {...this.state.inverseSort};
 
-        if (inverseSort.ADDED) {
-          tasks.sort((a, b) => b.added-a.added)
-        }else {
-          tasks.sort((a, b) => a.added-b.added);
-        }
-
-        inverseSort.ADDED = !inverseSort.ADDED;
-        this.setState({ inverseSort });
-        this.setState({ tasks });
-        break;
-
-      case 'POMODOROS':
-        break;
-
-      case 'DURATION':
-        break;
+    if (inverseSort[value]) {
+      tasks.sort((a, b) => a[value]-b[value]);
+    }else {
+      tasks.sort((a, b) => b[value]-a[value])
     }
+
+    inverseSort[value] = !inverseSort[value];
+    this.setState({ inverseSort });
+    this.setState({ tasks });
+
+
   };
 }
 

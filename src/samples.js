@@ -1,7 +1,7 @@
 module.exports = [
   {
     active: false,
-    added: 1480360210200,
+    added: 1,
     complete: true,
     elapsed: 4400000,
     id: 1,
@@ -10,7 +10,7 @@ module.exports = [
   },
   {
     active: false,
-    added: 1480366200190,
+    added: 3,
     complete: false,
     elapsed: 2990000,
     id: 2,
@@ -19,7 +19,7 @@ module.exports = [
   },
   {
     active: true,
-    added: 1480366220220,
+    added: 2,
     complete: false,
     elapsed: 1490000,
     id: 3,
@@ -28,7 +28,7 @@ module.exports = [
   },
   {
     active: true,
-    added: 1480366220210,
+    added: 5,
     complete: false,
     elapsed: 3222262,
     id: 4,
@@ -37,7 +37,7 @@ module.exports = [
   },
   {
     active: false,
-    added: 1480366220310,
+    added: 4,
     complete: false,
     elapsed: 0,
     id: 5,
@@ -46,7 +46,7 @@ module.exports = [
   },
   {
     active: true,
-    added: 1380366223910,
+    added: 6,
     complete: false,
     elapsed: 30000,
     id: 6,
