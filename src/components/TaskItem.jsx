@@ -36,10 +36,15 @@ const styles = {
 };
 
 const TaskItem = ({
-  task
+  active,
+  complete,
+  elapsed,
+  pomodoros,
+  title,
+
 }) => {
   const onePomodoro = 1500000;
-  const completedPomodoros = Math.floor(task.elapsed/onePomodoro);
+  const completedPomodoros = Math.floor(elapsed/onePomodoro);
 
   return (
     <li className="task-item">
@@ -51,15 +56,15 @@ const TaskItem = ({
           style={styles.toggleComplete.root}
           iconStyle={styles.toggleComplete.icon}
           inputStyle={styles.toggleComplete.input}
-          checked={task.complete}/>
+          checked={complete}/>
 
         <div style={styles.title}>
-          {task.title}
+          {title}
         </div>
 
         <ToggleActiveTask
-          active={task.active}
-          complete={task.complete}/>
+          active={active}
+          complete={complete}/>
 
         <Pomodoros>
           <CreatePomodoros amount={5}>
@@ -68,18 +73,18 @@ const TaskItem = ({
                 <Pomodoro key={index}>
                   <PomodoroProgress
                     isComplete={index < completedPomodoros}
-                    isActive={index === completedPomodoros && task.active}
-                    isTarget={index <= task.pomodoros - 1}/>
+                    isActive={index === completedPomodoros && active}
+                    isTarget={index <= pomodoros - 1}/>
                 </Pomodoro>
               );
             }}
           </CreatePomodoros>
         </Pomodoros>
       </div>
-      {task.active
+      {active
         ? <Timebar
           completedPomodoros={completedPomodoros}
-          elapsed={task.elapsed}
+          elapsed={elapsed}
           onePomodoro={onePomodoro}/>
         : null}
     </li>
@@ -87,18 +92,11 @@ const TaskItem = ({
 };
 
 TaskItem.propTypes = {
-  task: PropTypes.shape({
-    active: PropTypes.bool,
-    complete: PropTypes.bool.isRequired,
-    editing: PropTypes.bool,
-    elapsed: PropTypes.number.isRequired,
-    id: PropTypes.oneOfType([
-      PropTypes.string.isRequired,
-      PropTypes.number.isRequired,
-    ]),
-    pomodoros: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-  }).isRequired,
+  active: PropTypes.bool.isRequired,
+  complete: PropTypes.bool.isRequired,
+  elapsed: PropTypes.number.isRequired,
+  pomodoros: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default TaskItem;

@@ -16,10 +16,21 @@ const TaskList = ({tasks}) => {
     <ul
       className="task-list"
       style={styles.taskList}>
-        {tasks.map(task =>
+        {tasks.map(({
+          active,
+          complete,
+          elapsed,
+          id,
+          pomodoros,
+          title,
+        }) =>
           <TaskItem
-            key={task.id}
-            task={task}/>
+            key={id}
+            active={active}
+            complete={complete}
+            elapsed={elapsed}
+            pomodoros={pomodoros}
+            title={title}/>
         )}
     </ul>
   );

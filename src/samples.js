@@ -45,7 +45,7 @@ module.exports = [
     title: "Do that one thing",
   },
   {
-    active: true,
+    active: false,
     added: 6,
     complete: false,
     elapsed: 30000,

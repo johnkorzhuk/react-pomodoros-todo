@@ -37,7 +37,7 @@ const styles = {
   }
 };
 
-class AddItem extends Component {
+class AddTask extends Component {
   renderPomodoros() {
     return (
     <Pomodoros>
@@ -84,4 +84,4 @@ class AddItem extends Component {
 }
 
 
-export default AddItem;
+export default AddTask;

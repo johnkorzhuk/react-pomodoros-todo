@@ -8,7 +8,7 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import { grey400, red500 } from 'material-ui/styles/colors';
 import './App.css';
 import samples from './samples';
-import AddItem from './components/AddItem';
+import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
 
 
@@ -48,7 +48,6 @@ class App extends Component {
       value,
     } = this.state;
 
-
     return (
       <Paper
         style={styles.root}
@@ -59,7 +58,7 @@ class App extends Component {
 
           <MenuItem value={'added'} primaryText="Added" />
           <MenuItem value={'pomodoros'} primaryText="Pomodoros" />
-          <MenuItem value={'elapsed'} primaryText="Duration" />
+          <MenuItem value={'elapsed'} primaryText="Time" />
         </DropDownMenu>
 
         <Tabs
@@ -92,7 +91,7 @@ class App extends Component {
           <div>
             <TaskList tasks={tasks.filter(({complete}) => !complete)}/>
 
-            <AddItem/>
+            <AddTask/>
           </div>
 
           <TaskList tasks={tasks.filter(({complete}) => complete)}/>
@@ -113,17 +112,13 @@ class App extends Component {
     const tasks = [...this.state.tasks];
     const inverseSort = {...this.state.inverseSort};
 
-    if (inverseSort[value]) {
-      tasks.sort((a, b) => a[value]-b[value]);
-    }else {
-      tasks.sort((a, b) => b[value]-a[value])
-    }
+    inverseSort[value]
+      ? tasks.sort((a, b) => a[value]-b[value])
+      : tasks.sort((a, b) => b[value]-a[value]);
 
     inverseSort[value] = !inverseSort[value];
     this.setState({ inverseSort });
     this.setState({ tasks });
-
-
   };
 }
 
