@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Paper from 'material-ui/Paper';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
-import { grey400, red500 } from 'material-ui/styles/colors';
+import { grey400 } from 'material-ui/styles/colors';
 import './App.css';
 import samples from './samples';
 import AddItem from './components/AddItem';
 import TaskList from './components/TaskList';
 
-const muiTheme = getMuiTheme({
-  menuItem: {
-    selectedTextColor: red500
-  }
-});
 
 const styles = {
   root: {
     margin: '0 auto',
     width: '50em',
+  },
+  toolbar : {
+    backgroundColor: grey400,
+    height: '50px',
   },
   menu: {
     label: {
@@ -31,6 +28,11 @@ const styles = {
       lineHeight: '50px',
       fontWeight: 'bolder',
       letterSpacing: '1px'
+    },
+    icon: {
+      fill: 'black',
+      marginLeft: '20px',
+      top: '13px',
     }
   }
 };
@@ -46,34 +48,32 @@ class App extends Component {
 
   render() {
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
+      <Paper
+        style={styles.root}
+        zDepth={3}>
 
-        <Paper
-          style={styles.root}
-          zDepth={3}>
+        <Toolbar style={styles.toolbar}>
+          <ToolbarGroup>
+            <DropDownMenu
+              iconStyle={styles.menu.icon}
+              labelStyle={styles.menu.label}
+              value={this.state.value}
+              onChange={this.handleChange}>
 
-          <Toolbar style={{backgroundColor: grey400, height: '50px'}}>
-            <ToolbarGroup>
-              <DropDownMenu
-                selectedMenuItemStyle={{color: red500}}
-                value={this.state.value}
-                onChange={this.handleChange}
-                iconStyle={{fill: 'black', marginLeft: '20px', top: '13px'}}
-                labelStyle={styles.menu.label}>
-                <MenuItem value={1} primaryText="All" />
-                <MenuItem value={2} primaryText="Completed" />
-                <MenuItem value={3} primaryText="Started" />
-                <MenuItem value={4} primaryText="Pomodoros" />
-                <MenuItem value={5} primaryText="Elapsed" />
-              </DropDownMenu>
-            </ToolbarGroup>
-          </Toolbar>
+              <MenuItem value={1} primaryText="All" />
+              <MenuItem value={2} primaryText="Completed" />
+              <MenuItem value={3} primaryText="Started" />
+              <MenuItem value={4} primaryText="Pomodoros" />
+              <MenuItem value={5} primaryText="Elapsed" />
 
-          <TaskList tasks={samples}/>
+            </DropDownMenu>
+          </ToolbarGroup>
+        </Toolbar>
 
-          <AddItem/>
-        </Paper>
-      </MuiThemeProvider>
+        <TaskList tasks={samples}/>
+
+        <AddItem/>
+      </Paper>
     )
   }
 

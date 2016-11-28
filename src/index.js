@@ -1,12 +1,12 @@
 import React from 'react';
-import {render} from 'react-dom';
+import { render } from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import App from './App';
+import Root from './Root';
 
 injectTapEventPlugin();
 
 render(
-  <App/>,
+  <Root/>,
   document.getElementById('root')
 );
 
