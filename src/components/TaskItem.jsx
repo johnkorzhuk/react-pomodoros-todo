@@ -57,7 +57,9 @@ const TaskItem = ({
           {task.title}
         </div>
 
-        <ToggleActiveTask active={task.active}/>
+        <ToggleActiveTask
+          active={task.active}
+          complete={task.complete}/>
 
         <Pomodoros>
           <CreatePomodoros amount={5}>

@@ -19,15 +19,21 @@ const styles = {
   }
 };
 
-const ToggleActiveTask = ({active}) => {
+const ToggleActiveTask = ({
+  active,
+  complete,
+}) => {
   const rippleColor = active ? grey500 : red500;
 
   const Icon = active
     ? <Pause style={styles.icon}/>
     : <Play style={styles.icon}/>;
 
+
   return (
-    <FlatButton
+    complete
+      ? null
+      : <FlatButton
       style={styles.button}
       icon={Icon}
       rippleColor={rippleColor}/>
@@ -36,6 +42,7 @@ const ToggleActiveTask = ({active}) => {
 
 ToggleActiveTask.propTypes = {
   active: PropTypes.bool.isRequired,
+  complete: PropTypes.bool.isRequired,
 };
 
 export default ToggleActiveTask;

@@ -60,14 +60,6 @@ class AddItem extends Component {
   render() {
     return (
       <div style={styles.addItem}>
-        {this.renderPomodoros()}
-
-        <FloatingActionButton
-          backgroundColor={red500}
-          iconStyle={{height: '45px', width: '45px'}}
-          style={{position: 'absolute', left: '10px'}}>
-          <ContentAdd style={{width: '24px'}}/>
-        </FloatingActionButton>
 
         <TextField
           hintText="New Task"
@@ -77,6 +69,15 @@ class AddItem extends Component {
           underlineShow={true}
           underlineFocusStyle={Object.assign({borderColor: grey500}, styles.textField.underLine)}
           underlineStyle={styles.textField.underLine}/>
+
+        {this.renderPomodoros()}
+
+        <FloatingActionButton
+          backgroundColor={red500}
+          iconStyle={{height: '45px', width: '45px'}}
+          style={{position: 'absolute', left: '10px'}}>
+          <ContentAdd style={{width: '24px'}}/>
+        </FloatingActionButton>
       </div>
     );
   }

@@ -1,40 +1,24 @@
 import React, { Component } from 'react';
+import SwipeableViews from 'react-swipeable-views';
+import bindKeyboard from 'react-swipeable-views/lib/bindKeyboard';
 import Paper from 'material-ui/Paper';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
-import { grey400 } from 'material-ui/styles/colors';
+import {Tabs, Tab} from 'material-ui/Tabs';
+import { grey400, red500 } from 'material-ui/styles/colors';
 import './App.css';
 import samples from './samples';
 import AddItem from './components/AddItem';
 import TaskList from './components/TaskList';
 
 
+const BindKeyboardSwipeableViews = bindKeyboard(SwipeableViews);
+
 const styles = {
   root: {
     margin: '0 auto',
     width: '50em',
   },
-  toolbar : {
-    backgroundColor: grey400,
-    height: '50px',
-  },
-  menu: {
-    label: {
-      margin: '0 25px 0 0',
-      padding: '0 25px 0 0',
-      fontSize: '1.2em',
-      color: 'black',
-      lineHeight: '50px',
-      fontWeight: 'bolder',
-      letterSpacing: '1px'
-    },
-    icon: {
-      fill: 'black',
-      marginLeft: '20px',
-      top: '13px',
-    }
-  }
 };
 
 class App extends Component {
@@ -42,7 +26,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      value: 1,
+      value: 'ADDED',
+      slideIndex: 0,
     }
   }
 
@@ -52,33 +37,54 @@ class App extends Component {
         style={styles.root}
         zDepth={3}>
 
-        <Toolbar style={styles.toolbar}>
-          <ToolbarGroup>
-            <DropDownMenu
-              iconStyle={styles.menu.icon}
-              labelStyle={styles.menu.label}
-              value={this.state.value}
-              onChange={this.handleChange}>
+        <DropDownMenu
+          value={this.state.value}
+          onChange={this.onSort}>
 
-              <MenuItem value={1} primaryText="All" />
-              <MenuItem value={2} primaryText="Completed" />
-              <MenuItem value={3} primaryText="Started" />
-              <MenuItem value={4} primaryText="Pomodoros" />
-              <MenuItem value={5} primaryText="Elapsed" />
+          <MenuItem value={'ADDED'} primaryText="Added" />
+          <MenuItem value={'POMODOROS'} primaryText="Pomodoros" />
+          <MenuItem value={'DURATION'} primaryText="Duration" />
+        </DropDownMenu>
 
-            </DropDownMenu>
-          </ToolbarGroup>
-        </Toolbar>
+        <Tabs
+          tabTemplateStyle={grey400}
+          inkBarStyle={{backgroundColor: red500}}
+          onChange={this.onSwip}
+          value={this.state.slideIndex}>
 
-        <TaskList tasks={samples}/>
+          <Tab label="To do" value={0}/>
 
-        <AddItem/>
+
+          <Tab label="Completed" value={1} />
+        </Tabs>
+
+        <BindKeyboardSwipeableViews
+          style={{height: "100%"}}
+          animateHeight={true}
+          index={this.state.slideIndex}
+          onChangeIndex={this.onSwip}>
+
+          <div>
+            <TaskList tasks={samples.filter(({complete}) => !complete)}/>
+
+            <AddItem/>
+          </div>
+
+          <TaskList tasks={samples.filter(({complete}) => complete)}/>
+        </BindKeyboardSwipeableViews>
       </Paper>
     )
   }
 
-  handleChange = (event, index, value) =>
+  onSwip = (value) => {
+    this.setState({
+      slideIndex: value,
+    });
+  };
+
+  onSort = (event, index, value) => {
     this.setState({value});
+  };
 }
 
 
