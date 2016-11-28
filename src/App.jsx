@@ -20,7 +20,6 @@ const styles = {
     width: '50em',
   },
   tab: {
-    color: red500,
     fontWeight: 'bolder',
     letterSpacing: '.5px'
   }
@@ -31,19 +30,32 @@ class App extends Component {
     super(props);
 
     this.state = {
-      value: 'ADDED',
       slideIndex: 0,
+      inverseSort: {
+        ADDED: false,
+        POMODOROS: false,
+        DURATION: false,
+      },
+      tasks: samples,
+      value: 'ADDED',
     }
   }
 
   render() {
+    const {
+      slideIndex,
+      sort,
+      tasks,
+      value,
+    } = this.state;
+
+
     return (
       <Paper
         style={styles.root}
         zDepth={3}>
-        {console.log(Date.now())}
         <DropDownMenu
-          value={this.state.value}
+          value={value}
           onChange={this.onSort}>
 
           <MenuItem value={'ADDED'} primaryText="Added" />
@@ -55,32 +67,36 @@ class App extends Component {
           tabItemContainerStyle={{backgroundColor: grey400}}
           inkBarStyle={{backgroundColor: red500}}
           onChange={this.onSwip}
-          value={this.state.slideIndex}>
+          value={slideIndex}>
 
           <Tab
             label="To do"
             value={0}
-            style={styles.tab}/>
+            style={slideIndex === 0
+              ? Object.assign({color: red500}, styles.tab)
+              : styles.tab}/>
 
           <Tab
             label="Completed"
             value={1}
-            style={styles.tab}/>
+            style={slideIndex === 1
+              ? Object.assign({color: red500}, styles.tab)
+              : styles.tab}/>
         </Tabs>
 
         <BindKeyboardSwipeableViews
           style={{height: "100%"}}
           animateHeight={true}
-          index={this.state.slideIndex}
+          index={slideIndex}
           onChangeIndex={this.onSwip}>
 
           <div>
-            <TaskList tasks={samples.filter(({complete}) => !complete)}/>
+            <TaskList tasks={tasks.filter(({complete}) => !complete)}/>
 
             <AddItem/>
           </div>
 
-          <TaskList tasks={samples.filter(({complete}) => complete)}/>
+          <TaskList tasks={tasks.filter(({complete}) => complete)}/>
         </BindKeyboardSwipeableViews>
       </Paper>
     )
@@ -93,7 +109,30 @@ class App extends Component {
   };
 
   onSort = (event, index, value) => {
-    this.setState({value});
+    this.setState({ value });
+
+    switch (this.state.value) {
+      case 'ADDED':
+        const tasks = [...this.state.tasks];
+        const inverseSort = {...this.state.inverseSort};
+
+        if (inverseSort.ADDED) {
+          tasks.sort((a, b) => b.added-a.added)
+        }else {
+          tasks.sort((a, b) => a.added-b.added);
+        }
+
+        inverseSort.ADDED = !inverseSort.ADDED;
+        this.setState({ inverseSort });
+        this.setState({ tasks });
+        break;
+
+      case 'POMODOROS':
+        break;
+
+      case 'DURATION':
+        break;
+    }
   };
 }
 

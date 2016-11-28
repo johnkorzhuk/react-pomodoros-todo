@@ -8,7 +8,8 @@ import App from './App';
 const muiTheme = getMuiTheme({
   menuItem: {
     selectedTextColor: red500
-  }
+  },
+  accent1Color: red500
 });
 
 const Root = () => {
