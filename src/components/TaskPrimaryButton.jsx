@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Play from 'material-ui/svg-icons/av/play-arrow';
 import Pause from 'material-ui/svg-icons/av/pause';
+import IconButton from 'material-ui/IconButton';
+import Delete from 'material-ui/svg-icons/action/delete-forever';
 import { red500, grey500 } from 'material-ui/styles/colors';
 
 const styles = {
@@ -19,13 +21,13 @@ const styles = {
   }
 };
 
-const ToggleActiveTask = ({
+const TaskPrimaryButton = ({
   active,
   complete,
   id,
+  removeTask,
   toggleActive,
 }) => {
-
   let rippleColor = active
     ? grey500
     : red500;
@@ -34,20 +36,21 @@ const ToggleActiveTask = ({
     ? <Pause style={styles.icon}/>
     : <Play style={styles.icon}/>;
 
-  if (!complete) {
-    return (
-      <FlatButton
-        style={styles.button}
-        icon={Icon}
-        rippleColor={rippleColor}
-        onClick={() => toggleActive(id, active)}/>
-    );
-  }
-  return null;
+  return complete
+      ? <IconButton
+          style={styles.button}
+          onClick={() => removeTask(id)}>
+          <Delete/>
+        </IconButton>
+      : <FlatButton
+          style={styles.button}
+          icon={Icon}
+          rippleColor={rippleColor}
+          onClick={() => toggleActive(id, active)}/>
 
 };
 
-ToggleActiveTask.propTypes = {
+TaskPrimaryButton.propTypes = {
   active: PropTypes.bool,
   complete: PropTypes.bool,
   id: PropTypes.oneOfType([
@@ -57,4 +60,4 @@ ToggleActiveTask.propTypes = {
   toggleActive: PropTypes.func,
 };
 
-export default ToggleActiveTask;
+export default TaskPrimaryButton;

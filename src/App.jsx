@@ -100,6 +100,7 @@ class App extends Component {
             <TaskList
               tasks={tasks.filter(({complete}) =>
                 complete)}
+              removeTask={this.removeTask}
               toggleComplete={this.toggleComplete}/>
 
           </BindKeyboardSwipeableViews>
@@ -141,6 +142,18 @@ class App extends Component {
     this.setState({
       slideIndex: value,
     });
+  };
+
+  removeTask = (id) => {
+    const tasks = this.state.tasks.filter(task =>
+      task.id !== id
+    );
+
+    this.setState(prevState =>
+      prevState.tasks = tasks
+    );
+
+    this.checkCompleted();
   };
 
   toggleActive = (id, active) => {

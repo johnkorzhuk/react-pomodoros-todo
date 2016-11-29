@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
 import Checkbox from 'material-ui/Checkbox';
+import IconButton from 'material-ui/IconButton';
+import Clear from 'material-ui/svg-icons/content/clear';
 import { grey600 } from 'material-ui/styles/colors';
 import Pomodoros from './Pomodoros/Pomodoros';
-import ToggleActiveTask from './ToggleActiveTask';
+import TaskPrimaryButton from './TaskPrimaryButton';
 import Timebar from './Timebar';
 import CreatePomodoros from './Pomodoros/CreatePomodoros';
 import ProgressPomodoro from './Pomodoros/ProgressPomodoro';
@@ -44,6 +46,7 @@ const TaskItem = ({
   id,
   pomodoros,
   title,
+  removeTask,
   toggleComplete,
   toggleActive,
 }) => {
@@ -67,11 +70,14 @@ const TaskItem = ({
           {title}
         </div>
 
-        <ToggleActiveTask
-          active={active}
-          complete={complete}
-          id={id}
-          toggleActive={toggleActive}/>
+
+        <TaskPrimaryButton
+            active={active}
+            complete={complete}
+            id={id}
+            removeTask={removeTask}
+            toggleActive={toggleActive}/>
+
 
         <Pomodoros>
           <CreatePomodoros amount={5}>

@@ -103,7 +103,8 @@ class AddTask extends Component {
     this.props.addTask(newTask);
 
     this.textField.input.value = "";
-    this.setState(prevState => prevState.pomodoros = 0);
+    this.setState(prevState =>
+      prevState.pomodoros = 0);
   };
 
   onKeyEnter(event, callback) {

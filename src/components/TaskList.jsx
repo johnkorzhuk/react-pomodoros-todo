@@ -13,6 +13,7 @@ const styles = {
 
 const TaskList = ({
   tasks,
+  removeTask,
   toggleActive,
   toggleComplete,
 }) => {
@@ -36,6 +37,7 @@ const TaskList = ({
             id={id}
             pomodoros={pomodoros}
             title={title}
+            removeTask={removeTask}
             toggleActive={toggleActive}
             toggleComplete={toggleComplete.bind(null, id)}/>
         )}
@@ -57,6 +59,7 @@ TaskList.propTypes = {
       pomodoros: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
   })),
+  removeTask: PropTypes.func,
   toggleActive: PropTypes.func,
   toggleComplete: PropTypes.func.isRequired,
 };
