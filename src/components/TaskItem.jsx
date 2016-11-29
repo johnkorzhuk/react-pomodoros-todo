@@ -92,9 +92,9 @@ const TaskItem = ({
 };
 
 TaskItem.propTypes = {
-  active: PropTypes.bool.isRequired,
-  complete: PropTypes.bool.isRequired,
-  elapsed: PropTypes.number.isRequired,
+  active: PropTypes.bool,
+  complete: PropTypes.bool,
+  elapsed: PropTypes.number,
   pomodoros: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
 };

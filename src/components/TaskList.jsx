@@ -40,9 +40,9 @@ TaskList.propTypes = {
   tasks: PropTypes.arrayOf(
     PropTypes.shape({
       active: PropTypes.bool,
-      complete: PropTypes.bool.isRequired,
+      complete: PropTypes.bool,
       editing: PropTypes.bool,
-      elapsed: PropTypes.number.isRequired,
+      elapsed: PropTypes.number,
       id: PropTypes.oneOfType([
         PropTypes.string.isRequired,
         PropTypes.number.isRequired,

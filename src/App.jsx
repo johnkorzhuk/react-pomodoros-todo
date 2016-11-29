@@ -49,54 +49,63 @@ class App extends Component {
     } = this.state;
 
     return (
-      <Paper
-        style={styles.root}
-        zDepth={3}>
-        <DropDownMenu
-          value={value}
-          onChange={this.onSort}>
+      <div>
+        <Paper
+          style={styles.root}
+          zDepth={3}>
+          <DropDownMenu
+            value={value}
+            onChange={this.onSort}>
 
-          <MenuItem value={'added'} primaryText="Added" />
-          <MenuItem value={'pomodoros'} primaryText="Pomodoros" />
-          <MenuItem value={'elapsed'} primaryText="Time" />
-        </DropDownMenu>
+            <MenuItem value={'added'} primaryText="Added" />
+            <MenuItem value={'pomodoros'} primaryText="Pomodoros" />
+            <MenuItem value={'elapsed'} primaryText="Time" />
+          </DropDownMenu>
 
-        <Tabs
-          tabItemContainerStyle={{backgroundColor: grey400}}
-          inkBarStyle={{backgroundColor: red500}}
-          onChange={this.onSwip}
-          value={slideIndex}>
+          <Tabs
+            tabItemContainerStyle={{backgroundColor: grey400}}
+            inkBarStyle={{backgroundColor: red500}}
+            onChange={this.onSwip}
+            value={slideIndex}>
 
-          <Tab
-            label="To do"
-            value={0}
-            style={slideIndex === 0
-              ? Object.assign({color: red500}, styles.tab)
-              : styles.tab}/>
+            <Tab
+              label="To do"
+              value={0}
+              style={slideIndex === 0
+                ? Object.assign({color: red500}, styles.tab)
+                : styles.tab}/>
 
-          <Tab
-            label="Completed"
-            value={1}
-            style={slideIndex === 1
-              ? Object.assign({color: red500}, styles.tab)
-              : styles.tab}/>
-        </Tabs>
+            <Tab
+              label="Completed"
+              value={1}
+              style={slideIndex === 1
+                ? Object.assign({color: red500}, styles.tab)
+                : styles.tab}/>
+          </Tabs>
 
-        <BindKeyboardSwipeableViews
-          style={{height: "100%"}}
-          animateHeight={true}
-          index={slideIndex}
-          onChangeIndex={this.onSwip}>
+          <BindKeyboardSwipeableViews
+            style={{height: "100%"}}
+            animateHeight={true}
+            index={slideIndex}
+            onChangeIndex={this.onSwip}>
+            <div>
+              <TaskList tasks={tasks.filter(({complete}) => !complete)}/>
+            </div>
 
-          <div>
-            <TaskList tasks={tasks.filter(({complete}) => !complete)}/>
+            <TaskList tasks={tasks.filter(({complete}) => complete)}/>
+          </BindKeyboardSwipeableViews>
+        </Paper>
 
-            <AddTask/>
-          </div>
-
-          <TaskList tasks={tasks.filter(({complete}) => complete)}/>
-        </BindKeyboardSwipeableViews>
-      </Paper>
+        <Paper
+          style={Object.assign(
+            {},
+            styles.root,
+            {margin: '20px auto 0'},
+          )}
+          zDepth={3}>
+          <AddTask addTask={this.addTask}/>
+        </Paper>
+      </div>
     )
   }
 
@@ -113,13 +122,25 @@ class App extends Component {
     const inverseSort = {...this.state.inverseSort};
 
     inverseSort[value]
-      ? tasks.sort((a, b) => a[value]-b[value])
-      : tasks.sort((a, b) => b[value]-a[value]);
+      ? tasks.sort((a, b) =>
+          a[value]-b[value])
+      : tasks.sort((a, b) =>
+          b[value]-a[value]);
 
     inverseSort[value] = !inverseSort[value];
-    this.setState({ inverseSort });
-    this.setState({ tasks });
+    this.setState(prevSate =>
+      prevSate.inverseSort = inverseSort);
+    this.setState(prevSate =>
+      prevSate.tasks = tasks);
   };
+
+  addTask = (task) => {
+    const tasks = [...this.state.tasks, task];
+    this.setState(prevState =>
+      prevState.tasks = tasks);
+
+    this.setState({slideIndex: 0});
+  }
 }
 
 
