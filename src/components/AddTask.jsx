@@ -3,8 +3,8 @@ import TextField from 'material-ui/TextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { grey500, red500 } from 'material-ui/styles/colors';
-import Pomodoros from './Pomodoros';
-import InputPomodoros from './InputPomodoros';
+import Pomodoros from './Pomodoros/Pomodoros';
+import InputPomodoros from './Pomodoros/InputPomodoros';
 import { newId } from '../helpers';
 
 

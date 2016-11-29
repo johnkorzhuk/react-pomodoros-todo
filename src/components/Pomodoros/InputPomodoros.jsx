@@ -4,10 +4,12 @@ import RadioButtonUnchecked from 'material-ui/svg-icons/toggle/radio-button-unch
 import Lens from 'material-ui/svg-icons/image/lens';
 import { red500 } from 'material-ui/styles/colors';
 import CreatePomodoros from './CreatePomodoros';
-import Pomodoro from './Pomodoro';
 
 
 const styles = {
+  pomodoro: {
+    display: 'inline-block',
+  },
   icon: {
     fill: red500,
     marginRight: 0
@@ -23,7 +25,9 @@ const InputPomodoros = ({
     <CreatePomodoros amount={5}>
       {index => {
         return (
-          <Pomodoro key={index}>
+          <li
+            key={index}
+            style={styles.pomodoro}>
             <Checkbox
               iconStyle={styles.icon}
               checkedIcon={<Lens/>}
@@ -31,7 +35,7 @@ const InputPomodoros = ({
               checked={index+1 <= pomodoros}
               onKeyDown={event => onKeyEnter(event, () => onCheck(event, index+1))}
               onCheck={event => onCheck(event, index+1)}/>
-          </Pomodoro>
+          </li>
         );
       }}
     </CreatePomodoros>

@@ -1,12 +1,11 @@
 import React, { PropTypes } from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import { grey600 } from 'material-ui/styles/colors';
-import Pomodoros from './Pomodoros';
+import Pomodoros from './Pomodoros/Pomodoros';
 import ToggleActiveTask from './ToggleActiveTask';
 import Timebar from './Timebar';
-import CreatePomodoros from './CreatePomodoros';
-import ProgressPomodoro from './ProgressPomodoro';
-import Pomodoro from './Pomodoro';
+import CreatePomodoros from './Pomodoros/CreatePomodoros';
+import ProgressPomodoro from './Pomodoros/ProgressPomodoro';
 
 
 const styles = {
@@ -16,10 +15,6 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  title: {
-    fontSize: '1.1em',
-    flex: '1',
   },
   toggleComplete: {
     root: {
@@ -33,6 +28,13 @@ const styles = {
       height: '40px', width: '40px'
     }
   },
+  title: {
+    fontSize: '1.1em',
+    flex: '1',
+  },
+  pomodoro: {
+    display: 'inline-block',
+  },
 };
 
 const TaskItem = ({
@@ -41,7 +43,6 @@ const TaskItem = ({
   elapsed,
   pomodoros,
   title,
-
 }) => {
   const onePomodoro = 1500000;
   const completedPomodoros = Math.floor(elapsed/onePomodoro);
@@ -70,17 +71,20 @@ const TaskItem = ({
           <CreatePomodoros amount={5}>
             {index => {
               return (
-                <Pomodoro key={index}>
+                <li
+                  key={index}
+                  style={styles.pomodoro}>
                   <ProgressPomodoro
                     isComplete={index < completedPomodoros}
                     isActive={index === completedPomodoros && active}
                     isTarget={index <= pomodoros - 1}/>
-                </Pomodoro>
+                </li>
               );
             }}
           </CreatePomodoros>
         </Pomodoros>
       </div>
+
       {active
         ? <Timebar
           completedPomodoros={completedPomodoros}
