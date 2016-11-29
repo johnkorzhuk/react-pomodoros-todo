@@ -5,7 +5,7 @@ import Pomodoros from './Pomodoros';
 import ToggleActiveTask from './ToggleActiveTask';
 import Timebar from './Timebar';
 import CreatePomodoros from './CreatePomodoros';
-import PomodoroProgress from './PomodoroProgress';
+import ProgressPomodoro from './ProgressPomodoro';
 import Pomodoro from './Pomodoro';
 
 
@@ -71,7 +71,7 @@ const TaskItem = ({
             {index => {
               return (
                 <Pomodoro key={index}>
-                  <PomodoroProgress
+                  <ProgressPomodoro
                     isComplete={index < completedPomodoros}
                     isActive={index === completedPomodoros && active}
                     isTarget={index <= pomodoros - 1}/>

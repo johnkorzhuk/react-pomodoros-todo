@@ -22,7 +22,7 @@ const styles = {
   }
 };
 
-const PomodoroProgress = (props) => {
+const ProgressPomodoro = (props) => {
   const {
     isActive,
     isTarget,
@@ -52,10 +52,10 @@ const PomodoroProgress = (props) => {
 
 };
 
-PomodoroProgress.propTypes = {
+ProgressPomodoro.propTypes = {
   isActive: PropTypes.bool,
   isTarget: PropTypes.bool,
   isComplete: PropTypes.bool
 };
 
-export default PomodoroProgress;
+export default ProgressPomodoro;

@@ -1,14 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
-import Checkbox from 'material-ui/Checkbox';
-import RadioButtonUnchecked from 'material-ui/svg-icons/toggle/radio-button-unchecked';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import Lens from 'material-ui/svg-icons/image/lens';
 import { grey500, red500 } from 'material-ui/styles/colors';
-import CreatePomodoros from './CreatePomodoros';
 import Pomodoros from './Pomodoros';
-import Pomodoro from './Pomodoro';
+import InputPomodoros from './InputPomodoros';
 import { newId } from '../helpers';
 
 
@@ -42,10 +38,6 @@ const styles = {
       width: '45px',
     }
   },
-  icon: {
-    fill: red500,
-    marginRight: 0
-  },
 };
 
 class AddTask extends Component {
@@ -55,29 +47,6 @@ class AddTask extends Component {
     this.state = {
       pomodoros: 0
     }
-  }
-
-  renderPomodoros() {
-    return (
-      <Pomodoros>
-        <CreatePomodoros amount={5}>
-          {index => {
-            return (
-              <Pomodoro key={index}>
-                <Checkbox
-                  iconStyle={styles.icon}
-                  checkedIcon={<Lens/>}
-                  uncheckedIcon={<RadioButtonUnchecked/>}
-                  data-index={index}
-                  checked={index+1 <= this.state.pomodoros}
-                  onKeyDown={event => this.onKeyEnter(event, this.onCheck)}
-                  onCheck={this.onCheck}/>
-              </Pomodoro>
-            );
-          }}
-        </CreatePomodoros>
-      </Pomodoros>
-    );
   }
 
   render() {
@@ -96,9 +65,14 @@ class AddTask extends Component {
               styles.textField.underLine)}
           underlineShow={true}
           fullWidth={true}
-          onKeyDown={event => this.onKeyEnter(event, null)}/>
+          onKeyDown={event => this.onKeyEnter(event, this.createItem)}/>
 
-        {this.renderPomodoros()}
+        <Pomodoros>
+          <InputPomodoros
+            pomodoros={this.state.pomodoros}
+            onCheck={this.onCheck}
+            onKeyEnter={this.onKeyEnter}/>
+        </Pomodoros>
 
         <FloatingActionButton
           style={styles.button.root}
@@ -111,9 +85,7 @@ class AddTask extends Component {
     );
   }
 
-  // TODO figure out why I can't addnew item and updated pomodoros at the same time
-  onCheck = (event) => {
-    const index = (parseInt(event.target.getAttribute('data-index')))+1;
+  onCheck = (event, index) => {
     index === this.state.pomodoros
       ? this.setState(prevState => prevState.pomodoros = 0)
       : this.setState({pomodoros: index});
@@ -136,11 +108,7 @@ class AddTask extends Component {
 
   onKeyEnter(event, callback) {
     if (event.key === 'Enter') {
-      const keyEnter = true;
-
-      callback
-        ? callback(event, keyEnter)
-        : this.createItem();
+      callback();
     }
   }
 
