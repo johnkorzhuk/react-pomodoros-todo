@@ -22,27 +22,39 @@ const styles = {
 const ToggleActiveTask = ({
   active,
   complete,
+  id,
+  toggleActive,
 }) => {
-  const rippleColor = active ? grey500 : red500;
 
-  const Icon = active
+  let rippleColor = active
+    ? grey500
+    : red500;
+
+  let Icon = active
     ? <Pause style={styles.icon}/>
     : <Play style={styles.icon}/>;
 
+  if (!complete) {
+    return (
+      <FlatButton
+        style={styles.button}
+        icon={Icon}
+        rippleColor={rippleColor}
+        onClick={() => toggleActive(id, active)}/>
+    );
+  }
+  return null;
 
-  return (
-    complete
-      ? null
-      : <FlatButton
-      style={styles.button}
-      icon={Icon}
-      rippleColor={rippleColor}/>
-  );
 };
 
 ToggleActiveTask.propTypes = {
   active: PropTypes.bool,
   complete: PropTypes.bool,
+  id: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
+  toggleActive: PropTypes.func,
 };
 
 export default ToggleActiveTask;

@@ -41,8 +41,11 @@ const TaskItem = ({
   active,
   complete,
   elapsed,
+  id,
   pomodoros,
   title,
+  toggleComplete,
+  toggleActive,
 }) => {
   const onePomodoro = 1500000;
   const completedPomodoros = Math.floor(elapsed/onePomodoro);
@@ -57,7 +60,8 @@ const TaskItem = ({
           style={styles.toggleComplete.root}
           iconStyle={styles.toggleComplete.icon}
           inputStyle={styles.toggleComplete.input}
-          checked={complete}/>
+          checked={complete}
+          onCheck={toggleComplete}/>
 
         <div style={styles.title}>
           {title}
@@ -65,7 +69,9 @@ const TaskItem = ({
 
         <ToggleActiveTask
           active={active}
-          complete={complete}/>
+          complete={complete}
+          id={id}
+          toggleActive={toggleActive}/>
 
         <Pomodoros>
           <CreatePomodoros amount={5}>
@@ -85,12 +91,10 @@ const TaskItem = ({
         </Pomodoros>
       </div>
 
-      {active
-        ? <Timebar
+      {active && <Timebar
           completedPomodoros={completedPomodoros}
           elapsed={elapsed}
-          onePomodoro={onePomodoro}/>
-        : null}
+          onePomodoro={onePomodoro}/>}
     </li>
   );
 };
@@ -99,8 +103,14 @@ TaskItem.propTypes = {
   active: PropTypes.bool,
   complete: PropTypes.bool,
   elapsed: PropTypes.number,
+  id: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
   pomodoros: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
+  toggleActive: PropTypes.func,
+  toggleComplete: PropTypes.func.isRequired,
 };
 
 export default TaskItem;

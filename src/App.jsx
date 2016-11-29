@@ -88,11 +88,20 @@ class App extends Component {
             animateHeight={true}
             index={slideIndex}
             onChangeIndex={this.onSwip}>
+
             <div>
-              <TaskList tasks={tasks.filter(({complete}) => !complete)}/>
+              <TaskList
+                tasks={tasks.filter(({complete}) =>
+                  !complete)}
+                toggleActive={this.toggleActive}
+                toggleComplete={this.toggleComplete}/>
             </div>
 
-            <TaskList tasks={tasks.filter(({complete}) => complete)}/>
+            <TaskList
+              tasks={tasks.filter(({complete}) =>
+                complete)}
+              toggleComplete={this.toggleComplete}/>
+
           </BindKeyboardSwipeableViews>
         </Paper>
 
@@ -109,12 +118,6 @@ class App extends Component {
     )
   }
 
-  onSwip = (value) => {
-    this.setState({
-      slideIndex: value,
-    });
-  };
-
   onSort = (event, index, value) => {
     this.setState({ value });
 
@@ -123,9 +126,9 @@ class App extends Component {
 
     inverseSort[value]
       ? tasks.sort((a, b) =>
-          a[value]-b[value])
+    a[value]-b[value])
       : tasks.sort((a, b) =>
-          b[value]-a[value]);
+    b[value]-a[value]);
 
     inverseSort[value] = !inverseSort[value];
     this.setState(prevSate =>
@@ -134,13 +137,66 @@ class App extends Component {
       prevSate.tasks = tasks);
   };
 
+  onSwip = (value) => {
+    this.setState({
+      slideIndex: value,
+    });
+  };
+
+  toggleActive = (id, active) => {
+    if (!active) {
+      this.setState(prevState =>
+        prevState.tasks.map(task =>
+          task.active = false
+        )
+      );
+    }
+
+    this.setState(prevState => {
+      prevState.tasks
+        .filter(task =>
+          task.id === id)
+        .map(task =>
+          task.active = !task.active)
+    })
+  };
+
+  toggleComplete = (id) => {
+    console.log();
+    this.setState(prevState => {
+      prevState.tasks
+        .filter(task =>
+          task.id === id)
+        .map(task => {
+          if (task.active) {
+            task.active = false;
+          }
+          return task.complete = !task.complete;
+      })
+    });
+    this.checkCompleted();
+  };
+
   addTask = (task) => {
     const tasks = [...this.state.tasks, task];
+
     this.setState(prevState =>
       prevState.tasks = tasks);
 
-    this.setState({slideIndex: 0});
-  }
+    this.onSwip(0);
+  };
+
+  checkCompleted = () => {
+    this.setState(prevState => {
+      if (!prevState.tasks
+        .filter(({complete}) =>
+          complete)
+        .some(({complete}) =>
+          complete)) {
+        prevState.slideIndex = 0;
+      }
+    });
+  };
 }
 
 
