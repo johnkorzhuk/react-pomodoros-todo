@@ -44,9 +44,11 @@ class AddTask extends Component {
   constructor(props) {
     super(props);
 
+    this.pomodoros = 0;
     this.state = {
-      pomodoros: 0
-    }
+      pomodoros: this.pomodoros
+    };
+
   }
 
   render() {
@@ -65,13 +67,17 @@ class AddTask extends Component {
               styles.textField.underLine)}
           underlineShow={true}
           fullWidth={true}
-          onKeyDown={event => this.onKeyEnter(event, this.createItem)}/>
+          onKeyUp={(event) => this.onKeyEnter(event)}/>
 
         <Pomodoros>
-          <InputPomodoros
-            pomodoros={this.state.pomodoros}
-            onCheck={this.onCheck}
-            onKeyEnter={this.onKeyEnter}/>
+          <form
+            onKeyPress={this.onCheck}
+            onChange={this.onCheck}>
+            <InputPomodoros
+              pomodoros={this.pomodoros}
+              onKeyEnter={this.onKeyEnter.bind(this)}/>
+          </form>
+
         </Pomodoros>
 
         <FloatingActionButton
@@ -85,10 +91,19 @@ class AddTask extends Component {
     );
   }
 
-  onCheck = (event, index) => {
-    index === this.state.pomodoros
-      ? this.setState(prevState => prevState.pomodoros = 0)
-      : this.setState({pomodoros: index});
+  onCheck = (event) => {
+    const index = parseInt(event.target.getAttribute('data-pomodoro'), 10);
+
+
+    index === this.pomodoros
+      ? this.pomodoros = 0
+      : this.pomodoros = index;
+
+    this.setState({pomodoros: this.pomodoros});
+
+    if (event.key === 'Enter') {
+      this.createItem();
+    }
   };
 
   createItem = () => {
@@ -96,20 +111,20 @@ class AddTask extends Component {
       added: Date.now(),
       elapsed: 0,
       id: newId.next().value,
-      pomodoros: this.state.pomodoros,
+      pomodoros: this.pomodoros || this.state.pomodoros,
       title: this.textField.input.value,
     };
 
     this.props.addTask(newTask);
 
     this.textField.input.value = "";
-    this.setState(prevState =>
-      prevState.pomodoros = 0);
+    this.pomodoros = 0;
+    this.setState({ pomodoros: 0});
   };
 
-  onKeyEnter(event, callback) {
+  onKeyEnter(event) {
     if (event.key === 'Enter') {
-      callback();
+      this.createItem(event);
     }
   }
 

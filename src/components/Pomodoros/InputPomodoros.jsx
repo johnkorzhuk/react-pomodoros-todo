@@ -31,10 +31,9 @@ const InputPomodoros = ({
             <Checkbox
               iconStyle={styles.icon}
               checkedIcon={<Lens/>}
+              data-pomodoro={index+1}
               uncheckedIcon={<RadioButtonUnchecked/>}
-              checked={index+1 <= pomodoros}
-              onKeyDown={event => onKeyEnter(event, () => onCheck(event, index+1))}
-              onCheck={event => onCheck(event, index+1)}/>
+              checked={index+1 <= pomodoros}/>
           </li>
         );
       }}
