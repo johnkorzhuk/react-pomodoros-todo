@@ -94,6 +94,7 @@ class App extends Component {
                 tasks={tasks.filter(({complete}) =>
                   !complete)}
                 toggleActive={this.toggleActive}
+                updateElapsed={this.updateElapsed}
                 toggleComplete={this.toggleComplete}/>
             </div>
 
@@ -127,9 +128,9 @@ class App extends Component {
 
     inverseSort[value]
       ? tasks.sort((a, b) =>
-    a[value]-b[value])
+          a[value]-b[value])
       : tasks.sort((a, b) =>
-    b[value]-a[value]);
+          b[value]-a[value]);
 
     inverseSort[value] = !inverseSort[value];
     this.setState(prevSate =>
@@ -168,10 +169,22 @@ class App extends Component {
     this.setState(prevState => {
       prevState.tasks
         .filter(task =>
-          task.id === id)
-        .map(task =>
-          task.active = !task.active)
-    })
+          task.id === id
+        ).map(task =>
+          task.active = !task.active
+      )
+    });
+  };
+
+  updateElapsed = (id, newTime) => {
+    this.setState(prevState =>
+      prevState.tasks.map(task => {
+        if (task.id === id) {
+          task.elapsed = newTime;
+        }
+        return null;
+      })
+    );
   };
 
   toggleComplete = (id) => {
@@ -203,9 +216,10 @@ class App extends Component {
     this.setState(prevState => {
       if (!prevState.tasks
         .filter(({complete}) =>
-          complete)
-        .some(({complete}) =>
+          complete
+        ).some(({complete}) =>
           complete)) {
+
         prevState.slideIndex = 0;
       }
     });

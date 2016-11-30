@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import TaskItem from './TaskItem';
+import TaskItem from './TaskItem/TaskItem';
 import './TaskList.css';
 
 
@@ -15,6 +15,7 @@ const TaskList = ({
   tasks,
   removeTask,
   toggleActive,
+  updateElapsed,
   toggleComplete,
 }) => {
   return (
@@ -39,6 +40,7 @@ const TaskList = ({
             title={title}
             removeTask={removeTask}
             toggleActive={toggleActive}
+            updateElapsed={updateElapsed}
             toggleComplete={toggleComplete.bind(null, id)}/>
         )}
     </ul>
@@ -61,6 +63,7 @@ TaskList.propTypes = {
   })),
   removeTask: PropTypes.func,
   toggleActive: PropTypes.func,
+  updateElapsed: PropTypes.func,
   toggleComplete: PropTypes.func.isRequired,
 };
 

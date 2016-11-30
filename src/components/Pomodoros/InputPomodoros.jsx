@@ -18,8 +18,7 @@ const styles = {
 
 const InputPomodoros = ({
   pomodoros,
-  onCheck,
-  onKeyEnter,
+
 }) => {
   return (
     <CreatePomodoros amount={5}>
@@ -43,8 +42,6 @@ const InputPomodoros = ({
 
 InputPomodoros.propTypes = {
   pomodoros: PropTypes.number.isRequired,
-  onCheck: PropTypes.func.isRequired,
-  onKeyEnter: PropTypes.func.isRequired,
 };
 
 export default InputPomodoros;

@@ -73,9 +73,7 @@ class AddTask extends Component {
           <form
             onKeyPress={this.onCheck}
             onChange={this.onCheck}>
-            <InputPomodoros
-              pomodoros={this.pomodoros}
-              onKeyEnter={this.onKeyEnter.bind(this)}/>
+            <InputPomodoros pomodoros={this.pomodoros}/>
           </form>
 
         </Pomodoros>
@@ -93,7 +91,6 @@ class AddTask extends Component {
 
   onCheck = (event) => {
     const index = parseInt(event.target.getAttribute('data-pomodoro'), 10);
-
 
     index === this.pomodoros
       ? this.pomodoros = 0
@@ -127,7 +124,6 @@ class AddTask extends Component {
       this.createItem(event);
     }
   }
-
 }
 
 AddTask.propTypes = {
