@@ -87,20 +87,19 @@ class App extends Component {
             style={{height: "100%"}}
             animateHeight={true}
             index={slideIndex}
-            onChangeIndex={this.onSwip}>
-
-            <div>
-              <TaskList
-                tasks={tasks.filter(({complete}) =>
-                  !complete)}
-                toggleActive={this.toggleActive}
-                updateElapsed={this.updateElapsed}
-                toggleComplete={this.toggleComplete}/>
-            </div>
+            onChangeIndex={
+              this.state.tasks.some(({editing}) => editing)
+                ? () => null
+                : this.onSwip }>
 
             <TaskList
-              tasks={tasks.filter(({complete}) =>
-                complete)}
+              tasks={tasks.filter(({complete}) => !complete)}
+              toggleActive={this.toggleActive}
+              updateElapsed={this.updateElapsed}
+              toggleComplete={this.toggleComplete}/>
+
+            <TaskList
+              tasks={tasks.filter(({complete}) => complete)}
               removeTask={this.removeTask}
               toggleComplete={this.toggleComplete}/>
 
@@ -192,8 +191,8 @@ class App extends Component {
     this.setState(prevState => {
       prevState.tasks
         .filter(task =>
-          task.id === id)
-        .map(task => {
+          task.id === id
+        ).map(task => {
           if (task.active) {
             task.active = false;
           }

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import { grey600 } from 'material-ui/styles/colors';
+import EditableTaskItem from '../TaskItem/EditableTaskItem'
 import Pomodoros from '../Pomodoros/Pomodoros';
 import Timebar from '../Timebar';
 import PrimaryButton from './PrimaryButton';
@@ -89,9 +90,8 @@ class TaskItem extends Component {
             checked={complete}
             onCheck={toggleComplete}/>
 
-          <div style={styles.title}>
-            {title}
-          </div>
+          <EditableTaskItem name={id} style={styles.title} title={title}/>
+
 
           <PrimaryButton
             active={active}

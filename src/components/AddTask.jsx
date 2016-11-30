@@ -65,8 +65,8 @@ class AddTask extends Component {
             Object.assign(
               {borderColor: grey500},
               styles.textField.underLine)}
-          underlineShow={true}
-          fullWidth={true}
+          underlineShow
+          fullWidth
           onKeyUp={(event) => this.onKeyEnter(event)}/>
 
         <Pomodoros>
