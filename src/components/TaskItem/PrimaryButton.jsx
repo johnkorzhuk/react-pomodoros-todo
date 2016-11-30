@@ -53,8 +53,8 @@ const PrimaryButton = ({
 };
 
 PrimaryButton.propTypes = {
-  active: PropTypes.bool.isRequired,
-  complete: PropTypes.bool.isRequired,
+  active: PropTypes.bool,
+  complete: PropTypes.bool,
   id: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,

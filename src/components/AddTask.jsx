@@ -41,8 +41,8 @@ const styles = {
 };
 
 class AddTask extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       pomodoros: 0
