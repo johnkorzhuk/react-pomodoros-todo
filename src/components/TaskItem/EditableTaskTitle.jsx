@@ -52,7 +52,7 @@ class EditTaskTitle extends Component {
           {},
           styles.textField.root,
           styles.title)}
-        name="task"
+        name="title"
         underlineStyle={styles.textField.underLine}
         underlineFocusStyle={
           Object.assign(

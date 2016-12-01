@@ -3,9 +3,10 @@ import TextField from 'material-ui/TextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { grey500, red500 } from 'material-ui/styles/colors';
+import uuid from 'uuid';
+
 import Pomodoros from './Pomodoros/Pomodoros';
 import InputPomodoros from './Pomodoros/InputPomodoros';
-import { newId } from '../helpers';
 
 
 const styles = {
@@ -59,12 +60,13 @@ class AddTask extends Component {
           ref={(input) => this.textField = input}
           style={styles.textField.root}
           hintStyle={styles.textField.hint}
-          hintText="New Task"
+          placeholder="New Task"
           underlineStyle={styles.textField.underLine}
           underlineFocusStyle={
             Object.assign(
               {borderColor: grey500},
               styles.textField.underLine)}
+          name="title"
           underlineShow
           fullWidth
           onKeyUp={(event) => this.onKeyEnter(event)}/>
@@ -83,7 +85,7 @@ class AddTask extends Component {
           backgroundColor={red500}
           iconStyle={styles.button.icon}
           onClick={this.createItem}>
-          <ContentAdd style={{width: '24px'}}/>
+          <ContentAdd style={{width: 24}}/>
         </FloatingActionButton>
       </div>
     );
@@ -107,8 +109,7 @@ class AddTask extends Component {
     const newTask = {
       added: Date.now(),
       elapsed: 0,
-      // TODO switch to uuid instead of generator
-      id: newId.next().value,
+      id: uuid.v4(),
       pomodoros: this.pomodoros || this.state.pomodoros,
       title: this.textField.input.value,
     };
