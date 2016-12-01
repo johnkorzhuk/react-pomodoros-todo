@@ -8,7 +8,7 @@ const Timebar = ({
   onePomodoro,
 }) => {
   const remainingTime = elapsed-(completedPomodoros*onePomodoro);
-  console.log(elapsed);
+
   return (
     <LinearProgress
       color={red500}

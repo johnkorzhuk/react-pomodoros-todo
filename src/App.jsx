@@ -94,6 +94,8 @@ class App extends Component {
 
             <TaskList
               tasks={tasks.filter(({complete}) => !complete)}
+              onEdit={this.onEdit}
+              onEditComplete={this.onEditComplete}
               toggleActive={this.toggleActive}
               updateElapsed={this.updateElapsed}
               toggleComplete={this.toggleComplete}/>
@@ -132,10 +134,12 @@ class App extends Component {
           b[value]-a[value]);
 
     inverseSort[value] = !inverseSort[value];
-    this.setState(prevSate =>
-      prevSate.inverseSort = inverseSort);
-    this.setState(prevSate =>
-      prevSate.tasks = tasks);
+
+    this.setState(prevSate => {
+      prevSate.inverseSort = inverseSort;
+      prevSate.tasks = tasks;
+    });
+
   };
 
   onSwip = (value) => {
@@ -154,6 +158,29 @@ class App extends Component {
     );
 
     this.checkCompleted();
+  };
+
+  onEdit = (id) => {
+    this.setState(prevState =>
+      prevState.tasks.map(task => {
+        if (task.id === id) {
+          task.editing = true;
+        }
+        return task;
+      })
+    );
+  };
+
+  onEditComplete = (id, newTitle) => {
+    this.setState(prevState =>
+      prevState.tasks.map(task => {
+        if (task.id === id) {
+          task.editing = false;
+          task.title = newTitle;
+        }
+        return task;
+      })
+    );
   };
 
   toggleActive = (id, active) => {
@@ -181,7 +208,7 @@ class App extends Component {
         if (task.id === id) {
           task.elapsed = newTime;
         }
-        return null;
+        return task;
       })
     );
   };

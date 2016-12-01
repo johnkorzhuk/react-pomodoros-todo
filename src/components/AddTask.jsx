@@ -19,13 +19,13 @@ const styles = {
   textField: {
     root: {
       fontSize: '1.1em',
-      height: '36px',
+      height: '100%',
     },
     hint: {
-      bottom: '4px',
+      bottom: 0,
     },
     underLine: {
-      bottom: '4px'
+      bottom: 0
     }
   },
   button: {
@@ -107,6 +107,7 @@ class AddTask extends Component {
     const newTask = {
       added: Date.now(),
       elapsed: 0,
+      // TODO switch to uuid instead of generator
       id: newId.next().value,
       pomodoros: this.pomodoros || this.state.pomodoros,
       title: this.textField.input.value,

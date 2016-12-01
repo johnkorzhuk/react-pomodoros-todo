@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import { grey600 } from 'material-ui/styles/colors';
-import EditableTaskItem from '../TaskItem/EditableTaskItem'
+import EditableTaskTitle from './EditableTaskTitle'
 import Pomodoros from '../Pomodoros/Pomodoros';
 import Timebar from '../Timebar';
 import PrimaryButton from './PrimaryButton';
@@ -11,7 +11,7 @@ import ProgressPomodoro from '../Pomodoros/ProgressPomodoro';
 
 const styles = {
   taskItem: {
-    padding: '20px 220px 20px 20px',
+    padding: '0 220px 0 20px',
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
@@ -33,7 +33,6 @@ const styles = {
     fontSize: '1.1em',
     flex: '1',
   },
-
   pomodoro: {
     display: 'inline-block',
   },
@@ -68,10 +67,13 @@ class TaskItem extends Component {
     const {
       active,
       complete,
+      editing,
       id,
       pomodoros,
       title,
       removeTask,
+      onEdit,
+      onEditComplete,
       toggleComplete,
     } = this.props;
 
@@ -90,8 +92,12 @@ class TaskItem extends Component {
             checked={complete}
             onCheck={toggleComplete}/>
 
-          <EditableTaskItem name={id} style={styles.title} title={title}/>
-
+          <EditableTaskTitle
+            editing={editing}
+            id={id}
+            title={title}
+            onEdit={onEdit}
+            onEditComplete={onEditComplete}/>
 
           <PrimaryButton
             active={active}
@@ -150,6 +156,7 @@ class TaskItem extends Component {
 TaskItem.propTypes = {
   active: PropTypes.bool,
   complete: PropTypes.bool,
+  editing: PropTypes.bool,
   elapsed: PropTypes.number,
   id: PropTypes.oneOfType([
     PropTypes.string,
@@ -158,6 +165,8 @@ TaskItem.propTypes = {
   pomodoros: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   removeTask: PropTypes.func,
+  onEdit: PropTypes.func,
+  onEditComplete: PropTypes.func,
   toggleActive: PropTypes.func,
   toggleComplete: PropTypes.func.isRequired,
   updateElapsed: PropTypes.func,
