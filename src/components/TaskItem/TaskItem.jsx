@@ -52,10 +52,12 @@ class TaskItem extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.active) {
-      this.interval = setInterval(this.onTick, 1000)
-    }else {
-      clearInterval(this.interval);
+    if (nextProps.active !== this.props.active) {
+      if (nextProps.active) {
+        this.interval = setInterval(this.onTick, 1000)
+      }else {
+        clearInterval(this.interval);
+      }
     }
   }
 

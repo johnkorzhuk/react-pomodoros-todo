@@ -214,7 +214,6 @@ class App extends Component {
   };
 
   toggleComplete = (id) => {
-    console.log();
     this.setState(prevState => {
       prevState.tasks
         .filter(task =>
@@ -223,6 +222,7 @@ class App extends Component {
           if (task.active) {
             task.active = false;
           }
+
           return task.complete = !task.complete;
       })
     });
