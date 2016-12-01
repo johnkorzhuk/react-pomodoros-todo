@@ -53,13 +53,15 @@ class TaskItem extends Component {
       this.setState(prevState =>
         prevState.showEditIcon = false
       );
-
-      this.props.active
-        ? this.onActiveToggle()
-        : this.onActiveToggle();
-
     }
+
     if (nextProps.active !== this.props.active) {
+      if (this.props.externalEditing) {
+        this.setState({
+          prevTime: Date.now()
+        });
+      }
+
       nextProps.active
         ? this.interval = setInterval(this.onTick, 1000)
         : clearInterval(this.interval);
@@ -84,7 +86,6 @@ class TaskItem extends Component {
     } = this.props;
 
     const completedPomodoros = Math.floor(this.state.elapsed/this.onePomodoro);
-
     return (
       <li className="task-item">
         <div
@@ -177,6 +178,7 @@ TaskItem.propTypes = {
   elapsed: PropTypes.number,
   pomodoros: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
+  externalEditing: PropTypes.bool.isRequired,
   removeTask: PropTypes.func,
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func,

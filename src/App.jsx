@@ -39,7 +39,10 @@ class App extends Component {
       },
       tasks: samples,
       value: 'added',
-    }
+    };
+
+    this.onEditActiveId = null;
+    this.editing = false;
   }
 
   render() {
@@ -89,7 +92,7 @@ class App extends Component {
             animateHeight={true}
             index={slideIndex}
             onChangeIndex={
-              this.state.tasks.some(({editing}) => editing)
+              this.editing
                 ? () => null
                 : this.onSwip }>
 
@@ -105,6 +108,7 @@ class App extends Component {
                     elapsed={task.elapsed}
                     pomodoros={task.pomodoros}
                     title={task.title}
+                    externalEditing={this.editing}
                     onEdit={this.onEdit.bind(null, task.id)}
                     onEditComplete={this.onEditComplete.bind(null, task.id)}
                     toggleActive={this.toggleActive.bind(null, task.id)}
@@ -125,6 +129,7 @@ class App extends Component {
                   elapsed={task.elapsed}
                   pomodoros={task.pomodoros}
                   title={task.title}
+                  externalEditing={this.editing}
                   onEdit={this.onEdit.bind(null, task.id)}
                   onEditComplete={this.onEditComplete.bind(null, task.id)}
                   removeTask={this.removeTask.bind(null, task.id)}
@@ -166,7 +171,6 @@ class App extends Component {
       prevSate.inverseSort = inverseSort;
       prevSate.tasks = tasks;
     });
-
   };
 
   onSwip = (value) => {
@@ -188,10 +192,17 @@ class App extends Component {
   };
 
   onEdit = (id) => {
+    this.editing = true;
+
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
           task.editing = true;
+        }
+        if (task.active) {
+          task.active = false;
+          this.onEditActiveId = task.id;
+
         }
         return task;
       })
@@ -199,6 +210,8 @@ class App extends Component {
   };
 
   onEditComplete = (id, newTitle) => {
+    this.editing = false;
+
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
@@ -208,14 +221,21 @@ class App extends Component {
         return task;
       })
     );
+
+    this.setState(prevState => {
+      prevState.tasks
+        .filter(task =>
+          task.id === this.onEditActiveId
+        ).map(task =>
+          task.active = true);
+    });
   };
 
   toggleActive = (id, active) => {
     if (!active) {
       this.setState(prevState =>
         prevState.tasks.map(task =>
-          task.active = false
-        )
+          task.active = false)
       );
     }
 
@@ -224,8 +244,7 @@ class App extends Component {
         .filter(task =>
           task.id === id
         ).map(task =>
-          task.active = !task.active
-      )
+          task.active = !task.active);
     });
   };
 
