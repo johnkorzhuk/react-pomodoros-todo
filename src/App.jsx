@@ -121,9 +121,12 @@ class App extends Component {
                   key={task.id}
                   active={task.active}
                   complete={task.complete}
+                  editing={task.editing}
                   elapsed={task.elapsed}
                   pomodoros={task.pomodoros}
                   title={task.title}
+                  onEdit={this.onEdit.bind(null, task.id)}
+                  onEditComplete={this.onEditComplete.bind(null, task.id)}
                   removeTask={this.removeTask.bind(null, task.id)}
                   toggleComplete={this.toggleComplete.bind(null, task.id)}/>
               )}

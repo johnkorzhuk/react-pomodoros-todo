@@ -11,11 +11,11 @@ import ProgressPomodoro from '../Pomodoros/ProgressPomodoro';
 
 const styles = {
   taskItem: {
-    padding: '0 220px 0 20px',
+    padding: '0 20px',
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   toggleComplete: {
     root: {
@@ -29,10 +29,7 @@ const styles = {
       height: '40px', width: '40px'
     }
   },
-  title: {
-    fontSize: '1.1em',
-    flex: '1',
-  },
+
   pomodoro: {
     display: 'inline-block',
   },
@@ -46,12 +43,18 @@ class TaskItem extends Component {
       prevTime: 0,
       elapsed: this.props.elapsed,
       breaking: false,
+      showEditIcon: false,
     };
 
     this.onePomodoro = 1500000;
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.editing !== this.props.editing) {
+      this.setState(prevState =>
+        prevState.showEditIcon = false
+      )
+    }
     if (nextProps.active !== this.props.active) {
       if (nextProps.active) {
         this.interval = setInterval(this.onTick, 1000)
@@ -96,8 +99,11 @@ class TaskItem extends Component {
           <EditableTaskTitle
             editing={editing}
             title={title}
+            showEditIcon={this.state.showEditIcon}
             onEdit={onEdit}
-            onEditComplete={onEditComplete}/>
+            onEditComplete={onEditComplete}
+            onTitleMouseEnter={this.onTitleMouseEnter}
+            onTitleMouseLeave={this.onTitleMouseLeave}/>
 
           <PrimaryButton
             active={active}
@@ -130,6 +136,14 @@ class TaskItem extends Component {
       </li>
     );
   }
+
+  onTitleMouseEnter = () => {
+    this.setState({showEditIcon: true})
+  };
+
+  onTitleMouseLeave = () => {
+    this.setState({showEditIcon: false})
+  };
 
   onActiveToggle = () => {
     if (this.props.active) {

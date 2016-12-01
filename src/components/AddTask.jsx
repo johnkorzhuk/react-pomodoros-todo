@@ -60,21 +60,21 @@ class AddTask extends Component {
           ref={(input) => this.textField = input}
           style={styles.textField.root}
           hintStyle={styles.textField.hint}
-          placeholder="New Task"
-          underlineStyle={styles.textField.underLine}
           underlineFocusStyle={
             Object.assign(
               {borderColor: grey500},
               styles.textField.underLine)}
+          underlineStyle={styles.textField.underLine}
           name="title"
-          underlineShow
+          placeholder="New Task"
           fullWidth
+          underlineShow
           onKeyUp={(event) => this.onKeyEnter(event)}/>
 
         <Pomodoros>
           <form
-            onKeyPress={this.onCheck}
-            onChange={this.onCheck}>
+            onChange={this.onCheck}
+            onKeyPress={this.onCheck}>
             <InputPomodoros pomodoros={this.pomodoros}/>
           </form>
 

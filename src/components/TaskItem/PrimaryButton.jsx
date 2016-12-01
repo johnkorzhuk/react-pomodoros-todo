@@ -16,7 +16,7 @@ const styles = {
     },
     button: {
       position: 'absolute',
-      right: '160px',
+      right: '150px',
       minHeight: '40px',
       minWidth: '40px',
       borderRadius: '50%'

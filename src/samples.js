@@ -7,7 +7,7 @@ module.exports = [
     elapsed: 4400000,
     id: 1,
     pomodoros: 4,
-    title: "Finish Cowork Hive member page",
+    title: "A complete task",
   },
   {
     active: false,
@@ -24,10 +24,10 @@ module.exports = [
     added: 2,
     complete: false,
     editing: false,
-    elapsed: 1490000,
+    elapsed: 1495000,
     id: 3,
     pomodoros: 4,
-    title: "Do laundry",
+    title: "5 seconds short of one pomodoro. After one pomodoro (25 minutes) has elapsed, a break timer starts for 5 minutes. This should be skippable",
   },
   {
     active: false,
@@ -37,7 +37,7 @@ module.exports = [
     elapsed: 2999000,
     id: 4,
     pomodoros: 1,
-    title: "Fix car",
+    title: "one second short of two pomodoros",
   },
   {
     active: false,
@@ -47,7 +47,7 @@ module.exports = [
     elapsed: 0,
     id: 5,
     pomodoros: 4,
-    title: "Do that one thing",
+    title: "Do that one thingsdfsdf sdf sd fsdf sdfsdfsdfsd ffdsfsdfsdfsdf ....llll",
   },
   {
     active: false,
