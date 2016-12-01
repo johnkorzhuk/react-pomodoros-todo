@@ -17,7 +17,7 @@ module.exports = [
     elapsed: 6990000,
     id: 2,
     pomodoros: 3,
-    title: "Finish Lorem ipsum task. A really long to do task. No idea why you'd need to make a to do with so much text. This isn't the place to document the story of your life",
+    title: "Finish Lorem ipsum task. A really long to-do task. No idea why you'd need to make a to do with so much text. This isn't the place to document the story of your life",
   },
   {
     active: false,

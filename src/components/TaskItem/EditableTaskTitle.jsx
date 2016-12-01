@@ -37,7 +37,7 @@ const styles = {
       padding: 0,
       position: 'absolute',
       top: -5,
-      right: 0
+      right: 0,
     },
     icon: {
       width: 15,
@@ -66,7 +66,7 @@ const EditableTaskTitle = ({
         {title}
         <div
           style={styles.edit.wrap}
-          onMouseEnter={onTitleMouseEnter}
+          onMouseOver={onTitleMouseEnter}
           onMouseLeave={onTitleMouseLeave}>
           {showEditIcon
             ? <IconButton
@@ -91,6 +91,7 @@ class EditTaskTitle extends Component {
           {},
           styles.title,
           styles.textField.root)}
+        textareaStyle={{border: '1px solid blue', margin: 0}}
         underlineStyle={styles.textField.underLine}
         underlineFocusStyle={
           Object.assign(

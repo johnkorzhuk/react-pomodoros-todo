@@ -29,7 +29,6 @@ const styles = {
       height: '40px', width: '40px'
     }
   },
-
   pomodoro: {
     display: 'inline-block',
   },
@@ -53,14 +52,17 @@ class TaskItem extends Component {
     if (nextProps.editing !== this.props.editing) {
       this.setState(prevState =>
         prevState.showEditIcon = false
-      )
+      );
+
+      this.props.active
+        ? this.onActiveToggle()
+        : this.onActiveToggle();
+
     }
     if (nextProps.active !== this.props.active) {
-      if (nextProps.active) {
-        this.interval = setInterval(this.onTick, 1000)
-      }else {
-        clearInterval(this.interval);
-      }
+      nextProps.active
+        ? this.interval = setInterval(this.onTick, 1000)
+        : clearInterval(this.interval);
     }
   }
 
@@ -102,7 +104,7 @@ class TaskItem extends Component {
             showEditIcon={this.state.showEditIcon}
             onEdit={onEdit}
             onEditComplete={onEditComplete}
-            onTitleMouseEnter={this.onTitleMouseEnter}
+            onTitleMouseEnter={this.onTitleMouseOver}
             onTitleMouseLeave={this.onTitleMouseLeave}/>
 
           <PrimaryButton
@@ -137,8 +139,10 @@ class TaskItem extends Component {
     );
   }
 
-  onTitleMouseEnter = () => {
-    this.setState({showEditIcon: true})
+  onTitleMouseOver = () => {
+    if (!this.state.showEditIcon) {
+      this.setState({showEditIcon: true});
+    }
   };
 
   onTitleMouseLeave = () => {
