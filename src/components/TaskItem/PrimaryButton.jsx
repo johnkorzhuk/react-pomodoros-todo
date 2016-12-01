@@ -27,7 +27,6 @@ const styles = {
 const PrimaryButton = ({
   active,
   complete,
-  id,
   removeTask,
   onActiveToggle,
 }) => {
@@ -42,7 +41,7 @@ const PrimaryButton = ({
   return complete
     ? <IconButton
         style={styles.primaryButton.button}
-        onClick={() => removeTask(id)}>
+        onClick={removeTask}>
         <Delete/>
       </IconButton>
     : <FlatButton
@@ -55,10 +54,6 @@ const PrimaryButton = ({
 PrimaryButton.propTypes = {
   active: PropTypes.bool,
   complete: PropTypes.bool,
-  id: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]).isRequired,
   onActiveToggle: PropTypes.func,
   removeTask: PropTypes.func,
 };

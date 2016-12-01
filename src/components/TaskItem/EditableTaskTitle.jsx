@@ -24,7 +24,6 @@ const styles = {
 
 const EditableTaskTitle = ({
   editing,
-  id,
   title,
   onEdit,
   onEditComplete,
@@ -32,12 +31,11 @@ const EditableTaskTitle = ({
   return editing
     ? <EditTaskTitle
         style={styles.title}
-        id={id}
         title={title}
         onEditComplete={onEditComplete}/>
     : <div
         style={styles.title}
-        onDoubleClick={() => onEdit(id)}>
+        onDoubleClick={onEdit}>
         {title}
       </div>
 
@@ -53,7 +51,7 @@ class EditTaskTitle extends Component {
         style={Object.assign(
           {},
           styles.textField.root,
-          styles.title, )}
+          styles.title)}
         name="task"
         underlineStyle={styles.textField.underLine}
         underlineFocusStyle={
@@ -70,7 +68,7 @@ class EditTaskTitle extends Component {
   }
 
   editNote = (event) => {
-    this.props.onEditComplete(this.props.id, event.target.value)
+    this.props.onEditComplete(event.target.value)
   };
 
   onKeyEnter = (event) => {
@@ -79,5 +77,12 @@ class EditTaskTitle extends Component {
     }
   };
 }
+
+EditableTaskTitle.propTypes = {
+  editing: PropTypes.bool,
+  title: PropTypes.string.isRequired,
+  onEdit: PropTypes.func,
+  onEditComplete: PropTypes.func,
+};
 
 export default EditableTaskTitle;

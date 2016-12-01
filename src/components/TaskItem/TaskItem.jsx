@@ -70,7 +70,6 @@ class TaskItem extends Component {
       active,
       complete,
       editing,
-      id,
       pomodoros,
       title,
       removeTask,
@@ -96,7 +95,6 @@ class TaskItem extends Component {
 
           <EditableTaskTitle
             editing={editing}
-            id={id}
             title={title}
             onEdit={onEdit}
             onEditComplete={onEditComplete}/>
@@ -104,7 +102,6 @@ class TaskItem extends Component {
           <PrimaryButton
             active={active}
             complete={complete}
-            id={id}
             onActiveToggle={this.onActiveToggle}
             removeTask={removeTask}/>
 
@@ -137,13 +134,13 @@ class TaskItem extends Component {
   onActiveToggle = () => {
     if (this.props.active) {
       clearInterval(this.interval);
-      this.props.updateElapsed(this.props.id, this.state.elapsed);
+      this.props.updateElapsed(this.state.elapsed);
     }else {
       this.setState({
         prevTime: Date.now()
       });
     }
-    this.props.toggleActive(this.props.id, this.props.active);
+    this.props.toggleActive(this.props.active);
   };
 
   onTick = () => {
@@ -160,10 +157,6 @@ TaskItem.propTypes = {
   complete: PropTypes.bool,
   editing: PropTypes.bool,
   elapsed: PropTypes.number,
-  id: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]).isRequired,
   pomodoros: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   removeTask: PropTypes.func,

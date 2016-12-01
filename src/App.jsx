@@ -10,6 +10,7 @@ import './App.css';
 import samples from './samples';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
+import TaskItem from './components/TaskItem/TaskItem';
 
 
 const BindKeyboardSwipeableViews = bindKeyboard(SwipeableViews);
@@ -92,18 +93,41 @@ class App extends Component {
                 ? () => null
                 : this.onSwip }>
 
-            <TaskList
-              tasks={tasks.filter(({complete}) => !complete)}
-              onEdit={this.onEdit}
-              onEditComplete={this.onEditComplete}
-              toggleActive={this.toggleActive}
-              updateElapsed={this.updateElapsed}
-              toggleComplete={this.toggleComplete}/>
+            <TaskList>
+              {tasks.filter(({complete}) =>
+                !complete
+                ).map(task =>
+                  <TaskItem
+                    key={task.id}
+                    active={task.active}
+                    complete={task.complete}
+                    editing={task.editing}
+                    elapsed={task.elapsed}
+                    pomodoros={task.pomodoros}
+                    title={task.title}
+                    onEdit={this.onEdit.bind(null, task.id)}
+                    onEditComplete={this.onEditComplete.bind(null, task.id)}
+                    toggleActive={this.toggleActive.bind(null, task.id)}
+                    updateElapsed={this.updateElapsed.bind(null, task.id)}
+                    toggleComplete={this.toggleComplete.bind(null, task.id)}/>
+              )}
+            </TaskList>
 
-            <TaskList
-              tasks={tasks.filter(({complete}) => complete)}
-              removeTask={this.removeTask}
-              toggleComplete={this.toggleComplete}/>
+            <TaskList>
+              {tasks.filter(({complete}) =>
+                complete
+              ).map(task =>
+                <TaskItem
+                  key={task.id}
+                  active={task.active}
+                  complete={task.complete}
+                  elapsed={task.elapsed}
+                  pomodoros={task.pomodoros}
+                  title={task.title}
+                  removeTask={this.removeTask.bind(null, task.id)}
+                  toggleComplete={this.toggleComplete.bind(null, task.id)}/>
+              )}
+            </TaskList>
 
           </BindKeyboardSwipeableViews>
         </Paper>
