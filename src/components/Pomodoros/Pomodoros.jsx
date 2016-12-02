@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 
 const styles = {
@@ -17,12 +17,6 @@ const Pomodoros = ({
       {children}
     </ul>
   );
-};
-
-Pomodoros.propTypes = {
-  children: PropTypes.shape(
-    PropTypes.func.isRequired
-  ).isRequired,
 };
 
 export default Pomodoros;

@@ -13,7 +13,7 @@ module.exports = [
     active: false,
     added: 3,
     complete: false,
-    editing: false,
+    editing: true,
     elapsed: 6990000,
     id: 2,
     pomodoros: 3,

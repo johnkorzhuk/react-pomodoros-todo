@@ -45,17 +45,14 @@ class AddTask extends Component {
   constructor(props) {
     super(props);
 
-    this.pomodoros = 0;
     this.state = {
-      pomodoros: this.pomodoros
-    };
-
+      submitted: false,
+    }
   }
 
   render() {
     return (
       <div style={styles.root}>
-
         <TextField
           ref={(input) => this.textField = input}
           style={styles.textField.root}
@@ -72,45 +69,34 @@ class AddTask extends Component {
           onKeyUp={(event) => this.onKeyEnter(event)}/>
 
         <Pomodoros>
-          <form
-            onChange={this.onCheck}
-            onKeyPress={this.onCheck}>
-            <InputPomodoros pomodoros={this.pomodoros}/>
-          </form>
-
+          <InputPomodoros
+            submitted={this.state.submitted}
+            submitPomodoros={this.createItem}
+            updatePomodoros={this.updatePomodoros}/>
         </Pomodoros>
 
         <FloatingActionButton
           style={styles.button.root}
           backgroundColor={red500}
           iconStyle={styles.button.icon}
-          onClick={this.createItem}>
+          onClick={() => this.createItem()}>
           <ContentAdd style={{width: 24}}/>
         </FloatingActionButton>
       </div>
     );
   }
 
-  onCheck = (event) => {
-    const index = parseInt(event.target.getAttribute('data-pomodoro'), 10);
-
-    index === this.pomodoros
-      ? this.pomodoros = 0
-      : this.pomodoros = index;
-
-    this.setState({pomodoros: this.pomodoros});
-
-    if (event.key === 'Enter') {
-      this.createItem();
-    }
+  updatePomodoros = (pomodoros) => {
+    this.pomodoros = pomodoros;
+    this.setState({submitted: false});
   };
 
-  createItem = () => {
+  createItem = (pomodoros) => {
     const newTask = {
       added: Date.now(),
       elapsed: 0,
       id: uuid.v4(),
-      pomodoros: this.pomodoros || this.state.pomodoros,
+      pomodoros: pomodoros || this.pomodoros,
       title: this.textField.input.value,
     };
 
@@ -118,12 +104,12 @@ class AddTask extends Component {
 
     this.textField.input.value = "";
     this.pomodoros = 0;
-    this.setState({ pomodoros: 0});
+    this.setState({ submitted: true});
   };
 
   onKeyEnter(event) {
     if (event.key === 'Enter') {
-      this.createItem(event);
+      this.createItem();
     }
   }
 }

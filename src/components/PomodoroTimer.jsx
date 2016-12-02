@@ -13,7 +13,6 @@ class PomodoroTimer extends Component {
       prevTime: 0,
     };
   }
-  //300000
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.active !== this.props.active) {
@@ -121,18 +120,16 @@ class PomodoroTimer extends Component {
   };
 
   onActiveToggle = () => {
-    if (!this.state.breaking) {
-      if (this.props.active) {
-        clearInterval(this.interval);
-        this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
-        this.setState({elapsed: 0})
-      }else {
-        this.setState({
-          prevTime: Date.now()
-        });
-      }
-      this.props.toggleActive(this.props.active);
+    if (this.props.active) {
+      clearInterval(this.interval);
+      this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
+      this.setState({elapsed: 0})
+    }else {
+      this.setState({
+        prevTime: Date.now()
+      });
     }
+    this.props.toggleActive(this.props.active);
   };
 }
 

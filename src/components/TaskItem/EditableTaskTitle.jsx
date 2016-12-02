@@ -3,6 +3,8 @@ import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import Edit from 'material-ui/svg-icons/editor/mode-edit'
 import { grey500 } from 'material-ui/styles/colors';
+import InputPomodoros from '../Pomodoros/InputPomodoros';
+import Pomodoros from '../Pomodoros/Pomodoros';
 
 
 const styles = {
@@ -29,7 +31,7 @@ const styles = {
       height: '100%',
       width: '100%',
       top: 0,
-      right: 190
+      right: 0
     },
     button: {
       width: 35,
@@ -84,28 +86,33 @@ class EditTaskTitle extends Component {
   render() {
     const {
       title,
+      editing,
+      pomodoros,
     } = this.props;
     return (
-      <TextField
-        style={Object.assign(
-          {},
-          styles.title,
-          styles.textField.root)}
-        textareaStyle={{border: '1px solid blue', margin: 0}}
-        underlineStyle={styles.textField.underLine}
-        underlineFocusStyle={
-          Object.assign(
-            {borderColor: grey500},
-            styles.textField.underLine)}
-        name="title"
-        defaultValue={title}
-        autoFocus
-        fullWidth
-        underlineShow
-        onBlur={event => this.editNote(event)}
-        onKeyUp={event => this.onKeyEnter(event)}/>
+        <TextField
+          style={Object.assign(
+            {},
+            styles.title,
+            styles.textField.root)}
+          textareaStyle={{border: '1px solid blue', margin: 0}}
+          underlineStyle={styles.textField.underLine}
+          underlineFocusStyle={
+            Object.assign(
+              {borderColor: grey500},
+              styles.textField.underLine)}
+          name="title"
+          defaultValue={title}
+          autoFocus
+          fullWidth
+          underlineShow
+          onKeyUp={event => this.onKeyEnter(event)}>
+        </TextField>
+
+
     );
   }
+  //onBlur={event => this.editNote(event)}
 
   editNote = (event) => {
     this.props.onEditComplete(event.target.value)

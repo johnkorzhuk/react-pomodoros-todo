@@ -5,8 +5,8 @@ import EditableTaskTitle from './EditableTaskTitle'
 import Pomodoros from '../Pomodoros/Pomodoros';
 import Timebar from '../Timebar';
 import PrimaryButton from './PrimaryButton';
-import CreatePomodoros from '../Pomodoros/CreatePomodoros';
 import ProgressPomodoro from '../Pomodoros/ProgressPomodoro';
+import InputPomodoros from '../Pomodoros/InputPomodoros';
 
 
 const styles = {
@@ -28,10 +28,7 @@ const styles = {
     input: {
       height: '40px', width: '40px'
     }
-  },
-  pomodoro: {
-    display: 'inline-block',
-  },
+  }
 };
 
 class TaskItem extends Component {
@@ -39,7 +36,7 @@ class TaskItem extends Component {
     super(props);
 
     this.state = {
-      showEditIcon: false
+      showEditIcon: false,
     }
   }
 
@@ -82,7 +79,6 @@ class TaskItem extends Component {
         <div
           style={styles.taskItem}
           className="task-item">
-
           <Checkbox
             style={styles.toggleComplete.root}
             iconStyle={styles.toggleComplete.icon}
@@ -95,6 +91,7 @@ class TaskItem extends Component {
           <EditableTaskTitle
             editing={editing}
             title={title}
+            pomodoros={pomodoros}
             showEditIcon={this.state.showEditIcon}
             onEdit={onEdit}
             onEditComplete={onEditComplete}
@@ -110,41 +107,25 @@ class TaskItem extends Component {
             onDelete={onDelete}/>
 
           <Pomodoros>
-            <CreatePomodoros amount={5}>
-              {index => {
-                return (
-                  <li
-                    key={index}
-                    style={styles.pomodoro}>
-                    <ProgressPomodoro
-                      isActive={
-                        index === completedPomodoros
-                        && active
-                        && !breaking
-                      }
-                      isComplete={
-                        index < completedPomodoros
-                      }
-                      isTarget={
-                        index < pomodoros
-                      }/>
-                  </li>
-                );
-              }}
-            </CreatePomodoros>
+            <ProgressPomodoro
+              active={active}
+              editing={editing}
+              breaking={breaking}
+              completedPomodoros={completedPomodoros}
+              pomodoros={pomodoros}/>
           </Pomodoros>
         </div>
 
         {active &&
-        <Timebar
-          breakTime={breakTime}
-          onePomodoroTime={onePomodoroTime}
-          breaking={breaking}
-          elapsed={
-            breaking
-              ? elapsed
-              : elapsed-(completedPomodoros*onePomodoroTime)
-          }/>
+          <Timebar
+            breakTime={breakTime}
+            onePomodoroTime={onePomodoroTime}
+            breaking={breaking}
+            elapsed={
+              breaking
+                ? elapsed
+                : elapsed-(completedPomodoros*onePomodoroTime)
+            }/>
         }
       </li>
     );
