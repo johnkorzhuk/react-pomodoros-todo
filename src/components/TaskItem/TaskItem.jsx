@@ -69,6 +69,7 @@ class TaskItem extends Component {
       completedPomodoros,
       breakTime,
       onePomodoroTime,
+      onBreakEnd,
       onDelete,
       onEdit,
       onEditComplete,
@@ -105,7 +106,8 @@ class TaskItem extends Component {
             complete={complete}
             breaking={breaking}
             onActiveToggle={toggleActive}
-            removeTask={onDelete}/>
+            onBreakEnd={onBreakEnd}
+            onDelete={onDelete}/>
 
           <Pomodoros>
             <CreatePomodoros amount={5}>

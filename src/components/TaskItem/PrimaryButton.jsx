@@ -29,45 +29,46 @@ const PrimaryButton = ({
   active,
   complete,
   breaking,
-  removeTask,
   onActiveToggle,
+  onBreakEnd,
+  onDelete,
 }) => {
   const rippleColor =
     active
-      ? breaking
-        ? green500
-        : grey500
+      ? grey500
       : red500;
 
-  const ToggleActive =
+  const Icon =
     active
       ? <Pause style={styles.primaryButton.icon}/>
       : <Play style={styles.primaryButton.icon}/>;
 
-  const Icon =
-    breaking
-      ? <Skip style={Object.assign({fill: green500}, styles.primaryButton.icon)}/>
-      : ToggleActive;
-
   return complete
     ? <IconButton
         style={styles.primaryButton.button}
-        onClick={removeTask}>
+        onClick={onDelete}>
         <Delete/>
       </IconButton>
-    : <FlatButton
-        style={styles.primaryButton.button}
-        icon={Icon}
-        rippleColor={rippleColor}
-        onClick={onActiveToggle}/>;
+    : breaking
+      ? <FlatButton
+          style={styles.primaryButton.button}
+          icon={<Skip style={Object.assign({fill: green500}, styles.primaryButton.icon)}/>}
+          rippleColor={grey500}
+          onClick={onBreakEnd}/>
+      : <FlatButton
+          style={styles.primaryButton.button}
+          icon={Icon}
+          rippleColor={rippleColor}
+          onClick={onActiveToggle}/>;
 };
 
 PrimaryButton.propTypes = {
-  active: PropTypes.bool.isRequired,
-  complete: PropTypes.bool.isRequired,
+  active: PropTypes.bool,
+  complete: PropTypes.bool,
   breaking: PropTypes.bool.isRequired,
   onActiveToggle: PropTypes.func,
-  removeTask: PropTypes.func,
+  onBreakEnd: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
 export default PrimaryButton;

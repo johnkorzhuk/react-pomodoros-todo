@@ -7,7 +7,7 @@ class PomodoroTimer extends Component {
 
     this.state = {
       breaking: false,
-      breakTime: 5000,
+      breakTime: 300000,
       onePomodoroTime: 1500000,
       elapsed: 0,
       prevTime: 0,
@@ -16,10 +16,6 @@ class PomodoroTimer extends Component {
   //300000
 
   componentWillReceiveProps(nextProps) {
-    // if (nextProps.complete !== this.props.complete) {
-    //   this.setState({breaking: false})
-    // }
-
     if (nextProps.active !== this.props.active) {
       if (this.props.editingComponent) {
         this.setState({
@@ -119,7 +115,6 @@ class PomodoroTimer extends Component {
       prevTime: Date.now()
     });
 
-    console.log(this.state.elapsed);
     this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
 
     this.interval = setInterval(this.onTick, 1000)
