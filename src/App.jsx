@@ -39,11 +39,12 @@ class App extends Component {
       },
       tasks: samples,
       value: 'added',
+      onEditActiveId : null
     };
 
-    this.onEditActiveId = null;
     this.editing = false;
   }
+
 
   render() {
     const {
@@ -197,12 +198,11 @@ class App extends Component {
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
-          task.editing = true;
+          return task.editing = true;
         }
         if (task.active) {
-          task.active = false;
-          this.onEditActiveId = task.id;
-
+          prevState.onEditActiveId = task.id;
+          return task.active = false;
         }
         return task;
       })
@@ -211,7 +211,7 @@ class App extends Component {
 
   onEditComplete = (id, newTitle) => {
     this.editing = false;
-
+    console.log(this.state.onEditActiveId);
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
@@ -225,9 +225,11 @@ class App extends Component {
     this.setState(prevState => {
       prevState.tasks
         .filter(task =>
-          task.id === this.onEditActiveId
+          task.id === this.state.onEditActiveId
         ).map(task =>
           task.active = true);
+
+      prevState.onEditActiveId = null;
     });
   };
 
@@ -252,7 +254,7 @@ class App extends Component {
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
-          task.elapsed = newTime;
+          return task.elapsed = newTime;
         }
         return task;
       })
@@ -266,9 +268,8 @@ class App extends Component {
           task.id === id
         ).map(task => {
           if (task.active) {
-            task.active = false;
+            return task.active = false;
           }
-
           return task.complete = !task.complete;
       })
     });

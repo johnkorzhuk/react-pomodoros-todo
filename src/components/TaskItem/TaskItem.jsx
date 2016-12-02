@@ -40,7 +40,7 @@ class TaskItem extends Component {
 
     this.state = {
       prevTime: 0,
-      elapsed: this.props.elapsed,
+      elapsed: 0,
       breaking: false,
       showEditIcon: false,
     };
@@ -77,6 +77,7 @@ class TaskItem extends Component {
       active,
       complete,
       editing,
+      elapsed,
       pomodoros,
       title,
       removeTask,
@@ -85,7 +86,9 @@ class TaskItem extends Component {
       toggleComplete,
     } = this.props;
 
-    const completedPomodoros = Math.floor(this.state.elapsed/this.onePomodoro);
+    const totalElapsed = this.state.elapsed + elapsed;
+    const completedPomodoros = Math.floor(totalElapsed/this.onePomodoro);
+
     return (
       <li className="task-item">
         <div
@@ -134,7 +137,7 @@ class TaskItem extends Component {
 
         {active && <Timebar
           completedPomodoros={completedPomodoros}
-          elapsed={this.state.elapsed}
+          elapsed={totalElapsed}
           onePomodoro={this.onePomodoro}/>}
       </li>
     );
@@ -153,7 +156,8 @@ class TaskItem extends Component {
   onActiveToggle = () => {
     if (this.props.active) {
       clearInterval(this.interval);
-      this.props.updateElapsed(this.state.elapsed);
+      this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
+      this.setState({elapsed: 0})
     }else {
       this.setState({
         prevTime: Date.now()
