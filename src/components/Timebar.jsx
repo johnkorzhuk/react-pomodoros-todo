@@ -1,27 +1,28 @@
 import React, { PropTypes } from 'react';
 import LinearProgress from 'material-ui/LinearProgress';
-import { red500 } from 'material-ui/styles/colors';
+import { red500, green500 } from 'material-ui/styles/colors';
 
 const Timebar = ({
-  completedPomodoros,
+  breaking,
   elapsed,
-  onePomodoro,
+  breakTime,
+  onePomodoroTime,
 }) => {
-  const remainingTime = elapsed-(completedPomodoros*onePomodoro);
-  // console.log(elapsed);
+  console.log(elapsed);
   return (
     <LinearProgress
-      color={red500}
+      color={breaking ? green500 : red500}
       mode='determinate'
-      max={onePomodoro}
-      value={remainingTime}/>
+      max={breaking ? breakTime : onePomodoroTime}
+      value={elapsed}/>
   );
 };
 
 Timebar.propTypes = {
-  completedPomodoros: PropTypes.number.isRequired,
+  breaking: PropTypes.bool.isRequired,
   elapsed: PropTypes.number.isRequired,
-  onePomodoro: PropTypes.number.isRequired,
+  breakTime: PropTypes.number.isRequired,
+  onePomodoroTime: PropTypes.number.isRequired,
 };
 
 export default Timebar;

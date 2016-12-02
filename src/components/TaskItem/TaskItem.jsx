@@ -44,10 +44,16 @@ class TaskItem extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.breaking && nextProps.elapsed >= this.props.breakTime) {
+      this.props.onBreakEnd();
+    }
+
+    if (!this.props.breaking && nextProps.completedPomodoros !== this.props.completedPomodoros) {
+      this.props.onBreakInit();
+    }
+
     if (nextProps.editing !== this.props.editing) {
-      this.setState(prevState =>
-        prevState.showEditIcon = false
-      );
+      this.setState({showEditIcon: false});
     }
   }
 
@@ -59,7 +65,10 @@ class TaskItem extends Component {
       elapsed,
       pomodoros,
       title,
+      breaking,
       completedPomodoros,
+      breakTime,
+      onePomodoroTime,
       onDelete,
       onEdit,
       onEditComplete,
@@ -67,6 +76,7 @@ class TaskItem extends Component {
       toggleComplete,
     } = this.props;
     return (
+
       <li className="task-item">
         <div
           style={styles.taskItem}
@@ -77,7 +87,7 @@ class TaskItem extends Component {
             iconStyle={styles.toggleComplete.icon}
             inputStyle={styles.toggleComplete.input}
             checked={complete}
-            onCheck={toggleComplete}/>
+            onCheck={() => toggleComplete(elapsed)}/>
 
           <EditableTaskTitle
             editing={editing}
@@ -102,9 +112,17 @@ class TaskItem extends Component {
                     key={index}
                     style={styles.pomodoro}>
                     <ProgressPomodoro
-                      isComplete={index < completedPomodoros}
-                      isActive={index === completedPomodoros && active}
-                      isTarget={index < pomodoros}/>
+                      isActive={
+                        index === completedPomodoros
+                        && active
+                        && !breaking
+                      }
+                      isComplete={
+                        index < completedPomodoros
+                      }
+                      isTarget={
+                        index < pomodoros
+                      }/>
                   </li>
                 );
               }}
@@ -112,9 +130,17 @@ class TaskItem extends Component {
           </Pomodoros>
         </div>
 
-        {active && <Timebar
-          completedPomodoros={completedPomodoros}
-          elapsed={elapsed}/>}
+        {active &&
+        <Timebar
+          breakTime={breakTime}
+          onePomodoroTime={onePomodoroTime}
+          breaking={breaking}
+          elapsed={
+            breaking
+              ? elapsed
+              : elapsed-(completedPomodoros*onePomodoroTime)
+          }/>
+        }
       </li>
     );
   }
@@ -137,7 +163,11 @@ TaskItem.propTypes = {
   elapsed: PropTypes.number,
   pomodoros: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
+  breakElapsed: PropTypes.number,
+  breaking: PropTypes.bool,
   completedPomodoros: PropTypes.number.isRequired,
+  breakTime: PropTypes.number.isRequired,
+  onePomodoroTime: PropTypes.number.isRequired,
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func,

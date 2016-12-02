@@ -6,17 +6,18 @@ class PomodoroTimer extends Component {
     super(props);
 
     this.state = {
-      prevTime: 0,
-      elapsed: 0,
       breaking: false,
+      breakTime: 5000,
+      onePomodoroTime: 1500000,
+      elapsed: 0,
+      prevTime: 0,
     };
-
-    this.onePomodoro = 1500000;
   }
+  //300000
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.active !== this.props.active) {
-      if (this.props.externalEditing) {
+      if (this.props.editingComponent) {
         this.setState({
           prevTime: Date.now()
         });
@@ -46,18 +47,37 @@ class PomodoroTimer extends Component {
       toggleComplete,
     } = this.props;
 
-    const totalElapsed = this.state.elapsed + elapsed;
-    const completedPomodoros = Math.floor(totalElapsed/this.onePomodoro);
+    const {
+      breaking,
+      onePomodoroTime,
+      breakTime,
+    } = this.state;
+
+    const totalElapsed =
+      this.state.breaking
+        ? elapsed
+        : this.state.elapsed + elapsed;
 
     return (
       <TaskItem
         active={active}
         complete={complete}
         editing={editing}
-        elapsed={totalElapsed}
+        elapsed={
+          breaking
+            ? this.state.elapsed
+            : totalElapsed
+        }
         pomodoros={pomodoros}
         title={title}
-        completedPomodoros={completedPomodoros}
+        breaking={breaking}
+        completedPomodoros={
+          Math.floor(totalElapsed/onePomodoroTime)
+        }
+        breakTime={breakTime}
+        onePomodoroTime={onePomodoroTime}
+        onBreakEnd={this.onBreakEnd}
+        onBreakInit={this.onBreakInit}
         onDelete={removeTask}
         onEdit={onEdit}
         onEditComplete={onEditComplete}
@@ -72,6 +92,31 @@ class PomodoroTimer extends Component {
       prevTime: now,
       elapsed: this.state.elapsed + (now - this.state.prevTime),
     });
+  };
+
+  onBreakEnd = () => {
+    clearInterval(this.interval);
+
+    this.setState({
+      breaking: false,
+      elapsed: 0,
+      prevTime: Date.now()
+    });
+
+    this.interval = setInterval(this.onTick, 1000)
+  };
+
+  onBreakInit = () => {
+    clearInterval(this.interval);
+    this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
+
+    this.setState({
+      breaking: true,
+      elapsed: 0,
+      prevTime: Date.now()
+    });
+
+    this.interval = setInterval(this.onTick, 1000)
   };
 
   onActiveToggle = () => {
@@ -95,7 +140,7 @@ PomodoroTimer.propTypes = {
   elapsed: PropTypes.number,
   pomodoros: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
-  externalEditing: PropTypes.bool.isRequired,
+  editingComponent: PropTypes.bool.isRequired,
   removeTask: PropTypes.func,
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func,

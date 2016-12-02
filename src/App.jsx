@@ -10,7 +10,6 @@ import './App.css';
 import samples from './samples';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
-import TaskItem from './components/TaskItem/TaskItem';
 import PomodoroTimer from './components/PomodoroTimer';
 
 
@@ -32,15 +31,15 @@ class App extends Component {
     super(props);
 
     this.state = {
-      slideIndex: 0,
       inverseSort: {
         added: false,
         pomodoros: false,
         elapsed: false,
       },
+      onEditActiveId : null,
+      slideIndex: 0,
       tasks: samples,
       value: 'added',
-      onEditActiveId : null
     };
 
     this.editing = false;
@@ -90,13 +89,13 @@ class App extends Component {
           </Tabs>
 
           <BindKeyboardSwipeableViews
-            style={{height: "100%"}}
             animateHeight={true}
             index={slideIndex}
             onChangeIndex={
               this.editing
                 ? () => null
-                : this.onSwip }>
+                : this.onSwip
+            }>
 
             <TaskList>
               {tasks.filter(({complete}) =>
@@ -110,13 +109,12 @@ class App extends Component {
                     elapsed={task.elapsed}
                     pomodoros={task.pomodoros}
                     title={task.title}
-                    externalEditing={this.editing}
+                    editingComponent={this.editing}
                     onEdit={this.onEdit.bind(null, task.id)}
                     onEditComplete={this.onEditComplete.bind(null, task.id)}
                     toggleActive={this.toggleActive.bind(null, task.id)}
                     updateElapsed={this.updateElapsed.bind(null, task.id)}
                     toggleComplete={this.toggleComplete.bind(null, task.id)}/>
-
               )}
             </TaskList>
 
@@ -132,7 +130,7 @@ class App extends Component {
                   elapsed={task.elapsed}
                   pomodoros={task.pomodoros}
                   title={task.title}
-                  externalEditing={this.editing}
+                  editingComponent={this.editing}
                   onEdit={this.onEdit.bind(null, task.id)}
                   onEditComplete={this.onEditComplete.bind(null, task.id)}
                   removeTask={this.removeTask.bind(null, task.id)}
@@ -200,11 +198,11 @@ class App extends Component {
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
-          return task.editing = true;
+          task.editing = true;
         }
         if (task.active) {
           prevState.onEditActiveId = task.id;
-          return task.active = false;
+          task.active = false;
         }
         return task;
       })
@@ -255,23 +253,25 @@ class App extends Component {
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
-          return task.elapsed = newTime;
+          task.elapsed = newTime;
         }
         return task;
       })
     );
   };
 
-  toggleComplete = (id) => {
+  toggleComplete = (id, elapsed) => {
     this.setState(prevState => {
       prevState.tasks
         .filter(task =>
           task.id === id
         ).map(task => {
-          if (task.active) {
-            return task.active = false;
+          if (!task.complete) {
+            task.active = false;
+            task.elapsed = elapsed;
           }
-          return task.complete = !task.complete;
+          task.complete = !task.complete;
+          return task;
       })
     });
     this.checkCompleted();
