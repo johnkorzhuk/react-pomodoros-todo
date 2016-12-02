@@ -16,6 +16,10 @@ class PomodoroTimer extends Component {
   //300000
 
   componentWillReceiveProps(nextProps) {
+    // if (nextProps.complete !== this.props.complete) {
+    //   this.setState({breaking: false})
+    // }
+
     if (nextProps.active !== this.props.active) {
       if (this.props.editingComponent) {
         this.setState({
@@ -108,7 +112,6 @@ class PomodoroTimer extends Component {
 
   onBreakInit = () => {
     clearInterval(this.interval);
-    this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
 
     this.setState({
       breaking: true,
@@ -116,20 +119,25 @@ class PomodoroTimer extends Component {
       prevTime: Date.now()
     });
 
+    console.log(this.state.elapsed);
+    this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
+
     this.interval = setInterval(this.onTick, 1000)
   };
 
   onActiveToggle = () => {
-    if (this.props.active) {
-      clearInterval(this.interval);
-      this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
-      this.setState({elapsed: 0})
-    }else {
-      this.setState({
-        prevTime: Date.now()
-      });
+    if (!this.state.breaking) {
+      if (this.props.active) {
+        clearInterval(this.interval);
+        this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
+        this.setState({elapsed: 0})
+      }else {
+        this.setState({
+          prevTime: Date.now()
+        });
+      }
+      this.props.toggleActive(this.props.active);
     }
-    this.props.toggleActive(this.props.active);
   };
 }
 

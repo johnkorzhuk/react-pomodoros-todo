@@ -8,7 +8,6 @@ const Timebar = ({
   breakTime,
   onePomodoroTime,
 }) => {
-  console.log(elapsed);
   return (
     <LinearProgress
       color={breaking ? green500 : red500}

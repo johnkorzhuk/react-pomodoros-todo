@@ -2,9 +2,10 @@ import React, { PropTypes } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Play from 'material-ui/svg-icons/av/play-arrow';
 import Pause from 'material-ui/svg-icons/av/pause';
+import Skip from 'material-ui/svg-icons/av/skip-next';
 import IconButton from 'material-ui/IconButton';
 import Delete from 'material-ui/svg-icons/action/delete';
-import { red500, grey500 } from 'material-ui/styles/colors';
+import { red500, grey500, green500 } from 'material-ui/styles/colors';
 
 
 const styles = {
@@ -27,16 +28,26 @@ const styles = {
 const PrimaryButton = ({
   active,
   complete,
+  breaking,
   removeTask,
   onActiveToggle,
 }) => {
-  let rippleColor = active
-    ? grey500
-    : red500;
+  const rippleColor =
+    active
+      ? breaking
+        ? green500
+        : grey500
+      : red500;
 
-  let Icon = active
-    ? <Pause style={styles.primaryButton.icon}/>
-    : <Play style={styles.primaryButton.icon}/>;
+  const ToggleActive =
+    active
+      ? <Pause style={styles.primaryButton.icon}/>
+      : <Play style={styles.primaryButton.icon}/>;
+
+  const Icon =
+    breaking
+      ? <Skip style={Object.assign({fill: green500}, styles.primaryButton.icon)}/>
+      : ToggleActive;
 
   return complete
     ? <IconButton
@@ -52,8 +63,9 @@ const PrimaryButton = ({
 };
 
 PrimaryButton.propTypes = {
-  active: PropTypes.bool,
-  complete: PropTypes.bool,
+  active: PropTypes.bool.isRequired,
+  complete: PropTypes.bool.isRequired,
+  breaking: PropTypes.bool.isRequired,
   onActiveToggle: PropTypes.func,
   removeTask: PropTypes.func,
 };

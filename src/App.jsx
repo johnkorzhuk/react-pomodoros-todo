@@ -189,7 +189,7 @@ class App extends Component {
       prevState.tasks = tasks
     );
 
-    this.checkCompleted();
+    this.checkCompletedTasks();
   };
 
   onEdit = (id) => {
@@ -268,13 +268,15 @@ class App extends Component {
         ).map(task => {
           if (!task.complete) {
             task.active = false;
-            task.elapsed = elapsed;
+            if (elapsed) {
+              task.elapsed = elapsed;
+            }
           }
           task.complete = !task.complete;
           return task;
       })
     });
-    this.checkCompleted();
+    this.checkCompletedTasks();
   };
 
   addTask = (task) => {
@@ -286,7 +288,7 @@ class App extends Component {
     this.onSwip(0);
   };
 
-  checkCompleted = () => {
+  checkCompletedTasks = () => {
     this.setState(prevState => {
       if (!prevState.tasks
         .filter(({complete}) =>

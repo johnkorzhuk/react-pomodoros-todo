@@ -87,7 +87,9 @@ class TaskItem extends Component {
             iconStyle={styles.toggleComplete.icon}
             inputStyle={styles.toggleComplete.input}
             checked={complete}
-            onCheck={() => toggleComplete(elapsed)}/>
+            onCheck={
+              () => toggleComplete(breaking ? null : elapsed)
+            }/>
 
           <EditableTaskTitle
             editing={editing}
@@ -101,6 +103,7 @@ class TaskItem extends Component {
           <PrimaryButton
             active={active}
             complete={complete}
+            breaking={breaking}
             onActiveToggle={toggleActive}
             removeTask={onDelete}/>
 
