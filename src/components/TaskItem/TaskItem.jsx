@@ -39,13 +39,8 @@ class TaskItem extends Component {
     super(props);
 
     this.state = {
-      prevTime: 0,
-      elapsed: 0,
-      breaking: false,
-      showEditIcon: false,
-    };
-
-    this.onePomodoro = 1500000;
+      showEditIcon: false
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -54,22 +49,6 @@ class TaskItem extends Component {
         prevState.showEditIcon = false
       );
     }
-
-    if (nextProps.active !== this.props.active) {
-      if (this.props.externalEditing) {
-        this.setState({
-          prevTime: Date.now()
-        });
-      }
-
-      nextProps.active
-        ? this.interval = setInterval(this.onTick, 1000)
-        : clearInterval(this.interval);
-    }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
   }
 
   render() {
@@ -80,15 +59,13 @@ class TaskItem extends Component {
       elapsed,
       pomodoros,
       title,
-      removeTask,
+      completedPomodoros,
+      onDelete,
       onEdit,
       onEditComplete,
+      toggleActive,
       toggleComplete,
     } = this.props;
-
-    const totalElapsed = this.state.elapsed + elapsed;
-    const completedPomodoros = Math.floor(totalElapsed/this.onePomodoro);
-
     return (
       <li className="task-item">
         <div
@@ -108,14 +85,14 @@ class TaskItem extends Component {
             showEditIcon={this.state.showEditIcon}
             onEdit={onEdit}
             onEditComplete={onEditComplete}
-            onTitleMouseEnter={this.onTitleMouseOver}
+            onTitleMouseOver={this.onTitleMouseOver}
             onTitleMouseLeave={this.onTitleMouseLeave}/>
 
           <PrimaryButton
             active={active}
             complete={complete}
-            onActiveToggle={this.onActiveToggle}
-            removeTask={removeTask}/>
+            onActiveToggle={toggleActive}
+            removeTask={onDelete}/>
 
           <Pomodoros>
             <CreatePomodoros amount={5}>
@@ -137,41 +114,19 @@ class TaskItem extends Component {
 
         {active && <Timebar
           completedPomodoros={completedPomodoros}
-          elapsed={totalElapsed}
-          onePomodoro={this.onePomodoro}/>}
+          elapsed={elapsed}/>}
       </li>
     );
   }
-
-  onTitleMouseOver = () => {
-    if (!this.state.showEditIcon) {
-      this.setState({showEditIcon: true});
-    }
-  };
 
   onTitleMouseLeave = () => {
     this.setState({showEditIcon: false})
   };
 
-  onActiveToggle = () => {
-    if (this.props.active) {
-      clearInterval(this.interval);
-      this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
-      this.setState({elapsed: 0})
-    }else {
-      this.setState({
-        prevTime: Date.now()
-      });
+  onTitleMouseOver = () => {
+    if (!this.state.showEditIcon) {
+      this.setState({showEditIcon: true});
     }
-    this.props.toggleActive(this.props.active);
-  };
-
-  onTick = () => {
-    const now = Date.now();
-    this.setState({
-      prevTime: now,
-      elapsed: this.state.elapsed + (now - this.state.prevTime),
-    });
   };
 }
 
@@ -182,8 +137,8 @@ TaskItem.propTypes = {
   elapsed: PropTypes.number,
   pomodoros: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
-  externalEditing: PropTypes.bool.isRequired,
-  removeTask: PropTypes.func,
+  completedPomodoros: PropTypes.number.isRequired,
+  onDelete: PropTypes.func,
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func,
   toggleActive: PropTypes.func,

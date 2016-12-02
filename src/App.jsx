@@ -11,6 +11,7 @@ import samples from './samples';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
 import TaskItem from './components/TaskItem/TaskItem';
+import PomodoroTimer from './components/PomodoroTimer';
 
 
 const BindKeyboardSwipeableViews = bindKeyboard(SwipeableViews);
@@ -101,7 +102,7 @@ class App extends Component {
               {tasks.filter(({complete}) =>
                 !complete
                 ).map(task =>
-                  <TaskItem
+                  <PomodoroTimer
                     key={task.id}
                     active={task.active}
                     complete={task.complete}
@@ -115,6 +116,7 @@ class App extends Component {
                     toggleActive={this.toggleActive.bind(null, task.id)}
                     updateElapsed={this.updateElapsed.bind(null, task.id)}
                     toggleComplete={this.toggleComplete.bind(null, task.id)}/>
+
               )}
             </TaskList>
 
@@ -122,7 +124,7 @@ class App extends Component {
               {tasks.filter(({complete}) =>
                 complete
               ).map(task =>
-                <TaskItem
+                <PomodoroTimer
                   key={task.id}
                   active={task.active}
                   complete={task.complete}
@@ -211,7 +213,6 @@ class App extends Component {
 
   onEditComplete = (id, newTitle) => {
     this.editing = false;
-    console.log(this.state.onEditActiveId);
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {

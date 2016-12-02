@@ -52,7 +52,7 @@ const EditableTaskTitle = ({
   showEditIcon,
   onEdit,
   onEditComplete,
-  onTitleMouseEnter,
+  onTitleMouseOver,
   onTitleMouseLeave,
 }) => {
   return editing
@@ -66,7 +66,7 @@ const EditableTaskTitle = ({
         {title}
         <div
           style={styles.edit.wrap}
-          onMouseOver={onTitleMouseEnter}
+          onMouseOver={onTitleMouseOver}
           onMouseLeave={onTitleMouseLeave}>
           {showEditIcon
             ? <IconButton
@@ -123,7 +123,7 @@ EditableTaskTitle.propTypes = {
   title: PropTypes.string.isRequired,
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func.isRequired,
-  onTitleMouseEnter: PropTypes.func.isRequired,
+  onTitleMouseOver: PropTypes.func.isRequired,
   onTitleMouseLeave: PropTypes.func.isRequired,
 };
 
