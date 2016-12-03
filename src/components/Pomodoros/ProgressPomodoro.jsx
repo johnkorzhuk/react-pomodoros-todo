@@ -21,10 +21,7 @@ const styles = {
       backgroundColor: grey500,
       borderRadius: '50%'
     }
-  },
-  pomodoro: {
-    display: 'inline-block',
-  },
+  }
 };
 
 const Progress = (props) => {
@@ -66,23 +63,18 @@ const ProgressPomodoro = ({
     <CreatePomodoros amount={5}>
       {index => {
         return (
-          <div
+          <Progress
             key={index}
-            style={styles.pomodoro}>
-            <Progress
-              isActive={
-                index === completedPomodoros &&
-                active &&
-                !breaking
-              }
-              isComplete={
-                index < completedPomodoros &&
-                !editing
-              }
-              isTarget={
-                index < pomodoros
-              }/>
-          </div>
+            isActive={
+              index === completedPomodoros &&
+              active &&
+              !breaking }
+            isComplete={
+              index < completedPomodoros &&
+              !editing }
+            isTarget={
+              index < pomodoros }
+          />
         );
       }}
     </CreatePomodoros>

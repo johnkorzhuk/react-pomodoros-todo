@@ -1,42 +1,24 @@
 import React, { Component, PropTypes } from 'react';
-import TextField from 'material-ui/TextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import { grey500, red500 } from 'material-ui/styles/colors';
+import { red500 } from 'material-ui/styles/colors';
 import uuid from 'uuid';
 
-import Pomodoros from './Pomodoros/Pomodoros';
-import InputPomodoros from './Pomodoros/InputPomodoros';
-
+import TaskInput from './TaskInput';
 
 const styles = {
   root: {
-    padding: '20px 160px 20px 65px',
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  textField: {
-    root: {
-      fontSize: '1.1em',
-      height: '100%',
-    },
-    hint: {
-      bottom: 0,
-    },
-    underLine: {
-      bottom: 0
-    }
+    position: 'relative'
   },
   button: {
     root: {
       position: 'absolute',
-      left: '10px',
+      left: 10,
+      top: 10
     },
     icon: {
-      height: '45px',
-      width: '45px',
+      height: '40px',
+      width: '40px',
     }
   },
 };
@@ -46,6 +28,7 @@ class AddTask extends Component {
     super(props);
 
     this.state = {
+      pomodoros: 0,
       submitted: false,
     }
   }
@@ -53,63 +36,65 @@ class AddTask extends Component {
   render() {
     return (
       <div style={styles.root}>
-        <TextField
-          ref={(input) => this.textField = input}
-          style={styles.textField.root}
-          hintStyle={styles.textField.hint}
-          underlineFocusStyle={
-            Object.assign(
-              {borderColor: grey500},
-              styles.textField.underLine)}
-          underlineStyle={styles.textField.underLine}
-          name="title"
-          placeholder="New Task"
-          fullWidth
-          underlineShow
-          onKeyUp={(event) => this.onKeyEnter(event)}/>
-
-        <Pomodoros>
-          <InputPomodoros
-            submitted={this.state.submitted}
-            submitPomodoros={this.createItem}
-            updatePomodoros={this.updatePomodoros}/>
-        </Pomodoros>
+        <TaskInput
+          pomodoros={this.state.pomodoros}
+          submitted={this.state.submitted}
+          textFieldName="Title"
+          textFieldPlaceHolder="New Task"
+          onKeyEnter={this.onKeyEnter.bind(this)}
+          updatePomodoros={this.updatePomodoros}
+          updateTitle={this.updateTitle} />
 
         <FloatingActionButton
           style={styles.button.root}
           backgroundColor={red500}
           iconStyle={styles.button.icon}
           onClick={() => this.createItem()}>
-          <ContentAdd style={{width: 24}}/>
+          <ContentAdd style={{width: 24}} />
         </FloatingActionButton>
       </div>
     );
   }
 
-  updatePomodoros = (pomodoros) => {
-    this.pomodoros = pomodoros;
+  updateTitle = (event) => {
     this.setState({submitted: false});
+    this.title = event.target.value;
   };
 
-  createItem = (pomodoros) => {
+  updatePomodoros = (pomodoros) => {
+    this.setState({submitted: false});
+
+    pomodoros === this.state.pomodoros
+      ? this.setState({pomodoros: 0})
+      : this.setState({pomodoros: pomodoros});
+  };
+
+  createItem = () => {
     const newTask = {
       added: Date.now(),
       elapsed: 0,
       id: uuid.v4(),
-      pomodoros: pomodoros || this.pomodoros,
-      title: this.textField.input.value,
+      pomodoros: this.state.pomodoros || this.pomodoros || 0,
+      title: this.title,
     };
 
     this.props.addTask(newTask);
 
-    this.textField.input.value = "";
     this.pomodoros = 0;
-    this.setState({ submitted: true});
+    this.title = "";
+    this.setState({
+      submitted: true,
+      pomodoros: 0,
+    });
   };
 
-  onKeyEnter(event) {
+  onKeyEnter(event, pomodoros) {
     if (event.key === 'Enter') {
-      this.createItem();
+      pomodoros
+        ? this.pomodoros = pomodoros
+        : this.title = event.target.value;
+
+      this.createItem(event);
     }
   }
 }
