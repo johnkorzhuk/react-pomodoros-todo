@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import Edit from 'material-ui/svg-icons/editor/mode-edit'
 import { grey500 } from 'material-ui/styles/colors';
+
 import InputPomodoros from '../Pomodoros/InputPomodoros';
 import Pomodoros from '../Pomodoros/Pomodoros';
 
@@ -60,6 +61,7 @@ const EditableTaskTitle = ({
   return editing
     ? <EditTaskTitle
         style={styles.title}
+        editing={editing}
         title={title}
         onEditComplete={onEditComplete}/>
     : <div
@@ -95,7 +97,6 @@ class EditTaskTitle extends Component {
             {},
             styles.title,
             styles.textField.root)}
-          textareaStyle={{border: '1px solid blue', margin: 0}}
           underlineStyle={styles.textField.underLine}
           underlineFocusStyle={
             Object.assign(

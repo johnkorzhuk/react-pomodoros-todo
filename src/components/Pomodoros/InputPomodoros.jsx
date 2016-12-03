@@ -32,28 +32,25 @@ class InputPomodoros extends Component {
     } = this.props;
 
     return (
-      <form
-        onChange={this.onCheck}
-        onKeyPress={this.onCheck}>
-        <CreatePomodoros amount={5}>
-          {index => {
-            return (
-              <div
-                key={index}
-                style={styles.pomodoro}>
-                <Checkbox
-                  iconStyle={styles.icon}
-                  checkedIcon={<Lens/>}
-                  data-pomodoro={index+1}
-                  uncheckedIcon={<RadioButtonUnchecked/>}
-                  checked={
-                    index+1 <= this.pomodoros && !submitted
-                  }/>
-              </div>
-            );
-          }}
-        </CreatePomodoros>
-      </form>
+      <CreatePomodoros amount={5}>
+        {index => {
+          return (
+            <div
+              key={index}
+              style={styles.pomodoro}>
+              <Checkbox
+                iconStyle={styles.icon}
+                checkedIcon={<Lens/>}
+                uncheckedIcon={<RadioButtonUnchecked/>}
+                checked={
+                  index+1 <= this.pomodoros && !submitted
+                }
+                onCheck={event => this.onCheck(event, index+1)}
+                onKeyPress={event => this.onCheck(event, index+1)}/>
+            </div>
+          );
+        }}
+      </CreatePomodoros>
     );
   }
 
@@ -67,9 +64,7 @@ class InputPomodoros extends Component {
     this.setState({ pomodoros: 0});
   };
 
-  onCheck = (event) => {
-    const index = parseInt(event.target.getAttribute('data-pomodoro'), 10);
-
+  onCheck = (event, index) => {
     index === this.pomodoros
       ? this.pomodoros = 0
       : this.pomodoros = index;

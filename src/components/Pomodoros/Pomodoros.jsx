@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const styles = {
+const defaultStyles = {
   pomodoros: {
     position: 'absolute',
     right: '20px',
@@ -10,10 +10,15 @@ const styles = {
 };
 
 const Pomodoros = ({
-  children
+  children,
+  styles={},
 }) => {
   return (
-    <ul style={styles.pomodoros}>
+    <ul style={
+      Object.assign({},
+        defaultStyles.pomodoros,
+        styles)
+    }>
       {children}
     </ul>
   );

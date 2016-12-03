@@ -51,7 +51,8 @@ const Progress = (props) => {
     isTarget &&
       <Lens style={{color: grey500}}/>
     ||
-    <RadioButtonUnchecked style={{color: grey500}}/>);
+    <RadioButtonUnchecked style={{color: grey500}}/>
+  );
 };
 
 const ProgressPomodoro = ({
