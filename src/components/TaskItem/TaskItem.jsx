@@ -39,8 +39,8 @@ class TaskItem extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.breaking) {
-      if (nextProps.elapsed >= this.props.breakTime) {
+    if (this.props.breaking) {
+      if (nextProps.breakElapsed >= this.props.breakTime) {
         this.props.onBreakEnd();
       }
     }
@@ -55,7 +55,7 @@ class TaskItem extends Component {
 
     /* Update state editingTask is toggled so checked in InputPomodoros
     can accurately represent the current elapsed time */
-    if (nextProps.editingTask !== this.props.editingTask) {
+    if (this.props.editingTask !== nextProps.editingTask) {
       this.setState({
         newElapsed: this.props.elapsed,
         showEditIcon: false,
@@ -160,15 +160,9 @@ class TaskItem extends Component {
     this.title = title;
   };
 
-  onTaskEditComplete = (title, elapsed, pomodoros) => {
-    if (pomodoros) {
-      pomodoros === this.props.completedPomodoros
-        ? elapsed = 0
-        : elapsed = pomodoros * this.props.onePomodoroTime
-    }
-
-    this.props.onEditComplete(title, elapsed);
-  };
+  // onTaskEditComplete = (title, elapsed) => {
+  //
+  // };
 
   onEditTitle = () => {
     this.setState({
@@ -193,8 +187,8 @@ class TaskItem extends Component {
   onKeyEnter = (event, pomodoros) => {
     if (event.key === 'Enter') {
       pomodoros
-        ? this.onTaskEditComplete(this.title, this.state.newElapsed, pomodoros)
-        : this.onTaskEditComplete(event.target.value, this.state.newElapsed);
+        ? this.props.onEditComplete(this.title, pomodoros * this.props.onePomodoroTime)
+        : this.props.onEditComplete(event.target.value, this.props.elapsed);
     }
   };
 }
@@ -208,6 +202,7 @@ TaskItem.propTypes = {
   pomodoroGoal: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   breaking: PropTypes.bool,
+  breakElapsed: PropTypes.number,
   breakTime: PropTypes.number.isRequired,
   onePomodoroTime: PropTypes.number.isRequired,
   onBreakEnd: PropTypes.func,

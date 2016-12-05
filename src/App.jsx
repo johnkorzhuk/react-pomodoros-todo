@@ -214,9 +214,9 @@ class App extends Component {
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
+          task.elapsed = newElapsed;
           task.editing = false;
           task.title = newTitle;
-          task.elapsed = newElapsed;
         }
         return task;
       })

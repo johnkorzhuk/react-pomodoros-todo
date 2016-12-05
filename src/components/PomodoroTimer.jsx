@@ -50,11 +50,13 @@ class PomodoroTimer extends Component {
 
     /* During a break and during editing, toggling another task to active
     ends the break */
-    if (this.state.breaking && this.props.editing) {
-      clearInterval(this.interval);
-      this.setState({
-        breaking: false
-      });
+    if (this.props.elapsed !== nextProps.elapsed) {
+      if (this.state.breaking && this.props.editing) {
+        clearInterval(this.interval);
+        this.setState({
+          breaking: false
+        });
+      }
     }
   }
 
@@ -101,13 +103,11 @@ class PomodoroTimer extends Component {
           complete={ complete }
           completedPomodoros={  completedPomodoros }
           editingTask={ editing }
-          elapsed={
-            breaking
-              ? this.state.elapsed
-              : totalElapsed }
+          elapsed={ totalElapsed }
           pomodoroGoal={ pomodoroGoal }
           title={ title }
           breaking={ breaking && !this.state.breakSkipped }
+          breakElapsed={ this.state.elapsed }
           breakTime={ breakTime }
           onePomodoroTime={ onePomodoroTime }
           onBreakEnd={ this.onBreakEnd }
