@@ -53,7 +53,7 @@ const TaskInput = ({
 }) => {
 
   return (
-      <div style={styles.root}>
+      <div style={ styles.root }>
 
         {!editingElapsed &&
         <TextField

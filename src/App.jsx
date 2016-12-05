@@ -212,18 +212,14 @@ class App extends Component {
   onEditComplete = (id, newTitle, newElapsed) => {
     this.editing = false;
     this.setState(prevState =>
-      prevState.tasks
-        .map(task => {
-          if (task.id === id) {
-            task.editing = false;
-            if (newTitle) {
-              task.title = newTitle;
-            }
-            if (newElapsed) {
-              task.elapsed = newElapsed;
-            }
-          }
-          return task; })
+      prevState.tasks.map(task => {
+        if (task.id === id) {
+          task.editing = false;
+          task.title = newTitle;
+          task.elapsed = newElapsed;
+        }
+        return task;
+      })
     );
 
     this.setState(prevState => {
@@ -239,11 +235,17 @@ class App extends Component {
 
   toggleActive = (id, active) => {
     if (!active) {
-      this.setState(prevState =>
-        prevState.tasks
-          .map(task =>
-            task.active = false) );
+      this.setState(prevState => {
+        prevState.onEditActiveId = null;
+        prevState.tasks.map(task => {
+            task.active = false;
+            task.editing = false;
+            return task;
+          })
+      });
     }
+
+    this.editing = false;
 
     this.setState(prevState => {
       prevState.tasks
@@ -262,12 +264,15 @@ class App extends Component {
         ).map(task => {
           if (!task.complete) {
             task.active = false;
-            if (elapsed) {
-              task.elapsed = elapsed;
-            }
+            prevState.onEditActiveId = null;
           }
+          if (elapsed) {
+            task.elapsed = elapsed;
+          }
+          task.editing = false;
           task.complete = !task.complete;
-          return task; })
+          return task;
+        })
     });
     this.checkCompletedTasks();
   };

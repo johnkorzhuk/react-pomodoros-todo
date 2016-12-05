@@ -13,17 +13,14 @@ const styles = {
 const CreatePomodoros = ({
   children,
   amount,
-  rootStyles,
+  rootStyles=styles.root,
 }) => {
   let items = [];
   for (let i = 0; i < amount; i++) {
     items.push(children(i));
   }
   return (
-    <div style={
-      rootStyles
-        ? rootStyles
-        : styles.root }>
+    <div style={ rootStyles }>
       {items}
     </div>
   );
