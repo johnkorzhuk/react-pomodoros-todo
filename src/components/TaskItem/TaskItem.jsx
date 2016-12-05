@@ -173,7 +173,7 @@ TaskItem.propTypes = {
   active: PropTypes.bool,
   complete: PropTypes.bool,
   completedPomodoros: PropTypes.number.isRequired,
-  editingTask: PropTypes.bool.isRequired,
+  editingTask: PropTypes.bool,
   elapsed: PropTypes.number,
   pomodoroGoal: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,

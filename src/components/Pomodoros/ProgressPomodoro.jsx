@@ -97,8 +97,8 @@ const ProgressPomodoro = ({
 ProgressPomodoro.propTypes = {
   active: PropTypes.bool,
   completedPomodoros: PropTypes.number.isRequired,
-  editing: PropTypes.bool.isRequired,
   pomodoroGoal: PropTypes.number.isRequired,
+  editing: PropTypes.bool,
   breaking: PropTypes.bool,
   rootStyles: PropTypes.object,
 };

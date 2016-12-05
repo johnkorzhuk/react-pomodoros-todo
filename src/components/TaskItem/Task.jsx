@@ -16,6 +16,7 @@ const styles = {
   title: {
     padding: '20px 0',
     width: '100%',
+    minHeight: 20
   },
   edit: {
     button: {
@@ -72,8 +73,8 @@ const Task = ({
 };
 
 Task.propTypes = {
-  active: PropTypes.bool.isRequired,
-  editingTask: PropTypes.bool.isRequired,
+  active: PropTypes.bool,
+  editingTask: PropTypes.bool,
   completedPomodoros: PropTypes.number,
   pomodoroGoal: PropTypes.number,
   title: PropTypes.string.isRequired,

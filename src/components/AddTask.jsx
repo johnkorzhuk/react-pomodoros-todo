@@ -88,8 +88,9 @@ class AddTask extends Component {
       id: uuid.v4(),
       pomodoroGoal:
         this.state.pomodoros ||
-        this.pomodoros,
-      title: this.title,
+        this.pomodoros ||
+        0,
+      title: this.title || "",
     };
 
     this.props.addTask(newTask);
