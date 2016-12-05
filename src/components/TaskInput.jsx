@@ -2,74 +2,119 @@ import React, { PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import { grey500 } from 'material-ui/styles/colors';
 
-import Pomodoros from './Pomodoros/Pomodoros';
+import ProgressPomodoro from './Pomodoros/ProgressPomodoro';
 import InputPomodoros from './Pomodoros/InputPomodoros';
 
 
 const styles = {
   root: {
-    padding: '20px 160px 20px 60px',
-    position: 'relative',
+    flex: 1,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
   },
   textField: {
     root: {
-      fontSize: '1.1em',
+      padding: '20px 0',
       height: '100%',
-      flex: 1,
       lineHeight: '1.1em',
+      fontSize: '1.1em',
     },
     underLine: {
-      bottom: -2
+      bottom: 18
     }
+  },
+  pomodoros: {
+    root: {
+      position: 'absolute',
+      right: 20,
+      flex: 1,
+      marginTop: 2,
+    },
+    progress: {
+      position: 'absolute',
+      flex: 1,
+    },
   },
 };
 
 const TaskInput = ({
+  completedPomodoros,
+  editingTask,
+  title,
+  editingTitle,
+  editingElapsed,
+  pomodoroGoal,
   pomodoros,
   submitted,
-  textFieldName,
   textFieldPlaceHolder,
   onKeyEnter,
   updatePomodoros,
   updateTitle,
 }) => {
+
   return (
       <div style={styles.root}>
+
+        {!editingElapsed &&
         <TextField
-          ref={textfield => {
+          ref={ textfield => {
             if (submitted && textfield) {
               textfield.input.value = "";
-            }
-          }}
-          style={styles.textField.root}
+            }}}
+          style={ styles.textField.root }
           underlineFocusStyle={
             Object.assign(
               {borderColor: grey500},
-              styles.textField.underLine)}
-          underlineStyle={styles.textField.underLine}
-          name={textFieldName}
-          placeholder={textFieldPlaceHolder}
+              styles.textField.underLine) }
+          underlineStyle={ styles.textField.underLine }
+          defaultValue={ title ? title : "" }
+          name="title"
+          placeholder={ textFieldPlaceHolder }
+          autoFocus
           fullWidth
           underlineShow
-          onKeyUp={event => onKeyEnter(event)}
-          onBlur={event => updateTitle(event)}/>
+          onBlur={ e =>
+            updateTitle(e.target.value) }
+          onKeyUp={ e =>
+            onKeyEnter(e) }/> }
 
-      <Pomodoros>
-        <InputPomodoros
-          pomodoros={pomodoros}
-          onKeyEnter={onKeyEnter}
-          updatePomodoros={updatePomodoros}/>
-      </Pomodoros></div>
+        {editingTask
+          ? !editingTitle
+            ? <div style={ styles.pomodoros.root }>
+                <ProgressPomodoro
+                  rootStyles={ styles.pomodoros.progress }
+                  completedPomodoros={ completedPomodoros }
+                  editing={ !editingTitle && editingTask }
+                  pomodoroGoal={ pomodoroGoal }/>
+                <InputPomodoros
+                  rootStyles={ {} }
+                  pomodoros={ pomodoros }
+                  onKeyEnter={ onKeyEnter }
+                  updatePomodoros={ updatePomodoros }/>
+              </div>
+
+            : <ProgressPomodoro
+                completedPomodoros={ completedPomodoros }
+                editing={ !editingTitle && editingTask }
+                pomodoroGoal={ pomodoroGoal }/>
+
+          : <InputPomodoros
+              pomodoros={pomodoros}
+              onKeyEnter={ onKeyEnter }
+              updatePomodoros={ updatePomodoros }/> }
+      </div>
   );
 };
 
 TaskInput.propTypes = {
-  pomodoros: PropTypes.number.isRequired,
+  completedPomodoros: PropTypes.number,
+  editingTask: PropTypes.bool,
+  title: PropTypes.string,
+  editingTitle: PropTypes.bool,
+  editingElapsed: PropTypes.bool,
+  pomodoroGoal: PropTypes.number,
+  pomodoros: PropTypes.number,
   submitted: PropTypes.bool,
-  textFieldName: PropTypes.string,
   textFieldPlaceHolder: PropTypes.string,
   onKeyEnter: PropTypes.func,
   updatePomodoros: PropTypes.func,

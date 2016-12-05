@@ -6,17 +6,17 @@ module.exports = [
     editing: false,
     elapsed: 4400000,
     id: 1,
-    pomodoros: 4,
+    pomodoroGoal: 4,
     title: "A complete task",
   },
   {
     active: false,
     added: 3,
     complete: false,
-    editing: true,
+    editing: false,
     elapsed: 6990000,
     id: 2,
-    pomodoros: 3,
+    pomodoroGoal: 3,
     title: "Finish Lorem ipsum task. A really long to-do task. No idea why you'd need to make a to do with so much text. This isn't the place to document the story of your life",
   },
   {
@@ -26,7 +26,7 @@ module.exports = [
     editing: false,
     elapsed: 1495000,
     id: 3,
-    pomodoros: 4,
+    pomodoroGoal: 4,
     title: "5 seconds short of one pomodoro. After one pomodoro (25 minutes) has elapsed, a break timer starts for 5 minutes. This should be skippable",
   },
   {
@@ -36,7 +36,7 @@ module.exports = [
     editing: false,
     elapsed: 2999000,
     id: 4,
-    pomodoros: 1,
+    pomodoroGoal: 1,
     title: "one second short of two pomodoros",
   },
   {
@@ -46,7 +46,7 @@ module.exports = [
     editing: false,
     elapsed: 0,
     id: 5,
-    pomodoros: 4,
+    pomodoroGoal: 4,
     title: "Do that one thingsdfsdf sdf sd fsdf sdfsdfsdfsd ffdsfsdfsdfsdf ....llll",
   },
   {
@@ -56,7 +56,7 @@ module.exports = [
     editing: false,
     elapsed: 0,
     id: 6,
-    pomodoros: 2,
+    pomodoroGoal: 2,
     title: "Fix that other thing",
   },
 ];

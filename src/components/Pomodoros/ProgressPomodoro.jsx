@@ -1,17 +1,22 @@
 /* eslint-disable */
 import React, { PropTypes } from 'react';
-import RadioButtonUnchecked from 'material-ui/svg-icons/toggle/radio-button-unchecked';
 import Lens from 'material-ui/svg-icons/image/lens';
 import CircularProgress from 'material-ui/CircularProgress';
+import RadioButtonUnchecked from 'material-ui/svg-icons/toggle/radio-button-unchecked';
 import { red500, grey500 } from 'material-ui/styles/colors';
+
 import CreatePomodoros from './CreatePomodoros';
 
+
 const styles = {
+  pomodoro: {
+    display: 'inline-block',
+  },
   active: {
     inner: {
       position: 'absolute',
       bottom: '2px',
-      boxShadow: `0 0 0 2px ${grey500} inset`,
+      boxShadow: `0 0 0 2px ${ grey500 } inset`,
       borderRadius: '50%'
     },
     root: {
@@ -27,28 +32,33 @@ const styles = {
 const Progress = (props) => {
   const {
     isActive,
-    isTarget,
     isComplete,
+    isTarget,
   } = props;
 
   return (
-    isComplete &&
-      <Lens style={{color: red500}}/>
-    ||
-    isActive &&
+    <div style={ styles.pomodoro }>
+      {isComplete &&
+      <Lens style={ {color: red500} }/>
+      ||
+      isActive &&
       <CircularProgress
-        color={red500}
-        size={20}
-        thickness={2}
-        innerStyle={isTarget ?
-          Object.assign({}, styles.active.target, styles.active.inner) :
-          styles.active.inner}
-        style={styles.active.root}/>
-    ||
-    isTarget &&
-      <Lens style={{color: grey500}}/>
-    ||
-    <RadioButtonUnchecked style={{color: grey500}}/>
+        style={ styles.active.root }
+        color={ red500 }
+        size={ 20 }
+        thickness={ 2 }
+        innerStyle={
+          isTarget
+            ? Object.assign({},
+                styles.active.target,
+                styles.active.inner)
+            : styles.active.inner }/>
+      ||
+      isTarget &&
+      <Lens style={ {color: grey500} }/>
+      ||
+      <RadioButtonUnchecked style={ {color: grey500} }/> }
+    </div>
   );
 };
 
@@ -56,15 +66,19 @@ const ProgressPomodoro = ({
   active,
   breaking,
   completedPomodoros,
-  pomodoros,
+  pomodoroGoal,
   editing,
+  rootStyles,
 }) => {
   return (
-    <CreatePomodoros amount={5}>
+    <CreatePomodoros
+      amount={ 5 }
+      rootStyles={ rootStyles }>
+
       {index => {
         return (
           <Progress
-            key={index}
+            key={ index }
             isActive={
               index === completedPomodoros &&
               active &&
@@ -73,8 +87,7 @@ const ProgressPomodoro = ({
               index < completedPomodoros &&
               !editing }
             isTarget={
-              index < pomodoros }
-          />
+              index < pomodoroGoal }/>
         );
       }}
     </CreatePomodoros>
@@ -83,9 +96,11 @@ const ProgressPomodoro = ({
 
 ProgressPomodoro.propTypes = {
   active: PropTypes.bool,
+  completedPomodoros: PropTypes.number.isRequired,
+  editing: PropTypes.bool.isRequired,
+  pomodoroGoal: PropTypes.number.isRequired,
   breaking: PropTypes.bool,
-  completedPomodoros: PropTypes.number,
-  pomodoros: PropTypes.number,
+  rootStyles: PropTypes.object,
 };
 
 export default ProgressPomodoro;

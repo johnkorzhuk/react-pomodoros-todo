@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
+
 import TaskItem from './TaskItem/TaskItem';
+import Timebar from './Timebar';
 
 class PomodoroTimer extends Component {
   constructor(props) {
@@ -38,12 +40,13 @@ class PomodoroTimer extends Component {
       complete,
       editing,
       elapsed,
-      pomodoros,
+      pomodoroGoal,
       title,
       onEdit,
       onEditComplete,
       removeTask,
       toggleComplete,
+      updateElapsed,
     } = this.props;
 
     const {
@@ -52,36 +55,48 @@ class PomodoroTimer extends Component {
       breakTime,
     } = this.state;
 
-    const totalElapsed =
-      this.state.breaking
-        ? elapsed
-        : this.state.elapsed + elapsed;
+    const totalElapsed = this.state.breaking
+      ? elapsed
+      : this.state.elapsed + elapsed;
+
+    const completedPomodoros = Math.floor(totalElapsed / onePomodoroTime);
 
     return (
-      <TaskItem
-        active={active}
-        complete={complete}
-        editing={editing}
-        elapsed={
-          breaking
-            ? this.state.elapsed
-            : totalElapsed
-        }
-        pomodoros={pomodoros}
-        title={title}
-        breaking={breaking}
-        completedPomodoros={
-          Math.floor(totalElapsed/onePomodoroTime)
-        }
-        breakTime={breakTime}
-        onePomodoroTime={onePomodoroTime}
-        onBreakEnd={this.onBreakEnd}
-        onBreakInit={this.onBreakInit}
-        onDelete={removeTask}
-        onEdit={onEdit}
-        onEditComplete={onEditComplete}
-        toggleActive={this.onActiveToggle}
-        toggleComplete={toggleComplete}/>
+      <li className="task-item">
+        <TaskItem
+          active={ active }
+          complete={ complete }
+          completedPomodoros={  completedPomodoros }
+          editingTask={ editing }
+          elapsed={
+            breaking
+              ? null
+              : totalElapsed }
+          pomodoroGoal={ pomodoroGoal }
+          title={ title }
+          breaking={ breaking }
+          breakTime={ breakTime }
+          onePomodoroTime={ onePomodoroTime }
+          onBreakEnd={ this.onBreakEnd }
+          onBreakInit={ this.onBreakInit }
+          onDelete={ removeTask }
+          onEdit={ onEdit }
+          onEditComplete={ onEditComplete }
+          toggleActive={ this.onActiveToggle }
+          toggleComplete={ toggleComplete }
+          updateElapsed={ updateElapsed }/>
+
+        {active &&
+        <Timebar
+          elapsed={
+            breaking
+              ? this.state.elapsed
+              : totalElapsed-(completedPomodoros*onePomodoroTime) }
+          breaking={ breaking }
+          breakTime={ breakTime }
+          onePomodoroTime={ onePomodoroTime }/> }
+      </li>
+
     );
   }
 
@@ -111,7 +126,7 @@ class PomodoroTimer extends Component {
     this.setState({
       breaking: true,
       elapsed: 0,
-      prevTime: Date.now()
+      prevTime: Date.now(),
     });
 
     this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
@@ -123,11 +138,9 @@ class PomodoroTimer extends Component {
     if (this.props.active) {
       clearInterval(this.interval);
       this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
-      this.setState({elapsed: 0})
+      this.setState({ elapsed: 0 })
     }else {
-      this.setState({
-        prevTime: Date.now()
-      });
+      this.setState({ prevTime: Date.now() });
     }
     this.props.toggleActive(this.props.active);
   };
@@ -138,12 +151,12 @@ PomodoroTimer.propTypes = {
   complete: PropTypes.bool,
   editing: PropTypes.bool,
   elapsed: PropTypes.number,
-  pomodoros: PropTypes.number.isRequired,
+  pomodoroGoal: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   editingComponent: PropTypes.bool.isRequired,
-  removeTask: PropTypes.func,
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func,
+  removeTask: PropTypes.func,
   toggleActive: PropTypes.func,
   toggleComplete: PropTypes.func.isRequired,
   updateElapsed: PropTypes.func,

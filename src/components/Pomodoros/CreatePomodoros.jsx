@@ -1,20 +1,38 @@
 import React, { PropTypes } from 'react';
 
 
+const styles = {
+  root: {
+    position: 'absolute',
+    right: 20,
+    flex: 1,
+    marginTop: 2,
+  }
+};
+
 const CreatePomodoros = ({
   children,
   amount,
+  rootStyles,
 }) => {
   let items = [];
   for (let i = 0; i < amount; i++) {
     items.push(children(i));
   }
-  return <li>{items}</li>
+  return (
+    <div style={
+      rootStyles
+        ? rootStyles
+        : styles.root }>
+      {items}
+    </div>
+  );
 };
 
 CreatePomodoros.propTypes = {
-  children: PropTypes.func.isRequired,
   amount: PropTypes.number.isRequired,
+  rootStyles: PropTypes.object,
+  children: PropTypes.func.isRequired,
 };
 
 export default CreatePomodoros;

@@ -1,32 +1,27 @@
 import React, { Component, PropTypes } from 'react';
-import Checkbox from 'material-ui/Checkbox';
+import IconButton from 'material-ui/IconButton';
+import CheckboxComplete from 'material-ui/svg-icons/toggle/check-box';
+import Checkbox from 'material-ui/svg-icons/toggle/check-box-outline-blank';
 import { grey600 } from 'material-ui/styles/colors';
-import EditableTaskTitle from './EditableTaskTitle'
-import Pomodoros from '../Pomodoros/Pomodoros';
-import Timebar from '../Timebar';
+
+import EditableTask from './EditableTask'
 import PrimaryButton from './PrimaryButton';
-import ProgressPomodoro from '../Pomodoros/ProgressPomodoro';
-import InputPomodoros from '../Pomodoros/InputPomodoros';
 
 
 const styles = {
-  taskItem: {
-    padding: '0 20px',
+  root: {
+    padding: '0 140px 0 60px',
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   toggleComplete: {
     root: {
-      width: '30px',
-    },
-    icon: {
-      marginRight: '20px',
-      fill: grey600,
-    },
-    input: {
-      height: '40px', width: '40px'
+      position: 'absolute',
+      left: 10,
+      padding: 8,
+      width: 40,
+      height: 40,
     }
   }
 };
@@ -36,6 +31,9 @@ class TaskItem extends Component {
     super(props);
 
     this.state = {
+      newElapsed: this.props.elapsed,
+      editingElapsed: false,
+      editingTitle: false,
       showEditIcon: false,
     }
   }
@@ -45,12 +43,18 @@ class TaskItem extends Component {
       this.props.onBreakEnd();
     }
 
-    if (!this.props.breaking && nextProps.completedPomodoros !== this.props.completedPomodoros) {
-      this.props.onBreakInit();
+    if (nextProps.completedPomodoros !== this.props.completedPomodoros) {
+      if (!this.props.breaking && !this.props.editingTask) {
+        this.props.onBreakInit();
+      }
     }
 
-    if (nextProps.editing !== this.props.editing) {
-      this.setState({showEditIcon: false});
+    if (nextProps.editingTask !== this.props.editingTask) {
+      this.setState({showEditIcon: false });
+
+      if (!nextProps.editingTask) {
+        this.setState({ editingTitle: false });
+      }
     }
   }
 
@@ -58,13 +62,12 @@ class TaskItem extends Component {
     const {
       active,
       complete,
-      editing,
+      editingTask,
       elapsed,
-      pomodoros,
+      pomodoroGoal,
       title,
       breaking,
       completedPomodoros,
-      breakTime,
       onePomodoroTime,
       onBreakEnd,
       onDelete,
@@ -73,71 +76,95 @@ class TaskItem extends Component {
       toggleActive,
       toggleComplete,
     } = this.props;
+
+    const {
+      showEditIcon,
+      editingTitle,
+      editingElapsed,
+      newElapsed,
+    } = this.state;
+
     return (
+      <div
+        style={ styles.root }
+        onMouseLeave={ this.onTaskMouseLeave }
+        onMouseOver={ this.onTaskMouseOver }>
 
-      <li className="task-item">
-        <div
-          style={styles.taskItem}
-          className="task-item">
-          <Checkbox
-            style={styles.toggleComplete.root}
-            iconStyle={styles.toggleComplete.icon}
-            inputStyle={styles.toggleComplete.input}
-            checked={complete}
-            onCheck={
-              () => toggleComplete(breaking ? null : elapsed)
-            }/>
+        <IconButton
+          style={ styles.toggleComplete.root }
+          onClick={ () =>
+            toggleComplete(elapsed) }>
 
-          <EditableTaskTitle
-            editing={editing}
-            title={title}
-            pomodoros={pomodoros}
-            showEditIcon={this.state.showEditIcon}
-            onEdit={onEdit}
-            onEditComplete={onEditComplete}
-            onTitleMouseOver={this.onTitleMouseOver}
-            onTitleMouseLeave={this.onTitleMouseLeave}/>
+          {complete
+            ? <CheckboxComplete color={ grey600 } />
+            : <Checkbox color={ grey600 }/> }
+        </IconButton>
 
-          <PrimaryButton
-            active={active}
-            complete={complete}
-            breaking={breaking}
-            onActiveToggle={toggleActive}
-            onBreakEnd={onBreakEnd}
-            onDelete={onDelete}/>
+        <EditableTask
+          active={ active }
+          completedPomodoros={ completedPomodoros }
+          editingTask={ editingTask }
+          pomodoroGoal={ pomodoroGoal }
+          title={ title }
+          breaking={ breaking }
+          editingElapsed={ editingElapsed }
+          editingTitle={ editingTitle }
+          pomodoros={ newElapsed/onePomodoroTime }
+          showEditIcon={ showEditIcon }
+          onEdit={ onEdit }
+          onEditComplete={ onEditComplete }
+          onEditTitle={ this.onEditTitle }
+          onKeyEnter={ this.onKeyEnter.bind(this) }
+          updateNewElapsedPom={ this.updateNewElapsedPom }
+          updateTitle={ this.updateTitle }/>
 
-          <Pomodoros>
-            <ProgressPomodoro
-              active={active}
-              editing={editing}
-              breaking={breaking}
-              completedPomodoros={completedPomodoros}
-              pomodoros={pomodoros}/>
-          </Pomodoros>
-        </div>
-
-        {active &&
-          <Timebar
-            breakTime={breakTime}
-            onePomodoroTime={onePomodoroTime}
-            breaking={breaking}
-            elapsed={
-              breaking
-                ? elapsed
-                : elapsed-(completedPomodoros*onePomodoroTime)
-            }/>
-        }
-      </li>
+        <PrimaryButton
+          active={ active }
+          complete={ complete }
+          breaking={ breaking }
+          onActiveToggle={ toggleActive }
+          onBreakEnd={ onBreakEnd }
+          onDelete={ onDelete }/>
+      </div>
     );
   }
 
-  onTitleMouseLeave = () => {
-    this.setState({showEditIcon: false})
+  updateTitle = (title) => {
+    this.title = title;
   };
 
-  onTitleMouseOver = () => {
+  onTaskEditComplete = (title, elapsed) => {
+  //  todo add checkmark button for toggling editingTask
+  };
+
+  onEditTitle = () => {
+    this.setState({ editingTitle: true });
+    this.props.onEdit();
+  };
+
+  updateNewElapsedPom = (pomodoroIndex) => {
+    pomodoroIndex === Math.floor(this.state.newElapsed / this.props.onePomodoroTime)
+      ? this.setState({ newElapsed: 0 })
+      : this.setState({
+          newElapsed: pomodoroIndex * this.props.onePomodoroTime
+        });
+  };
+
+  onKeyEnter = (event, pomodoros) => {
+    if (event.key === 'Enter') {
+      pomodoros
+        ? this.props.onEditComplete(this.title, pomodoros * this.props.onePomodoroTime)
+        : this.props.onEditComplete(event.target.value, this.state.newElapsed);
+    }
+  };
+
+  onTaskMouseLeave = () => {
+    this.setState({ showEditIcon: false })
+  };
+
+  onTaskMouseOver = () => {
     if (!this.state.showEditIcon) {
-      this.setState({showEditIcon: true});
+      this.setState({ showEditIcon: true });
     }
   };
 }
@@ -145,15 +172,16 @@ class TaskItem extends Component {
 TaskItem.propTypes = {
   active: PropTypes.bool,
   complete: PropTypes.bool,
-  editing: PropTypes.bool,
-  elapsed: PropTypes.number,
-  pomodoros: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
-  breakElapsed: PropTypes.number,
-  breaking: PropTypes.bool,
   completedPomodoros: PropTypes.number.isRequired,
+  editingTask: PropTypes.bool.isRequired,
+  elapsed: PropTypes.number,
+  pomodoroGoal: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  breaking: PropTypes.bool,
   breakTime: PropTypes.number.isRequired,
   onePomodoroTime: PropTypes.number.isRequired,
+  onBreakEnd: PropTypes.func,
+  onBreakInit: PropTypes.func,
   onDelete: PropTypes.func,
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func,

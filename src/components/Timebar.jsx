@@ -3,8 +3,8 @@ import LinearProgress from 'material-ui/LinearProgress';
 import { red500, green500 } from 'material-ui/styles/colors';
 
 const Timebar = ({
-  breaking,
   elapsed,
+  breaking,
   breakTime,
   onePomodoroTime,
 }) => {
@@ -18,8 +18,8 @@ const Timebar = ({
 };
 
 Timebar.propTypes = {
-  breaking: PropTypes.bool.isRequired,
   elapsed: PropTypes.number.isRequired,
+  breaking: PropTypes.bool.isRequired,
   breakTime: PropTypes.number.isRequired,
   onePomodoroTime: PropTypes.number.isRequired,
 };

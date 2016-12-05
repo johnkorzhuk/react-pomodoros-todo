@@ -11,6 +11,7 @@ import samples from './samples';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
 import PomodoroTimer from './components/PomodoroTimer';
+// import TaskItem from './components/TaskItem/TaskItem';
 
 
 const BindKeyboardSwipeableViews = bindKeyboard(SwipeableViews);
@@ -33,7 +34,7 @@ class App extends Component {
     this.state = {
       inverseSort: {
         added: false,
-        pomodoros: false,
+        pomodoroGoal: false,
         elapsed: false,
       },
       onEditActiveId : null,
@@ -56,22 +57,22 @@ class App extends Component {
     return (
       <div>
         <Paper
-          style={styles.root}
-          zDepth={3}>
+          style={ styles.root }
+          zDepth={ 3 }>
           <DropDownMenu
-            value={value}
-            onChange={this.onSort}>
+            value={ value }
+            onChange={ this.onSort }>
 
-            <MenuItem value={'added'} primaryText="Added" />
-            <MenuItem value={'pomodoros'} primaryText="Pomodoros" />
-            <MenuItem value={'elapsed'} primaryText="Time" />
+            <MenuItem value="added" primaryText="Added" />
+            <MenuItem value="pomodoroGoal" primaryText="Pomodoros" />
+            <MenuItem value="elapsed" primaryText="Time" />
           </DropDownMenu>
 
           <Tabs
-            tabItemContainerStyle={{backgroundColor: grey400}}
-            inkBarStyle={{backgroundColor: red500}}
-            onChange={this.onSwip}
-            value={slideIndex}>
+            tabItemContainerStyle={ {backgroundColor: grey400} }
+            inkBarStyle={ {backgroundColor: red500} }
+            onChange={ this.onSwip }
+            value={ slideIndex }>
 
             <Tab
               label="To do"
@@ -82,73 +83,71 @@ class App extends Component {
 
             <Tab
               label="Completed"
-              value={1}
-              style={slideIndex === 1
-                ? Object.assign({color: red500}, styles.tab)
-                : styles.tab}/>
+              value={ 1 }
+              style={
+                slideIndex === 1
+                  ? Object.assign({color: red500}, styles.tab)
+                  : styles.tab }/>
           </Tabs>
 
           <BindKeyboardSwipeableViews
-            animateHeight={true}
-            index={slideIndex}
+            index={ slideIndex }
+            animateHeight
             onChangeIndex={
               this.editing
                 ? () => null
-                : this.onSwip
-            }>
+                : this.onSwip }>
 
             <TaskList>
-              {tasks.filter(({complete}) =>
+              {tasks.filter(({ complete }) =>
                 !complete
-                ).map(task =>
-                  <PomodoroTimer
-                    key={task.id}
-                    active={task.active}
-                    complete={task.complete}
-                    editing={task.editing}
-                    elapsed={task.elapsed}
-                    pomodoros={task.pomodoros}
-                    title={task.title}
-                    editingComponent={this.editing}
-                    onEdit={this.onEdit.bind(null, task.id)}
-                    onEditComplete={this.onEditComplete.bind(null, task.id)}
-                    toggleActive={this.toggleActive.bind(null, task.id)}
-                    updateElapsed={this.updateElapsed.bind(null, task.id)}
-                    toggleComplete={this.toggleComplete.bind(null, task.id)}/>
-              )}
+              ).map(task =>
+                <PomodoroTimer
+                  key={ task.id }
+                  active={ task.active }
+                  complete={ task.complete }
+                  editing={ task.editing }
+                  elapsed={ task.elapsed }
+                  pomodoroGoal={ task.pomodoroGoal }
+                  title={ task.title }
+                  editingComponent={ this.editing }
+                  onEdit={this.onEdit.bind(null, task.id) }
+                  onEditComplete={this.onEditComplete.bind(null, task.id) }
+                  toggleActive={this.toggleActive.bind(null, task.id) }
+                  toggleComplete={this.toggleComplete.bind(null, task.id) }
+                  updateElapsed={this.updateElapsed.bind(null, task.id) }/> )}
             </TaskList>
 
+            {/*Todo does the completed list need PomodoroTimer? Will TaskItem suffice?*/}
             <TaskList>
-              {tasks.filter(({complete}) =>
+              {tasks.filter(({ complete }) =>
                 complete
               ).map(task =>
                 <PomodoroTimer
-                  key={task.id}
-                  active={task.active}
-                  complete={task.complete}
-                  editing={task.editing}
-                  elapsed={task.elapsed}
-                  pomodoros={task.pomodoros}
-                  title={task.title}
-                  editingComponent={this.editing}
-                  onEdit={this.onEdit.bind(null, task.id)}
-                  onEditComplete={this.onEditComplete.bind(null, task.id)}
-                  removeTask={this.removeTask.bind(null, task.id)}
-                  toggleComplete={this.toggleComplete.bind(null, task.id)}/>
-              )}
+                  key={ task.id }
+                  active={ task.active }
+                  complete={ task.complete }
+                  editing={ task.editing }
+                  elapsed={ task.elapsed }
+                  pomodoroGoal={ task.pomodoroGoal }
+                  title={ task.title }
+                  editingComponent={ this.editing }
+                  onEdit={ this.onEdit.bind(null, task.id) }
+                  onEditComplete={ this.onEditComplete.bind(null, task.id) }
+                  removeTask={ this.removeTask.bind(null, task.id) }
+                  toggleComplete={ this.toggleComplete.bind(null, task.id) }
+                  updateElapsed={ this.updateElapsed.bind(null, task.id) }/> )}
             </TaskList>
-
           </BindKeyboardSwipeableViews>
         </Paper>
 
         <Paper
-          style={Object.assign(
-            {},
-            styles.root,
-            {margin: '20px auto 0'},
-          )}
-          zDepth={3}>
-          <AddTask addTask={this.addTask}/>
+          style={
+            Object.assign({},
+              styles.root,
+              { margin: '20px auto 0' }) }
+          zDepth={ 3 }>
+          <AddTask addTask={ this.addTask }/>
         </Paper>
       </div>
     )
@@ -157,8 +156,8 @@ class App extends Component {
   onSort = (event, index, value) => {
     this.setState({ value });
 
-    const tasks = [...this.state.tasks];
-    const inverseSort = {...this.state.inverseSort};
+    const tasks = [ ...this.state.tasks ];
+    const inverseSort = { ...this.state.inverseSort };
 
     inverseSort[value]
       ? tasks.sort((a, b) =>
@@ -181,8 +180,9 @@ class App extends Component {
   };
 
   removeTask = (id) => {
-    const tasks = this.state.tasks.filter(task =>
-      task.id !== id
+    const tasks = this.state.tasks
+      .filter(task =>
+        task.id !== id
     );
 
     this.setState(prevState =>
@@ -196,29 +196,34 @@ class App extends Component {
     this.editing = true;
 
     this.setState(prevState =>
-      prevState.tasks.map(task => {
-        if (task.id === id) {
-          task.editing = true;
-        }
-        if (task.active) {
-          prevState.onEditActiveId = task.id;
-          task.active = false;
-        }
-        return task;
-      })
+      prevState.tasks
+        .map(task => {
+          if (task.id === id) {
+            task.editing = true;
+          }
+          if (task.active) {
+            prevState.onEditActiveId = task.id;
+            task.active = false;
+          }
+          return task; })
     );
   };
 
-  onEditComplete = (id, newTitle) => {
+  onEditComplete = (id, newTitle, newElapsed) => {
     this.editing = false;
     this.setState(prevState =>
-      prevState.tasks.map(task => {
-        if (task.id === id) {
-          task.editing = false;
-          task.title = newTitle;
-        }
-        return task;
-      })
+      prevState.tasks
+        .map(task => {
+          if (task.id === id) {
+            task.editing = false;
+            if (newTitle) {
+              task.title = newTitle;
+            }
+            if (newElapsed) {
+              task.elapsed = newElapsed;
+            }
+          }
+          return task; })
     );
 
     this.setState(prevState => {
@@ -235,9 +240,9 @@ class App extends Component {
   toggleActive = (id, active) => {
     if (!active) {
       this.setState(prevState =>
-        prevState.tasks.map(task =>
-          task.active = false)
-      );
+        prevState.tasks
+          .map(task =>
+            task.active = false) );
     }
 
     this.setState(prevState => {
@@ -247,17 +252,6 @@ class App extends Component {
         ).map(task =>
           task.active = !task.active);
     });
-  };
-
-  updateElapsed = (id, newTime) => {
-    this.setState(prevState =>
-      prevState.tasks.map(task => {
-        if (task.id === id) {
-          task.elapsed = newTime;
-        }
-        return task;
-      })
-    );
   };
 
   toggleComplete = (id, elapsed) => {
@@ -273,14 +267,13 @@ class App extends Component {
             }
           }
           task.complete = !task.complete;
-          return task;
-      })
+          return task; })
     });
     this.checkCompletedTasks();
   };
 
   addTask = (task) => {
-    const tasks = [...this.state.tasks, task];
+    const tasks = [ ...this.state.tasks, task ];
 
     this.setState(prevState =>
       prevState.tasks = tasks);
@@ -300,7 +293,17 @@ class App extends Component {
       }
     });
   };
-}
 
+  updateElapsed = (id, newTime) => {
+    this.setState(prevState =>
+      prevState.tasks
+        .map(task => {
+          if (task.id === id) {
+            task.elapsed = newTime;
+          }
+          return task; })
+    );
+  };
+}
 
 export default App;

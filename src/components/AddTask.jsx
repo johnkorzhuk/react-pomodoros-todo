@@ -6,20 +6,22 @@ import uuid from 'uuid';
 
 import TaskInput from './TaskInput';
 
+
 const styles = {
   root: {
-    position: 'relative'
+    padding: '0 140px 0 60px',
+    position: 'relative',
   },
   button: {
     root: {
       position: 'absolute',
       left: 10,
-      top: 10
+      top: 10,
     },
     icon: {
-      height: '40px',
-      width: '40px',
-    }
+      height: 40,
+      width: 40,
+    },
   },
 };
 
@@ -35,38 +37,48 @@ class AddTask extends Component {
 
   render() {
     return (
-      <div style={styles.root}>
+      <div style={ styles.root }>
         <TaskInput
-          pomodoros={this.state.pomodoros}
-          submitted={this.state.submitted}
-          textFieldName="Title"
+          pomodoros={ this.state.pomodoros }
+          submitted={ this.state.submitted }
           textFieldPlaceHolder="New Task"
-          onKeyEnter={this.onKeyEnter.bind(this)}
-          updatePomodoros={this.updatePomodoros}
-          updateTitle={this.updateTitle} />
+          onKeyEnter={ this.onKeyEnter.bind(this) }
+          updatePomodoros={ this.updatePomodoros }
+          updateTitle={ this.updateTitle }/>
 
         <FloatingActionButton
-          style={styles.button.root}
-          backgroundColor={red500}
-          iconStyle={styles.button.icon}
-          onClick={() => this.createItem()}>
-          <ContentAdd style={{width: 24}} />
+          style={ styles.button.root }
+          backgroundColor={ red500 }
+          iconStyle={ styles.button.icon }
+          onClick={ () =>
+            this.createItem() }>
+          <ContentAdd style={ {width: 24} }/>
         </FloatingActionButton>
       </div>
     );
   }
 
-  updateTitle = (event) => {
-    this.setState({submitted: false});
-    this.title = event.target.value;
-  };
+  onKeyEnter(event, pomodoros) {
+    if (event.key === 'Enter') {
+      pomodoros
+        ? this.pomodoros = pomodoros
+        : this.title = event.target.value;
+
+      this.createItem(event);
+    }
+  }
 
   updatePomodoros = (pomodoros) => {
-    this.setState({submitted: false});
+    this.setState({ submitted: false });
 
     pomodoros === this.state.pomodoros
-      ? this.setState({pomodoros: 0})
-      : this.setState({pomodoros: pomodoros});
+      ? this.setState({ pomodoros: 0 })
+      : this.setState({ pomodoros });
+  };
+
+  updateTitle = (title) => {
+    this.setState({ submitted: false });
+    this.title = title;
   };
 
   createItem = () => {
@@ -74,7 +86,9 @@ class AddTask extends Component {
       added: Date.now(),
       elapsed: 0,
       id: uuid.v4(),
-      pomodoros: this.state.pomodoros || this.pomodoros || 0,
+      pomodoroGoal:
+        this.state.pomodoros ||
+        this.pomodoros,
       title: this.title,
     };
 
@@ -87,16 +101,6 @@ class AddTask extends Component {
       pomodoros: 0,
     });
   };
-
-  onKeyEnter(event, pomodoros) {
-    if (event.key === 'Enter') {
-      pomodoros
-        ? this.pomodoros = pomodoros
-        : this.title = event.target.value;
-
-      this.createItem(event);
-    }
-  }
 }
 
 AddTask.propTypes = {
