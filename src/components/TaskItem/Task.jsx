@@ -48,10 +48,11 @@ const Task = ({
         title={ title }
         onDoubleClick={ onEditTitle }/>
 
-      {/*Todo add hint icon*/}
       {showEditIcon &&
       <IconButton
         style={ styles.edit.button }
+        tooltipStyles={ { top: 0, left: 25 } }
+        tooltip="edit"
         iconStyle={ styles.edit.icon }
         onClick={ onEdit }>
         <Edit />

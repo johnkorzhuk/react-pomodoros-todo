@@ -23,7 +23,7 @@ const styles = {
   },
   tab: {
     fontWeight: 'bolder',
-    letterSpacing: '.5px'
+    letterSpacing: '.5px',
   }
 };
 
