@@ -206,6 +206,7 @@ class App extends Component {
   };
 
   onEditComplete = (id, newTitle, newElapsed) => {
+    console.log(newTitle, newElapsed);
     this.editing = false;
     this.setState(prevState =>
       prevState.tasks.map(task => {

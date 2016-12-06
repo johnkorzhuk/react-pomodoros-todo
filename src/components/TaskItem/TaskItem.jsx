@@ -194,7 +194,7 @@ class TaskItem extends Component {
     if (event.key === 'Enter') {
       pomodoroIndex
         ? this.onTaskEditComplete(this.title, null, pomodoroIndex)
-        : this.onTaskEditComplete(event.target.value, this.props.elapsed);
+        : this.onTaskEditComplete(event.target.value, this.state.newElapsed);
     }
   };
 }
