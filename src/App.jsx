@@ -37,7 +37,6 @@ class App extends Component {
         pomodoroGoal: false,
         elapsed: false,
       },
-      onEditActiveId : null,
       slideIndex: 0,
       tasks: samples,
       value: 'added',
@@ -110,7 +109,6 @@ class App extends Component {
                   elapsed={ task.elapsed }
                   pomodoroGoal={ task.pomodoroGoal }
                   title={ task.title }
-                  editingComponent={ this.editing }
                   onEdit={this.onEdit.bind(null, task.id) }
                   onEditComplete={this.onEditComplete.bind(null, task.id) }
                   toggleActive={this.toggleActive.bind(null, task.id) }
@@ -131,7 +129,6 @@ class App extends Component {
                   elapsed={ task.elapsed }
                   pomodoroGoal={ task.pomodoroGoal }
                   title={ task.title }
-                  editingComponent={ this.editing }
                   onEdit={ this.onEdit.bind(null, task.id) }
                   onEditComplete={ this.onEditComplete.bind(null, task.id) }
                   removeTask={ this.removeTask.bind(null, task.id) }
@@ -196,16 +193,12 @@ class App extends Component {
     this.editing = true;
 
     this.setState(prevState =>
-      prevState.tasks
-        .map(task => {
-          if (task.id === id) {
-            task.editing = true;
-          }
-          if (task.active) {
-            prevState.onEditActiveId = task.id;
-            task.active = false;
-          }
-          return task; })
+      prevState.tasks.map(task => {
+        if (task.id === id) {
+          task.editing = true;
+        }
+        return task;
+      })
     );
   };
 
@@ -214,6 +207,7 @@ class App extends Component {
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
+          console.log(newElapsed);
           task.elapsed = newElapsed;
           task.editing = false;
           task.title = newTitle;
@@ -221,38 +215,28 @@ class App extends Component {
         return task;
       })
     );
-
-    this.setState(prevState => {
-      prevState.tasks
-        .filter(task =>
-          task.id === this.state.onEditActiveId
-        ).map(task =>
-          task.active = true);
-
-      prevState.onEditActiveId = null;
-    });
   };
 
   toggleActive = (id, active) => {
+    this.editing = false;
+
     if (!active) {
-      this.setState(prevState => {
-        prevState.onEditActiveId = null;
+      this.setState(prevState =>
         prevState.tasks.map(task => {
             task.active = false;
             task.editing = false;
             return task;
           })
-      });
+      );
     }
-
-    this.editing = false;
 
     this.setState(prevState => {
       prevState.tasks
         .filter(task =>
           task.id === id
         ).map(task =>
-          task.active = !task.active);
+          task.active = !task.active
+      );
     });
   };
 
@@ -264,10 +248,10 @@ class App extends Component {
         ).map(task => {
           if (!task.complete) {
             task.active = false;
-            prevState.onEditActiveId = null;
-          }
-          if (elapsed) {
-            task.elapsed = elapsed;
+            if (elapsed) {
+              console.log(elapsed);
+              task.elapsed = elapsed;
+            }
           }
           task.editing = false;
           task.complete = !task.complete;
@@ -281,7 +265,8 @@ class App extends Component {
     const tasks = [ ...this.state.tasks, task ];
 
     this.setState(prevState =>
-      prevState.tasks = tasks);
+      prevState.tasks = tasks
+    );
 
     this.onSwip(0);
   };
@@ -289,10 +274,8 @@ class App extends Component {
   checkCompletedTasks = () => {
     this.setState(prevState => {
       if (!prevState.tasks
-        .filter(({complete}) =>
-          complete
-        ).some(({complete}) =>
-          complete)) {
+          .some(({ complete }) =>
+            complete)) {
 
         prevState.slideIndex = 0;
       }
@@ -306,7 +289,8 @@ class App extends Component {
           if (task.id === id) {
             task.elapsed = newTime;
           }
-          return task; })
+          return task;
+        })
     );
   };
 }

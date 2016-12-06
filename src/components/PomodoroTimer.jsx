@@ -10,6 +10,8 @@ class PomodoroTimer extends Component {
     this.state = {
       breaking: false,
       breakSkipped: false,
+      // breakTime: 5000,
+      // onePomodoroTime: 10000,
       breakTime: 300000,
       onePomodoroTime: 1500000,
       elapsed: 0,
@@ -18,19 +20,28 @@ class PomodoroTimer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    /* Any time active is toggled, update previous time */
     if (nextProps.active !== this.props.active) {
-      if (this.props.editingComponent) {
+      /* If elapsed has been updated, reset this.state.elapsed
+      and prevTime */
+      if (this.props.elapsed !== nextProps.elapsed) {
         this.setState({
+          elapsed: 0,
           prevTime: Date.now()
         });
+        /* During a break and during editing, toggling another task to active
+         ends the break */
+        if (this.state.breaking && this.props.editing) {
+          clearInterval(this.interval);
+          this.setState({
+            breaking: false
+          });
+        }
       }
 
       /* Toggling active on another task during a break ends the
       break. */
       if (this.props.active && !nextProps.active) {
         if (this.state.breaking && !nextProps.editing) {
-          console.log('yo');
           clearInterval(this.interval);
           this.setState({
             breaking: false
@@ -45,17 +56,6 @@ class PomodoroTimer extends Component {
         this.interval = setInterval(this.onTick, 1000);
       }else if(!nextProps.editing){
         clearInterval(this.interval);
-      }
-    }
-
-    /* During a break and during editing, toggling another task to active
-    ends the break */
-    if (this.props.elapsed !== nextProps.elapsed) {
-      if (this.state.breaking && this.props.editing) {
-        clearInterval(this.interval);
-        this.setState({
-          breaking: false
-        });
       }
     }
   }
@@ -96,12 +96,17 @@ class PomodoroTimer extends Component {
       renderTimeBar = true;
     }
 
+    if (active && !this.state.breaking) {
+
+      console.log(elapsed, totalElapsed);
+    }
+
     return (
       <li className="task-item">
         <TaskItem
           active={ active }
           complete={ complete }
-          completedPomodoros={  completedPomodoros }
+          completedPomodoros={ completedPomodoros }
           editingTask={ editing }
           elapsed={ totalElapsed }
           pomodoroGoal={ pomodoroGoal }
@@ -116,8 +121,7 @@ class PomodoroTimer extends Component {
           onEdit={ onEdit }
           onEditComplete={ onEditComplete }
           toggleActive={ this.onActiveToggle }
-          toggleComplete={ toggleComplete }
-          updateElapsed={ updateElapsed }/>
+          toggleComplete={ toggleComplete }/>
 
         {renderTimeBar &&
         <Timebar
@@ -199,7 +203,6 @@ PomodoroTimer.propTypes = {
   elapsed: PropTypes.number,
   pomodoroGoal: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
-  editingComponent: PropTypes.bool.isRequired,
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func,
   removeTask: PropTypes.func,

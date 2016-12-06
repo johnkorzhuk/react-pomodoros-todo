@@ -148,7 +148,7 @@ class TaskItem extends Component {
   };
 
   toggleComplete = () => {
-    let elapsed = null;
+    let elapsed = this.props.elapsed;
     if (this.props.editingTask || this.state.editingElapsed) {
       elapsed = this.state.newElapsed;
     }
@@ -160,9 +160,15 @@ class TaskItem extends Component {
     this.title = title;
   };
 
-  // onTaskEditComplete = (title, elapsed) => {
-  //
-  // };
+  onTaskEditComplete = (newTitle, newElapsed, pomodoroIndex) => {
+    if (pomodoroIndex) {
+      this.props.completedPomodoros === pomodoroIndex
+        ? newElapsed = 0
+        : newElapsed = this.props.onePomodoroTime * pomodoroIndex
+    }
+
+    this.props.onEditComplete(newTitle, newElapsed);
+  };
 
   onEditTitle = () => {
     this.setState({
@@ -184,11 +190,11 @@ class TaskItem extends Component {
     }
   };
 
-  onKeyEnter = (event, pomodoros) => {
+  onKeyEnter = (event, pomodoroIndex) => {
     if (event.key === 'Enter') {
-      pomodoros
-        ? this.props.onEditComplete(this.title, pomodoros * this.props.onePomodoroTime)
-        : this.props.onEditComplete(event.target.value, this.props.elapsed);
+      pomodoroIndex
+        ? this.onTaskEditComplete(this.title, null, pomodoroIndex)
+        : this.onTaskEditComplete(event.target.value, this.props.elapsed);
     }
   };
 }
@@ -212,7 +218,6 @@ TaskItem.propTypes = {
   onEditComplete: PropTypes.func,
   toggleActive: PropTypes.func,
   toggleComplete: PropTypes.func.isRequired,
-  updateElapsed: PropTypes.func,
 };
 
 export default TaskItem;
