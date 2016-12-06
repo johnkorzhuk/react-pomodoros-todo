@@ -45,7 +45,6 @@ class App extends Component {
     this.editing = false;
   }
 
-
   render() {
     const {
       slideIndex,
@@ -211,7 +210,6 @@ class App extends Component {
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
-          console.log(newElapsed);
           task.elapsed = newElapsed;
           task.editing = false;
           task.title = newTitle;
@@ -253,7 +251,6 @@ class App extends Component {
           if (!task.complete) {
             task.active = false;
             if (elapsed) {
-              console.log(elapsed);
               task.elapsed = elapsed;
             }
           }

@@ -46,8 +46,7 @@ const PrimaryButton = ({
         : breaking
           ? <IconButton
               style={ styles.button.root }
-              onClick={ () =>
-                onBreakEnd(true) }>
+              onClick={ onBreakEnd }>
               <Skip color={ green500 }/>
             </IconButton>
 

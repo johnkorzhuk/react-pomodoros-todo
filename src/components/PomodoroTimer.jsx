@@ -9,50 +9,37 @@ class PomodoroTimer extends Component {
 
     this.state = {
       breaking: false,
-      breakSkipped: false,
       elapsed: 0,
       prevTime: 0,
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.active !== this.props.active) {
-      /* If elapsed has been updated, reset this.state.elapsed
-      and prevTime */
-      if (this.props.elapsed !== nextProps.elapsed) {
-        this.setState({
-          elapsed: 0,
-          prevTime: Date.now()
-        });
-        /* During a break and during editing, toggling another task to active
-         ends the break */
-        if (this.state.breaking && this.props.editing) {
-          clearInterval(this.interval);
-          this.setState({
-            breaking: false
-          });
-        }
+    /* If elapsed has been updated, reset state.elapsed */
+    if (this.props.elapsed !== nextProps.elapsed) {
+      if (this.state.breaking && !nextProps.editing) {
+        this.onBreakEnd();
       }
+      this.setState({
+        elapsed: 0,
+      });
+    }
 
+    if (nextProps.active !== this.props.active) {
       /* Toggling active on another task during a break ends the
       break. */
       if (this.props.active && !nextProps.active) {
         if (this.state.breaking && !nextProps.editing) {
-          clearInterval(this.interval);
-          this.setState({
-            breaking: false
-          });
+          this.onBreakEnd();
         }
       }
 
-      /* Start the interval if the task is set to active. Clear it
-      if we're not editing and active has been set to false,
-      otherwise editing will clear the interval, even if breaking */
       if (nextProps.active) {
         this.interval = setInterval(this.onTick, 1000);
-      }else if(!nextProps.editing){
+      }else {
         clearInterval(this.interval);
       }
+
     }
   }
 
@@ -86,14 +73,9 @@ class PomodoroTimer extends Component {
 
     const completedPomodoros = Math.floor(totalElapsed / onePomodoroTime);
 
-    let renderTimeBar = false;
+    let renderTimeBar;
     if (active || this.state.breaking) {
       renderTimeBar = true;
-    }
-
-    if (active && !this.state.breaking) {
-
-      console.log(elapsed, totalElapsed);
     }
 
     return (
@@ -106,7 +88,7 @@ class PomodoroTimer extends Component {
           elapsed={ totalElapsed }
           pomodoroGoal={ pomodoroGoal }
           title={ title }
-          breaking={ breaking && !this.state.breakSkipped }
+          breaking={ breaking }
           breakElapsed={ this.state.elapsed }
           breakTime={ breakTime }
           onePomodoroTime={ onePomodoroTime }
@@ -140,19 +122,12 @@ class PomodoroTimer extends Component {
     });
   };
 
-  onBreakEnd = (skip) => {
-    if (skip) {
-      this.setState({
-        breakSkipped: true
-      })
-    }
-
+  onBreakEnd = () => {
     clearInterval(this.interval);
 
     this.setState({
       breaking: false,
       elapsed: 0,
-      prevTime: Date.now()
     });
 
     this.interval = setInterval(this.onTick, 1000);
@@ -165,7 +140,6 @@ class PomodoroTimer extends Component {
       breaking: true,
       breakSkipped: false,
       elapsed: 0,
-      prevTime: Date.now(),
     });
 
     this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
