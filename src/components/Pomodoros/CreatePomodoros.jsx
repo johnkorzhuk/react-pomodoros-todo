@@ -19,6 +19,7 @@ const CreatePomodoros = ({
   for (let i = 0; i < amount; i++) {
     items.push(children(i));
   }
+
   return (
     <div style={ rootStyles }>
       {items}

@@ -69,11 +69,14 @@ const ProgressPomodoro = ({
   pomodoroGoal,
   editing,
   rootStyles,
+  onEditPomodoros,
 }) => {
+
   return (
     <CreatePomodoros
       amount={ 5 }
-      rootStyles={ rootStyles }>
+      rootStyles={ rootStyles }
+      onDoubleClick={ onEditPomodoros }>
 
       {index => {
         return (
@@ -86,8 +89,7 @@ const ProgressPomodoro = ({
             isComplete={
               index < completedPomodoros &&
               !editing }
-            isTarget={
-              index < pomodoroGoal }/>
+            isTarget={ index < pomodoroGoal }/>
         );
       }}
     </CreatePomodoros>

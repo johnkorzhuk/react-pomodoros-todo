@@ -2,8 +2,10 @@ import React, { PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import { grey500 } from 'material-ui/styles/colors';
 
+import EditablePomodoros from './Pomodoros/EditablePomodoros';
 import ProgressPomodoro from './Pomodoros/ProgressPomodoro';
 import InputPomodoros from './Pomodoros/InputPomodoros';
+import Title from './TaskItem/Title';
 
 
 const styles = {
@@ -23,18 +25,6 @@ const styles = {
       bottom: 18
     }
   },
-  pomodoros: {
-    root: {
-      position: 'absolute',
-      right: 20,
-      flex: 1,
-      marginTop: 2,
-    },
-    progress: {
-      position: 'absolute',
-      flex: 1,
-    },
-  },
 };
 
 const TaskInput = ({
@@ -47,6 +37,7 @@ const TaskInput = ({
   pomodoros,
   submitted,
   textFieldPlaceHolder,
+  onEditTitle,
   onKeyEnter,
   updatePomodoros,
   updateTitle,
@@ -55,43 +46,43 @@ const TaskInput = ({
   return (
       <div style={ styles.root }>
 
-        {!editingElapsed &&
-        <TextField
-          ref={ textfield => {
-            if (submitted && textfield) {
-              textfield.input.value = "";
-            }}}
-          style={ styles.textField.root }
-          underlineFocusStyle={
-            Object.assign(
-              {borderColor: grey500},
-              styles.textField.underLine) }
-          underlineStyle={ styles.textField.underLine }
-          defaultValue={ title ? title : "" }
-          name="title"
-          placeholder={ textFieldPlaceHolder }
-          autoFocus
-          fullWidth
-          underlineShow
-          onBlur={ e =>
-            updateTitle(e.target.value) }
-          onKeyUp={ e =>
-            onKeyEnter(e) }/> }
+        {editingElapsed && !editingTitle
+          ? <Title
+              title={ title }
+              onDoubleClick={ onEditTitle }/>
+          : <TextField
+              ref={ textfield => {
+                if (submitted && textfield) {
+                  textfield.input.value = "";
+                }}}
+              style={ styles.textField.root }
+              underlineFocusStyle={
+                Object.assign(
+                  {borderColor: grey500},
+                  styles.textField.underLine) }
+              underlineStyle={ styles.textField.underLine }
+              defaultValue={ title ? title : "" }
+              name="title"
+              placeholder={ textFieldPlaceHolder }
+              autoFocus
+              fullWidth
+              underlineShow
+              onBlur={ e =>
+                updateTitle(e.target.value) }
+              onKeyUp={ e =>
+                onKeyEnter(e) }/> }
+
 
         {editingTask
           ? !editingTitle
-            ? <div style={ styles.pomodoros.root }>
-                <ProgressPomodoro
-                  rootStyles={ styles.pomodoros.progress }
-                  completedPomodoros={ completedPomodoros }
-                  editing={ !editingTitle && editingTask }
-                  pomodoroGoal={ pomodoroGoal }/>
-                <InputPomodoros
-                  rootStyles={ {} }
-                  pomodoros={ pomodoros }
-                  onKeyEnter={ onKeyEnter }
-                  updatePomodoros={ updatePomodoros }/>
-              </div>
+            ? <EditablePomodoros
+                completedPomodoros={ completedPomodoros }
+                editingTitle={ editingTitle }
+                editingTask={ editingTask }
+                pomodoroGoal={ pomodoroGoal }
+                pomodoros={ pomodoros }
+                onKeyEnter={ onKeyEnter }
+                updatePomodoros={ updatePomodoros }/>
 
             : <ProgressPomodoro
                 completedPomodoros={ completedPomodoros }

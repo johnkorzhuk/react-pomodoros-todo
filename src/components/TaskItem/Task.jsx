@@ -3,20 +3,15 @@ import IconButton from 'material-ui/IconButton';
 import Edit from 'material-ui/svg-icons/editor/mode-edit'
 
 import ProgressPomodoro from '../Pomodoros/ProgressPomodoro';
+import Title from './Title';
 
 
 const styles = {
   root: {
-    fontSize: '1.1em',
     flex: 1,
     minHeight: '1.1em',
     display: 'flex',
     alignItems: 'center',
-  },
-  title: {
-    padding: '20px 0',
-    width: '100%',
-    minHeight: 20
   },
   edit: {
     button: {
@@ -44,16 +39,16 @@ const Task = ({
   editingTitle,
   showEditIcon,
   onEdit,
+  onEditPomodoros,
   onEditTitle,
 }) => {
   return (
     <div style={ styles.root }>
-      <div
-        style={ styles.title }
-        onDoubleClick={ onEditTitle }>
-        { title }
-      </div>
+      <Title
+        title={ title }
+        onDoubleClick={ onEditTitle }/>
 
+      {/*Todo add hint icon*/}
       {showEditIcon &&
       <IconButton
         style={ styles.edit.button }
@@ -67,7 +62,8 @@ const Task = ({
         completedPomodoros={ completedPomodoros }
         editing={ !editingTitle && editingTask }
         pomodoroGoal={ pomodoroGoal }
-        breaking={ breaking }/>
+        breaking={ breaking }
+        onEditPomodoros={ onEditPomodoros }/>
       </div>
   );
 };

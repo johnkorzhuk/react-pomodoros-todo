@@ -17,6 +17,7 @@ const EditableTaskTitle = ({
   showEditIcon,
   onEdit,
   onEditComplete,
+  onEditPomodoros,
   onEditTitle,
   onKeyEnter,
   updateNewElapsedPom,
@@ -35,8 +36,8 @@ const EditableTaskTitle = ({
           pomodoros={ pomodoros }
           onKeyEnter={ onKeyEnter }
           updatePomodoros={ updateNewElapsedPom }
-          updateTitle={
-            editingTitle ? onEditComplete : updateTitle }/>
+          onEditTitle={ onEditTitle }
+          updateTitle={ editingTitle ? onEditComplete : updateTitle }/>
 
       : <Task
           active={ active }
@@ -48,6 +49,7 @@ const EditableTaskTitle = ({
           editingTitle={ editingTitle }
           showEditIcon={ showEditIcon }
           onEdit={ onEdit }
+          onEditPomodoros={ onEditPomodoros }
           onEditTitle={ onEditTitle }/>
   );
 };

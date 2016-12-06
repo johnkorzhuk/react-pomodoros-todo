@@ -56,6 +56,8 @@ class TaskItem extends Component {
     /* Update state editingTask is toggled so checked in InputPomodoros
     can accurately represent the current elapsed time */
     if (this.props.editingTask !== nextProps.editingTask) {
+      this.title = this.props.title;
+
       this.setState({
         newElapsed: this.props.elapsed,
         showEditIcon: false,
@@ -121,6 +123,7 @@ class TaskItem extends Component {
           showEditIcon={ showEditIcon }
           onEdit={ onEdit }
           onEditComplete={ onEditComplete }
+          onEditPomodoros={ this.onEditPomodoros }
           onEditTitle={ this.onEditTitle }
           onKeyEnter={ this.onKeyEnter.bind(this) }
           updateNewElapsedPom={ this.updateNewElapsedPom }
@@ -168,6 +171,14 @@ class TaskItem extends Component {
     }
 
     this.props.onEditComplete(newTitle, newElapsed);
+  };
+
+  onEditPomodoros = () => {
+    this.setState({
+      editingElapsed: true,
+    });
+
+    this.props.onEdit();
   };
 
   onEditTitle = () => {
