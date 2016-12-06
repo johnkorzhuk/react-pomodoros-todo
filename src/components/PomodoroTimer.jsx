@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import TaskItem from './TaskItem/TaskItem';
 import Timebar from './Timebar';
 
+
 class PomodoroTimer extends Component {
   constructor(props) {
     super(props);

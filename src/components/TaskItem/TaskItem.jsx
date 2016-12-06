@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Checkmark from 'material-ui/svg-icons/action/done';
 import IconButton from 'material-ui/IconButton';
 import CheckboxComplete from 'material-ui/svg-icons/toggle/check-box';
 import Checkbox from 'material-ui/svg-icons/toggle/check-box-outline-blank';
-import { grey600 } from 'material-ui/styles/colors';
+import { grey600, red500 } from 'material-ui/styles/colors';
 
 import EditableTask from './EditableTask'
 import PrimaryButton from './PrimaryButton';
@@ -23,7 +25,18 @@ const styles = {
       width: 40,
       height: 40,
     }
-  }
+  },
+  button: {
+    root: {
+      position: 'absolute',
+      left: 15,
+      flex: 1
+    },
+    icon: {
+      height: 30,
+      width: 30,
+    },
+  },
 };
 
 class TaskItem extends Component {
@@ -32,7 +45,6 @@ class TaskItem extends Component {
 
     this.state = {
       newElapsed: 0,
-      editingElapsed: false,
       editingTitle: false,
       showEditIcon: false,
     }
@@ -91,7 +103,6 @@ class TaskItem extends Component {
     const {
       showEditIcon,
       editingTitle,
-      editingElapsed,
       newElapsed,
     } = this.state;
 
@@ -101,15 +112,6 @@ class TaskItem extends Component {
         onMouseLeave={ this.onTaskMouseLeave }
         onMouseOver={ this.onTaskMouseOver }>
 
-        <IconButton
-          style={ styles.toggleComplete.root }
-          onClick={ this.toggleComplete }>
-
-          {complete
-            ? <CheckboxComplete color={ grey600 } />
-            : <Checkbox color={ grey600 }/> }
-        </IconButton>
-
         <EditableTask
           active={ active }
           completedPomodoros={ completedPomodoros }
@@ -117,7 +119,6 @@ class TaskItem extends Component {
           pomodoroGoal={ pomodoroGoal }
           title={ title }
           breaking={ breaking }
-          editingElapsed={ editingElapsed }
           editingTitle={ editingTitle }
           pomodoros={ newElapsed/onePomodoroTime }
           showEditIcon={ showEditIcon }
@@ -136,6 +137,24 @@ class TaskItem extends Component {
           onActiveToggle={ toggleActive }
           onBreakEnd={ onBreakEnd }
           onDelete={ onDelete }/>
+
+        {editingTask && !this.state.editingTitle
+          ? <FloatingActionButton
+          style={ styles.button.root }
+          backgroundColor={ red500 }
+          iconStyle={ styles.button.icon }
+          onClick={ () =>
+            this.onTaskEditComplete(this.title, this.state.newElapsed) }>
+          <Checkmark style={ {width: 24} }/>
+        </FloatingActionButton>
+
+          : <IconButton
+          style={ styles.toggleComplete.root }
+          onClick={ this.toggleComplete }>
+          {complete
+            ? <CheckboxComplete color={ grey600 } />
+            : <Checkbox color={ grey600 }/> }
+        </IconButton> }
       </div>
     );
   }
@@ -152,7 +171,7 @@ class TaskItem extends Component {
 
   toggleComplete = () => {
     let elapsed = this.props.elapsed;
-    if (this.props.editingTask || this.state.editingElapsed) {
+    if (this.props.editingTask) {
       elapsed = this.state.newElapsed;
     }
 
@@ -171,14 +190,6 @@ class TaskItem extends Component {
     }
 
     this.props.onEditComplete(newTitle, newElapsed);
-  };
-
-  onEditPomodoros = () => {
-    this.setState({
-      editingElapsed: true,
-    });
-
-    this.props.onEdit();
   };
 
   onEditTitle = () => {
