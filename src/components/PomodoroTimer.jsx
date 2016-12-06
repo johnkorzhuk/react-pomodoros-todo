@@ -10,10 +10,6 @@ class PomodoroTimer extends Component {
     this.state = {
       breaking: false,
       breakSkipped: false,
-      // breakTime: 5000,
-      // onePomodoroTime: 10000,
-      breakTime: 300000,
-      onePomodoroTime: 1500000,
       elapsed: 0,
       prevTime: 0,
     };
@@ -72,17 +68,16 @@ class PomodoroTimer extends Component {
       elapsed,
       pomodoroGoal,
       title,
+      breakTime,
+      onePomodoroTime,
       onEdit,
       onEditComplete,
       removeTask,
       toggleComplete,
-      updateElapsed,
     } = this.props;
 
     const {
       breaking,
-      onePomodoroTime,
-      breakTime,
     } = this.state;
 
     const totalElapsed = this.state.breaking
@@ -128,7 +123,7 @@ class PomodoroTimer extends Component {
           elapsed={
             breaking
               ? this.state.elapsed
-              : totalElapsed-(completedPomodoros*onePomodoroTime) }
+              : totalElapsed - (completedPomodoros * onePomodoroTime) }
           breaking={ breaking }
           breakTime={ breakTime }
           onePomodoroTime={ onePomodoroTime }/> }
@@ -203,6 +198,8 @@ PomodoroTimer.propTypes = {
   elapsed: PropTypes.number,
   pomodoroGoal: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
+  breakTime: PropTypes.number.isRequired,
+  onePomodoroTime: PropTypes.number.isRequired,
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func,
   removeTask: PropTypes.func,

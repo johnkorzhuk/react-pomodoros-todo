@@ -109,6 +109,8 @@ class App extends Component {
                   elapsed={ task.elapsed }
                   pomodoroGoal={ task.pomodoroGoal }
                   title={ task.title }
+                  breakTime={ 300000 }
+                  onePomodoroTime={ 1500000 }
                   onEdit={this.onEdit.bind(null, task.id) }
                   onEditComplete={this.onEditComplete.bind(null, task.id) }
                   toggleActive={this.toggleActive.bind(null, task.id) }
@@ -129,6 +131,8 @@ class App extends Component {
                   elapsed={ task.elapsed }
                   pomodoroGoal={ task.pomodoroGoal }
                   title={ task.title }
+                  breakTime={ 300000 }
+                  onePomodoroTime={ 1500000 }
                   onEdit={ this.onEdit.bind(null, task.id) }
                   onEditComplete={ this.onEditComplete.bind(null, task.id) }
                   removeTask={ this.removeTask.bind(null, task.id) }
