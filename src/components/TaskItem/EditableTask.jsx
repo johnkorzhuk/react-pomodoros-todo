@@ -46,7 +46,6 @@ const EditableTaskTitle = ({
           editingTitle={ editingTitle }
           showEditIcon={ showEditIcon }
           onEdit={ onEdit }
-          onEditPomodoros={ onEditPomodoros }
           onEditTitle={ onEditTitle }/>
   );
 };

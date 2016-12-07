@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
 import TaskItem from './TaskItem/TaskItem';
-import Timebar from './Timebar';
 
 
 class PomodoroTimer extends Component {
@@ -74,44 +73,26 @@ class PomodoroTimer extends Component {
 
     const completedPomodoros = Math.floor(totalElapsed / onePomodoroTime);
 
-    let renderTimeBar;
-    if (active || this.state.breaking) {
-      renderTimeBar = true;
-    }
-
     return (
-      <li className="task-item">
-        <TaskItem
-          active={ active }
-          complete={ complete }
-          completedPomodoros={ completedPomodoros }
-          editingTask={ editing }
-          elapsed={ totalElapsed }
-          pomodoroGoal={ pomodoroGoal }
-          title={ title }
-          breaking={ breaking }
-          breakElapsed={ this.state.elapsed }
-          breakTime={ breakTime }
-          onePomodoroTime={ onePomodoroTime }
-          onBreakEnd={ this.onBreakEnd }
-          onBreakInit={ this.onBreakInit }
-          onDelete={ removeTask }
-          onEdit={ onEdit }
-          onEditComplete={ onEditComplete }
-          toggleActive={ this.onActiveToggle }
-          toggleComplete={ toggleComplete }/>
-
-        {renderTimeBar &&
-        <Timebar
-          elapsed={
-            breaking
-              ? this.state.elapsed
-              : totalElapsed - (completedPomodoros * onePomodoroTime) }
-          breaking={ breaking }
-          breakTime={ breakTime }
-          onePomodoroTime={ onePomodoroTime }/> }
-      </li>
-
+      <TaskItem
+        active={ active }
+        complete={ complete }
+        completedPomodoros={ completedPomodoros }
+        editingTask={ editing }
+        elapsed={ totalElapsed }
+        pomodoroGoal={ pomodoroGoal }
+        title={ title }
+        breaking={ breaking }
+        breakElapsed={ this.state.elapsed }
+        breakTime={ breakTime }
+        onePomodoroTime={ onePomodoroTime }
+        onBreakEnd={ this.onBreakEnd }
+        onBreakInit={ this.onBreakInit }
+        onDelete={ removeTask }
+        onEdit={ onEdit }
+        onEditComplete={ onEditComplete }
+        toggleActive={ this.onActiveToggle }
+        toggleComplete={ toggleComplete }/>
     );
   }
 

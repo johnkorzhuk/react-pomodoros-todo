@@ -69,14 +69,12 @@ const ProgressPomodoro = ({
   pomodoroGoal,
   editing,
   rootStyles,
-  onEditPomodoros,
 }) => {
 
   return (
     <CreatePomodoros
       amount={ 5 }
-      rootStyles={ rootStyles }
-      onDoubleClick={ onEditPomodoros }>
+      rootStyles={ rootStyles }>
 
       {index => {
         return (

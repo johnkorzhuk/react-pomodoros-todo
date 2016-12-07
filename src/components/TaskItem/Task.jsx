@@ -39,7 +39,6 @@ const Task = ({
   editingTitle,
   showEditIcon,
   onEdit,
-  onEditPomodoros,
   onEditTitle,
 }) => {
   return (
@@ -63,8 +62,7 @@ const Task = ({
         completedPomodoros={ completedPomodoros }
         editing={ !editingTitle && editingTask }
         pomodoroGoal={ pomodoroGoal }
-        breaking={ breaking }
-        onEditPomodoros={ onEditPomodoros }/>
+        breaking={ breaking }/>
       </div>
   );
 };

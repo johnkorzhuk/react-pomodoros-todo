@@ -8,6 +8,7 @@ import { grey600, red500 } from 'material-ui/styles/colors';
 
 import EditableTask from './EditableTask'
 import PrimaryButton from './PrimaryButton';
+import Timebar from '../Timebar';
 
 
 const styles = {
@@ -88,9 +89,12 @@ class TaskItem extends Component {
       active,
       complete,
       editingTask,
+      elapsed,
       pomodoroGoal,
       title,
       breaking,
+      breakElapsed,
+      breakTime,
       completedPomodoros,
       onePomodoroTime,
       onBreakEnd,
@@ -106,7 +110,13 @@ class TaskItem extends Component {
       newElapsed,
     } = this.state;
 
+    let renderTimeBar;
+    if (active || editingTask) {
+      renderTimeBar = true;
+    }
+
     return (
+    <li className="task-item">
       <div
         style={ styles.root }
         onMouseLeave={ this.onTaskMouseLeave }
@@ -124,7 +134,6 @@ class TaskItem extends Component {
           showEditIcon={ showEditIcon }
           onEdit={ onEdit }
           onEditComplete={ onEditComplete }
-          onEditPomodoros={ this.onEditPomodoros }
           onEditTitle={ this.onEditTitle }
           onKeyEnter={ this.onKeyEnter.bind(this) }
           updateNewElapsedPom={ this.updateNewElapsedPom }
@@ -155,7 +164,21 @@ class TaskItem extends Component {
             ? <CheckboxComplete color={ grey600 } />
             : <Checkbox color={ grey600 }/> }
         </IconButton> }
+
       </div>
+
+      {renderTimeBar &&
+      <Timebar
+        elapsed={
+          breaking
+            ? breakElapsed
+            : elapsed - (completedPomodoros * onePomodoroTime) }
+        breaking={ breaking }
+        breakTime={ breakTime }
+        onePomodoroTime={ onePomodoroTime }/> }
+    </li>
+
+
     );
   }
 
