@@ -13,3 +13,7 @@ export const msToHMS = (ms) => {
     ss: seconds,
   }
 };
+
+export const HMSToMs = (hms) => {
+  return parseInt(hms.hh * 3600000 + hms.mm * 60000 + hms.ss * 1000, 10)
+};

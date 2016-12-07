@@ -10,7 +10,7 @@ import EditableTask from './EditableTask'
 import PrimaryButton from './PrimaryButton';
 import Timebar from '../Timebar';
 import ElapsedInput from './ElapsedInput';
-import { msToHMS } from '../../helpers';
+import { msToHMS, HMSToMs } from '../../helpers';
 
 
 
@@ -63,8 +63,8 @@ class TaskItem extends Component {
 
     /* Included !this.props.editingTask so that when changing elapsed,
     a break isn't initialized */
-    if (!this.props.breaking && !this.props.editingTask) {
-      if (nextProps.completedPomodoros > this.props.completedPomodoros) {
+    if (!this.props.breaking) {
+      if (nextProps.completedPomodoros > this.props.completedPomodoros && !this.props.editingTask) {
         this.props.onBreakInit();
       }
     }
@@ -92,7 +92,6 @@ class TaskItem extends Component {
       active,
       complete,
       editingTask,
-      elapsed,
       pomodoroGoal,
       title,
       breaking,
@@ -120,73 +119,75 @@ class TaskItem extends Component {
       }
     }
 
-    console.log(title, msToHMS(elapsed));
+    let elapsed = this.props.elapsed % onePomodoroTime;
+    if (breaking && !editingTask) {
+      elapsed = breakElapsed;
+    }else if(editingTask) {
+      elapsed = this.state.newElapsed % onePomodoroTime;
+    }
 
     return (
-    <li className="task-item">
-      <div
-        style={ styles.root }
-        onMouseLeave={ this.onTaskMouseLeave }
-        onMouseOver={ this.onTaskMouseOver }>
+      <li className="task-item">
+        <div
+          style={ styles.root }
+          onMouseLeave={ this.onTaskMouseLeave }
+          onMouseOver={ this.onTaskMouseOver }>
 
-        <EditableTask
-          active={ active }
-          completedPomodoros={ completedPomodoros }
-          editingTask={ editingTask }
-          pomodoroGoal={ pomodoroGoal }
-          title={ title }
-          breaking={ breaking }
-          editingTitle={ editingTitle }
-          pomodoros={ newElapsed/onePomodoroTime }
-          showEditIcon={ showEditIcon }
-          onEdit={ onEdit }
-          onEditComplete={ onEditComplete }
-          onEditTitle={ this.onEditTitle }
-          onKeyEnter={ this.onKeyEnter.bind(this) }
-          updateNewElapsedPom={ this.updateNewElapsedPom }
-          updateTitle={ this.updateTitle }/>
+          <EditableTask
+            active={ active }
+            completedPomodoros={ completedPomodoros }
+            editingTask={ editingTask }
+            pomodoroGoal={ pomodoroGoal }
+            title={ title }
+            breaking={ breaking }
+            editingTitle={ editingTitle }
+            pomodoros={ newElapsed/onePomodoroTime }
+            showEditIcon={ showEditIcon }
+            onEdit={ onEdit }
+            onEditComplete={ onEditComplete }
+            onEditTitle={ this.onEditTitle }
+            onKeyEnter={ this.onKeyEnter.bind(this) }
+            updateNewElapsedPom={ this.updateNewElapsedPom }
+            updateTitle={ this.updateTitle }/>
 
-        {editingTask && !this.state.editingTitle
-          ? <ElapsedInput/>
-          : <PrimaryButton
-              active={ active }
-              complete={ complete }
-              breaking={ breaking }
-              onActiveToggle={ toggleActive }
-              onBreakEnd={ onBreakEnd }
-              onDelete={ onDelete }/> }
+          {editingTask && !this.state.editingTitle
+            ? <ElapsedInput
+                hms={ msToHMS(this.state.newElapsed) }
+                updateNewElapsed={ this.updateNewElapsed }/>
+            : <PrimaryButton
+                active={ active }
+                complete={ complete }
+                breaking={ breaking }
+                onActiveToggle={ toggleActive }
+                onBreakEnd={ onBreakEnd }
+                onDelete={ onDelete }/> }
 
-        {editingTask && !this.state.editingTitle
-          ? <FloatingActionButton
-              style={ styles.button.root }
-              backgroundColor={ red500 }
-              iconStyle={ styles.button.icon }
-              onClick={ () =>
-                this.onTaskEditComplete(this.title, this.state.newElapsed) }>
-              <Checkmark style={ {width: 24} }/>
-            </FloatingActionButton>
+          {editingTask && !this.state.editingTitle
+            ? <FloatingActionButton
+                style={ styles.button.root }
+                backgroundColor={ red500 }
+                iconStyle={ styles.button.icon }
+                onClick={ () =>
+                  this.onTaskEditComplete(this.title, this.state.newElapsed) }>
+                <Checkmark style={ {width: 24} }/>
+              </FloatingActionButton>
 
-          : <IconButton
-              style={ styles.toggleComplete.root }
-              onClick={ this.toggleComplete }>
-              {complete
-                ? <CheckboxComplete color={ grey600 } />
-                : <Checkbox color={ grey600 }/> }
-            </IconButton> }
-      </div>
+            : <IconButton
+                style={ styles.toggleComplete.root }
+                onClick={ this.toggleComplete }>
+                {complete
+                  ? <CheckboxComplete color={ grey600 } />
+                  : <Checkbox color={ grey600 }/> }
+              </IconButton> }
+        </div>
 
-      {renderTimeBar &&
-        <Timebar
-          elapsed={
-            breaking
-              ? breakElapsed
-              : elapsed - (completedPomodoros * onePomodoroTime) }
-          breaking={ breaking }
-          breakTime={ breakTime }
-          onePomodoroTime={ onePomodoroTime }/> }
-    </li>
-
-
+        {renderTimeBar &&
+          <Timebar
+            elapsed={ elapsed }
+            breaking={ breaking }
+            breakTime={ breakTime }
+            onePomodoroTime={ onePomodoroTime }/> }
+      </li>
     );
   }
 
@@ -229,6 +230,17 @@ class TaskItem extends Component {
     });
 
     this.props.onEdit();
+  };
+
+  updateNewElapsed = (newVal) => {
+    const newHMS = {
+      ...msToHMS(this.state.newElapsed),
+      ...newVal
+    };
+
+    this.setState({
+      newElapsed: HMSToMs(newHMS)
+    });
   };
 
   updateNewElapsedPom = (pomodoroIndex) => {

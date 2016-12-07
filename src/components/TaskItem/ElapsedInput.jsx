@@ -4,11 +4,12 @@ import { red500 } from 'material-ui/styles/colors';
 
 const styles = {
   root: {
-    padding: '0 10px'
+    padding: '0 10px',
+    fontSize: '.8em'
   },
   numericInput: {
     wrap: {
-      padding: '0 2px'
+      padding: '0 1px'
     },
     btn: {
       display: 'none'
@@ -18,7 +19,7 @@ const styles = {
       width: '2em',
       padding: 0,
       textAlign: 'center',
-      fontSize: '.8em'
+      fontSize: '1em'
     },
     'input:not(.form-control)': {
       paddingLeft: 0,
@@ -31,25 +32,45 @@ const styles = {
 };
 
 const ElapsedInput = ({
-
+  hms,
+  updateNewElapsed,
 }) => {
   return (
-    <div style={ styles.root }>
+    <div
+      style={ styles.root }>
       <NumericInput
         style={ styles.numericInput }
-        />
+        max={ 99 }
+        min={ 0 }
+        size={ 2 }
+        value={ hms.hh }
+        onChange={ e => updateNewElapsed({hh: e}) }/>
+      :
       <NumericInput
         style={ styles.numericInput }
-        />
+        max={ hms.hh === 99 ? 59 : 60 }
+        min={ hms.hh ? -1 : 0 }
+        size={ 2 }
+        value={ hms.mm }
+        onChange={ e => updateNewElapsed({mm: e}) }/>
+      :
       <NumericInput
         style={ styles.numericInput }
-        />
+        max={ hms.hh === 99 ? 59 : 60 }
+        min={ hms.mm ? -1 : 0 }
+        size={ 2 }
+        value={ hms.ss }
+        onChange={ e => updateNewElapsed({ss: e}) }/>
     </div>
   );
 };
 
 ElapsedInput.propTypes = {
-
+  hms: PropTypes.shape({
+    hh: PropTypes.number.isRequired,
+    mm: PropTypes.number.isRequired,
+    ss: PropTypes.number.isRequired,
+  }).isRequired
 };
 
 export default ElapsedInput;
