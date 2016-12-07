@@ -9,6 +9,9 @@ import { grey600, red500 } from 'material-ui/styles/colors';
 import EditableTask from './EditableTask'
 import PrimaryButton from './PrimaryButton';
 import Timebar from '../Timebar';
+import ElapsedInput from './ElapsedInput';
+import { msToHMS } from '../../helpers';
+
 
 
 const styles = {
@@ -117,6 +120,8 @@ class TaskItem extends Component {
       }
     }
 
+    console.log(title, msToHMS(elapsed));
+
     return (
     <li className="task-item">
       <div
@@ -141,43 +146,44 @@ class TaskItem extends Component {
           updateNewElapsedPom={ this.updateNewElapsedPom }
           updateTitle={ this.updateTitle }/>
 
-        <PrimaryButton
-          active={ active }
-          complete={ complete }
-          breaking={ breaking }
-          onActiveToggle={ toggleActive }
-          onBreakEnd={ onBreakEnd }
-          onDelete={ onDelete }/>
+        {editingTask && !this.state.editingTitle
+          ? <ElapsedInput/>
+          : <PrimaryButton
+              active={ active }
+              complete={ complete }
+              breaking={ breaking }
+              onActiveToggle={ toggleActive }
+              onBreakEnd={ onBreakEnd }
+              onDelete={ onDelete }/> }
 
         {editingTask && !this.state.editingTitle
           ? <FloatingActionButton
-          style={ styles.button.root }
-          backgroundColor={ red500 }
-          iconStyle={ styles.button.icon }
-          onClick={ () =>
-            this.onTaskEditComplete(this.title, this.state.newElapsed) }>
-          <Checkmark style={ {width: 24} }/>
-        </FloatingActionButton>
+              style={ styles.button.root }
+              backgroundColor={ red500 }
+              iconStyle={ styles.button.icon }
+              onClick={ () =>
+                this.onTaskEditComplete(this.title, this.state.newElapsed) }>
+              <Checkmark style={ {width: 24} }/>
+            </FloatingActionButton>
 
           : <IconButton
-          style={ styles.toggleComplete.root }
-          onClick={ this.toggleComplete }>
-          {complete
-            ? <CheckboxComplete color={ grey600 } />
-            : <Checkbox color={ grey600 }/> }
-        </IconButton> }
-
+              style={ styles.toggleComplete.root }
+              onClick={ this.toggleComplete }>
+              {complete
+                ? <CheckboxComplete color={ grey600 } />
+                : <Checkbox color={ grey600 }/> }
+            </IconButton> }
       </div>
 
       {renderTimeBar &&
-      <Timebar
-        elapsed={
-          breaking
-            ? breakElapsed
-            : elapsed - (completedPomodoros * onePomodoroTime) }
-        breaking={ breaking }
-        breakTime={ breakTime }
-        onePomodoroTime={ onePomodoroTime }/> }
+        <Timebar
+          elapsed={
+            breaking
+              ? breakElapsed
+              : elapsed - (completedPomodoros * onePomodoroTime) }
+          breaking={ breaking }
+          breakTime={ breakTime }
+          onePomodoroTime={ onePomodoroTime }/> }
     </li>
 
 

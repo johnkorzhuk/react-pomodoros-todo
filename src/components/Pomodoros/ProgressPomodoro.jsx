@@ -39,24 +39,24 @@ const Progress = (props) => {
   return (
     <div style={ styles.pomodoro }>
       {isComplete &&
-      <Lens style={ {color: red500} }/>
-      ||
+        <Lens style={ {color: red500} }/> ||
+
       isActive &&
-      <CircularProgress
-        style={ styles.active.root }
-        color={ red500 }
-        size={ 20 }
-        thickness={ 2 }
-        innerStyle={
-          isTarget
-            ? Object.assign({},
-                styles.active.target,
-                styles.active.inner)
-            : styles.active.inner }/>
-      ||
+        <CircularProgress
+          style={ styles.active.root }
+          color={ red500 }
+          size={ 20 }
+          thickness={ 2 }
+          innerStyle={
+            isTarget
+              ? Object.assign({},
+                  styles.active.target,
+                  styles.active.inner)
+              : styles.active.inner }/> ||
+
       isTarget &&
-      <Lens style={ {color: grey500} }/>
-      ||
+        <Lens style={ {color: grey500} }/> ||
+
       <RadioButtonUnchecked style={ {color: grey500} }/> }
     </div>
   );

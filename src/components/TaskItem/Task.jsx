@@ -48,15 +48,15 @@ const Task = ({
         onDoubleClick={ onEditTitle }/>
 
       {showEditIcon &&
-      <IconButton
-        style={ styles.edit.button }
-        tooltipStyles={ {top: -10, right: 25} }
-        tooltip="edit"
-        tooltipPosition="bottom-left"
-        iconStyle={ styles.edit.icon }
-        onClick={ onEdit }>
-        <Edit />
-      </IconButton> }
+        <IconButton
+          style={ styles.edit.button }
+          tooltipStyles={ {top: -10, right: 25} }
+          tooltip="edit"
+          tooltipPosition="bottom-left"
+          iconStyle={ styles.edit.icon }
+          onClick={ onEdit }>
+          <Edit />
+        </IconButton> }
 
       <ProgressPomodoro
         active={ active }
