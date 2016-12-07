@@ -31,6 +31,7 @@ const EditableTaskTitle = ({
           editingTitle={ editingTitle }
           pomodoroGoal={ pomodoroGoal }
           pomodoros={ pomodoros }
+          onEditComplete={ onEditComplete }
           onKeyEnter={ onKeyEnter }
           updatePomodoros={ updateNewElapsedPom }
           updateTitle={ editingTitle ? onEditComplete : updateTitle }/>

@@ -111,8 +111,10 @@ class TaskItem extends Component {
     } = this.state;
 
     let renderTimeBar;
-    if (active || editingTask) {
-      renderTimeBar = true;
+    if (!this.state.editingTitle) {
+      if (active || editingTask) {
+        renderTimeBar = true;
+      }
     }
 
     return (

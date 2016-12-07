@@ -1,4 +1,6 @@
 import React, { PropTypes } from 'react';
+import IconButton from 'material-ui/IconButton';
+import CancelEdit from 'material-ui/svg-icons/navigation/close'
 import TextField from 'material-ui/TextField';
 import { grey500 } from 'material-ui/styles/colors';
 
@@ -24,7 +26,23 @@ const styles = {
       bottom: 18
     }
   },
+  cancelEdit: {
+    button: {
+      width: 30,
+      height: 30,
+      padding: 0,
+      position: 'absolute',
+      top: -5,
+      right: -5,
+    },
+    icon: {
+      width: 15,
+      height: 15,
+    },
+  },
 };
+
+
 
 const TaskInput = ({
   completedPomodoros,
@@ -35,6 +53,7 @@ const TaskInput = ({
   pomodoros,
   submitted,
   textFieldPlaceHolder,
+  onEditComplete,
   onKeyEnter,
   updatePomodoros,
   updateTitle,
@@ -42,6 +61,18 @@ const TaskInput = ({
 
   return (
       <div style={ styles.root }>
+
+        {editingTask && !editingTitle &&
+        <IconButton
+          style={ styles.cancelEdit.button }
+          tooltipStyles={ {top: -10, right: 25} }
+          tooltip="cancel"
+          tooltipPosition="bottom-left"
+          iconStyle={ styles.cancelEdit.icon }
+          onClick={ () => onEditComplete() }>
+          <CancelEdit />
+        </IconButton> }
+
         <TextField
           ref={ textfield => {
             if (submitted && textfield) {
@@ -97,6 +128,7 @@ TaskInput.propTypes = {
   pomodoros: PropTypes.number,
   submitted: PropTypes.bool,
   textFieldPlaceHolder: PropTypes.string,
+  onEditComplete: PropTypes.func,
   onKeyEnter: PropTypes.func,
   updatePomodoros: PropTypes.func,
   updateTitle: PropTypes.func,

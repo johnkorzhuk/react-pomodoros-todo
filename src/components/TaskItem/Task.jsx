@@ -50,9 +50,9 @@ const Task = ({
       {showEditIcon &&
       <IconButton
         style={ styles.edit.button }
-        tooltipPosition="bottom-left"
         tooltipStyles={ {top: -10, right: 25} }
         tooltip="edit"
+        tooltipPosition="bottom-left"
         iconStyle={ styles.edit.icon }
         onClick={ onEdit }>
         <Edit />
