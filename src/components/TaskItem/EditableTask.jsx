@@ -16,7 +16,6 @@ const EditableTaskTitle = ({
   showEditIcon,
   onEdit,
   onEditComplete,
-  onEditPomodoros,
   onEditTitle,
   onKeyEnter,
   updateNewElapsedPom,

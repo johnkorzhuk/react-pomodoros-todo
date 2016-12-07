@@ -19,8 +19,8 @@ const styles = {
       height: 30,
       padding: 0,
       position: 'absolute',
-      top: -7,
-      right: 180,
+      top: -5,
+      right: -5,
     },
     icon: {
       width: 15,
@@ -50,7 +50,8 @@ const Task = ({
       {showEditIcon &&
       <IconButton
         style={ styles.edit.button }
-        tooltipStyles={ { top: 0, left: 25 } }
+        tooltipPosition="bottom-left"
+        tooltipStyles={ {top: -10, right: 25} }
         tooltip="edit"
         iconStyle={ styles.edit.icon }
         onClick={ onEdit }>

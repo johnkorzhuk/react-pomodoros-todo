@@ -89,6 +89,7 @@ class App extends Component {
           </Tabs>
 
           <BindKeyboardSwipeableViews
+            slideStyle={ {overflowX: 'hidden'} }
             index={ slideIndex }
             animateHeight
             onChangeIndex={
