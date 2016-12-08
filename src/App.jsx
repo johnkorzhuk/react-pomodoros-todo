@@ -211,12 +211,9 @@ class App extends Component {
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
-          if (newElapsed) {
-            task.elapsed = newElapsed;
-          }
-          if (newTitle) {
-            task.title = newTitle;
-          }
+          task.elapsed = newElapsed;
+          task.title = newTitle;
+
           task.editing = false;
         }
         return task;
@@ -225,13 +222,11 @@ class App extends Component {
   };
 
   toggleActive = (id, active) => {
-    this.editing = false;
 
     if (!active) {
       this.setState(prevState =>
         prevState.tasks.map(task => {
             task.active = false;
-            task.editing = false;
             return task;
           })
       );

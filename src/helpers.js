@@ -14,6 +14,6 @@ export const msToHMS = (ms) => {
   }
 };
 
-export const HMSToMs = (hms) => {
+export const msFromHMS = (hms) => {
   return parseInt(hms.hh * 3600000 + hms.mm * 60000 + hms.ss * 1000, 10)
 };

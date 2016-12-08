@@ -10,8 +10,7 @@ import EditableTask from './EditableTask'
 import PrimaryButton from './PrimaryButton';
 import Timebar from '../Timebar';
 import ElapsedInput from './ElapsedInput';
-import { msToHMS, HMSToMs } from '../../helpers';
-
+import { msToHMS, msFromHMS } from '../../helpers';
 
 
 const styles = {
@@ -59,14 +58,19 @@ class TaskItem extends Component {
       if (nextProps.breakElapsed >= this.props.breakTime) {
         this.props.onBreakEnd();
       }
-    }
-
-    /* Included !this.props.editingTask so that when changing elapsed,
-    a break isn't initialized */
-    if (!this.props.breaking) {
+    }else {
+      /* Included !this.props.editingTask so that when changing elapsed,
+       a break isn't initialized */
       if (nextProps.completedPomodoros > this.props.completedPomodoros && !this.props.editingTask) {
         this.props.onBreakInit();
       }
+    }
+
+    if (this.props.active && this.props.editingTask) {
+      const diff = nextProps.elapsed - this.props.elapsed;
+      this.setState(prevState =>
+        prevState.newElapsed += diff
+      );
     }
 
     /* Update state editingTask is toggled so checked in InputPomodoros
@@ -112,15 +116,12 @@ class TaskItem extends Component {
       newElapsed,
     } = this.state;
 
-    let renderTimeBar;
-    if (!this.state.editingTitle) {
-      if (active || editingTask) {
-        renderTimeBar = true;
-      }
-    }
+    const editing = editingTask && !this.state.editingTitle;
+
+    const renderTimeBar = active || editing;
 
     let elapsed = this.props.elapsed % onePomodoroTime;
-    if (breaking && !editingTask) {
+    if (breaking && !editingTask || this.state.editingTitle) {
       elapsed = breakElapsed;
     }else if(editingTask) {
       elapsed = this.state.newElapsed % onePomodoroTime;
@@ -150,7 +151,7 @@ class TaskItem extends Component {
             updateNewElapsedPom={ this.updateNewElapsedPom }
             updateTitle={ this.updateTitle }/>
 
-          {editingTask && !this.state.editingTitle
+          {editing
             ? <ElapsedInput
                 hms={ msToHMS(this.state.newElapsed) }
                 updateNewElapsed={ this.updateNewElapsed }/>
@@ -162,7 +163,7 @@ class TaskItem extends Component {
                 onBreakEnd={ onBreakEnd }
                 onDelete={ onDelete }/> }
 
-          {editingTask && !this.state.editingTitle
+          {editing
             ? <FloatingActionButton
                 style={ styles.button.root }
                 backgroundColor={ red500 }
@@ -184,7 +185,7 @@ class TaskItem extends Component {
         {renderTimeBar &&
           <Timebar
             elapsed={ elapsed }
-            breaking={ breaking }
+            breaking={ breaking && !editingTask || this.state.editingTitle }
             breakTime={ breakTime }
             onePomodoroTime={ onePomodoroTime }/> }
       </li>
@@ -239,7 +240,7 @@ class TaskItem extends Component {
     };
 
     this.setState({
-      newElapsed: HMSToMs(newHMS)
+      newElapsed: msFromHMS(newHMS)
     });
   };
 

@@ -112,6 +112,7 @@ class PomodoroTimer extends Component {
       elapsed: 0,
     });
 
+    // Todo this is a problem. Breakend should not be starting an interval. Error prone.
     this.interval = setInterval(this.onTick, 1000);
   };
 
