@@ -1,6 +1,7 @@
 module.exports = [
   {
     active: false,
+    breaking: false,
     added: 1,
     complete: true,
     editing: false,
@@ -11,6 +12,7 @@ module.exports = [
   },
   {
     active: false,
+    breaking: false,
     added: 3,
     complete: false,
     editing: false,
@@ -21,6 +23,7 @@ module.exports = [
   },
   {
     active: false,
+    breaking: false,
     added: 2,
     complete: false,
     editing: false,
@@ -31,6 +34,7 @@ module.exports = [
   },
   {
     active: false,
+    breaking: false,
     added: 5,
     complete: false,
     editing: false,
@@ -41,6 +45,7 @@ module.exports = [
   },
   {
     active: false,
+    breaking: false,
     added: 4,
     complete: false,
     editing: false,
@@ -51,6 +56,7 @@ module.exports = [
   },
   {
     active: false,
+    breaking: false,
     added: 6,
     complete: false,
     editing: false,

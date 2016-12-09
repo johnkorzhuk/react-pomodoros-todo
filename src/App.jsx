@@ -104,6 +104,7 @@ class App extends Component {
                 <PomodoroTimer
                   key={ task.id }
                   active={ task.active }
+                  breaking={ task.breaking }
                   complete={ task.complete }
                   editing={ task.editing }
                   elapsed={ task.elapsed }
@@ -114,8 +115,9 @@ class App extends Component {
                   onEdit={this.onEdit.bind(null, task.id) }
                   onEditComplete={this.onEditComplete.bind(null, task.id) }
                   toggleActive={this.toggleActive.bind(null, task.id) }
+                  toggleBreaking={this.toggleBreaking.bind(null, task.id) }
                   toggleComplete={this.toggleComplete.bind(null, task.id) }
-                  updateElapsed={this.updateElapsed.bind(null, task.id) }/> )}
+                  updateTask={this.updateTask.bind(null, task.id) }/> )}
             </TaskList>
 
             {/*Todo does the completed list need PomodoroTimer? Will TaskItem suffice?*/}
@@ -137,7 +139,7 @@ class App extends Component {
                   onEditComplete={ this.onEditComplete.bind(null, task.id) }
                   removeTask={ this.removeTask.bind(null, task.id) }
                   toggleComplete={ this.toggleComplete.bind(null, task.id) }
-                  updateElapsed={ this.updateElapsed.bind(null, task.id) }/> )}
+                  updateTask={this.updateTask.bind(null, task.id) }/> )}
             </TaskList>
           </BindKeyboardSwipeableViews>
         </Paper>
@@ -186,11 +188,28 @@ class App extends Component {
         task.id !== id
     );
 
-    this.setState(prevState =>
-      prevState.tasks = tasks
-    );
+    this.setState({ tasks });
 
     this.checkCompletedTasks();
+  };
+
+  updateTask = (id, updatedTask) => {
+    const tasks = this.state.tasks
+      .map(task => {
+        if (task.id === id) {
+          return Object.assign(
+            task,
+            updatedTask,
+          )
+        }
+        return task;
+    });
+
+    this.editing = tasks.some(task =>
+      task.editing
+    );
+
+    this.setState({ tasks })
   };
 
   onEdit = (id) => {
@@ -206,14 +225,13 @@ class App extends Component {
     );
   };
 
-  onEditComplete = (id, newTitle, newElapsed) => {
+  onEditComplete = (id, title, elapsed) => {
     this.editing = false;
     this.setState(prevState =>
       prevState.tasks.map(task => {
         if (task.id === id) {
-          task.elapsed = newElapsed;
-          task.title = newTitle;
-
+          task.elapsed = elapsed;
+          task.title = title;
           task.editing = false;
         }
         return task;
@@ -221,25 +239,40 @@ class App extends Component {
     );
   };
 
-  toggleActive = (id, active) => {
+  toggleActive = (id) => {
+    this.setState(prevState =>
+      prevState.tasks.map(task => {
+        if (task.id === id) {
+          if (!task.active) {
+            return task.active = true;
+          }
+        }
+        task.active = false;
+        task.breaking = false;
+        return task;
+      })
+    );
+  };
 
-    if (!active) {
-      this.setState(prevState =>
-        prevState.tasks.map(task => {
-            task.active = false;
-            return task;
-          })
-      );
-    }
-
-    this.setState(prevState => {
-      prevState.tasks
-        .filter(task =>
-          task.id === id
-        ).map(task =>
-          task.active = !task.active
-      );
-    });
+  toggleBreaking = (id) => {
+    this.setState(prevState =>
+      prevState.tasks.map(({
+        active,
+        breaking,
+        ...task
+      }) => {
+        if (task.id === id) {
+          if (active) {
+            active = false;
+            breaking = true;
+          }else {
+            active = true;
+            breaking = false;
+          }
+        }
+        return task;
+      })
+    );
   };
 
   toggleComplete = (id, elapsed) => {
@@ -263,7 +296,7 @@ class App extends Component {
   };
 
   addTask = (task) => {
-    const tasks = [ ...this.state.tasks, task ];
+    const tasks = [...this.state.tasks, task];
 
     this.setState(prevState =>
       prevState.tasks = tasks
@@ -274,26 +307,24 @@ class App extends Component {
 
   checkCompletedTasks = () => {
     this.setState(prevState => {
-      if (!prevState.tasks
-          .some(({ complete }) =>
-            complete)) {
-
+      if (!prevState.tasks.some(({
+        complete
+      }) => complete)) {
         prevState.slideIndex = 0;
       }
     });
   };
 
-  updateElapsed = (id, newTime) => {
-    this.setState(prevState =>
-      prevState.tasks
-        .map(task => {
-          if (task.id === id) {
-            task.elapsed = newTime;
-          }
-          return task;
-        })
-    );
-  };
+  updateElapsed = (id, elapsed) => {
+    this.setState(prevState => {
+      prevState.map(task => {
+        if (task.id === id) {
+          task.elapsed = elapsed;
+        }
+        return task;
+      })
+    });
+  }
 }
 
 export default App;

@@ -31,8 +31,8 @@ const PrimaryButton = ({
   onDelete,
 }) => {
   const Icon = active
-      ? <Pause />
-      : <Play />;
+    ? <Pause />
+    : <Play />;
 
   return (
     <div style={ styles.root }>

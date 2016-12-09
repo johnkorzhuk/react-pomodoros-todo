@@ -84,6 +84,10 @@ class AddTask extends Component {
   createItem = () => {
     const newTask = {
       added: Date.now(),
+      active: false,
+      breaking: false,
+      complete: false,
+      editing: false,
       elapsed: 0,
       id: uuid.v4(),
       pomodoroGoal:

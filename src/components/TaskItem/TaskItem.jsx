@@ -54,18 +54,6 @@ class TaskItem extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.breaking) {
-      if (nextProps.breakElapsed >= this.props.breakTime) {
-        this.props.onBreakEnd();
-      }
-    }else {
-      /* Included !this.props.editingTask so that when changing elapsed,
-       a break isn't initialized */
-      if (nextProps.completedPomodoros > this.props.completedPomodoros && !this.props.editingTask) {
-        this.props.onBreakInit();
-      }
-    }
-
     if (this.props.active && this.props.editingTask) {
       const diff = nextProps.elapsed - this.props.elapsed;
       this.setState(prevState =>
@@ -108,6 +96,7 @@ class TaskItem extends Component {
       onEdit,
       onEditComplete,
       toggleActive,
+      updateTask,
     } = this.props;
 
     const {
@@ -284,6 +273,7 @@ TaskItem.propTypes = {
   onEditComplete: PropTypes.func,
   toggleActive: PropTypes.func,
   toggleComplete: PropTypes.func.isRequired,
+  updateTask: PropTypes.func.isRequired,
 };
 
 export default TaskItem;

@@ -8,38 +8,36 @@ class PomodoroTimer extends Component {
     super(props);
 
     this.state = {
-      breaking: false,
       elapsed: 0,
       prevTime: 0,
     };
+
+    /* delay between update of state.elapsed, this will cause a re-render
+    by at least this time in ms */
+    this.delay = 1000;
   }
 
   componentWillReceiveProps(nextProps) {
-    /* If elapsed has been updated, reset state.elapsed */
-    if (this.props.elapsed !== nextProps.elapsed) {
-      if (this.state.breaking && !nextProps.editing) {
-        this.onBreakEnd();
+    if (this.props.breaking !== nextProps.breaking) {
+      if (nextProps.breaking) {
+        this.interval = setInterval(this.onTick, this.delay);
+      }else {
+        this.resetTimer();
       }
-      this.setState({
-        elapsed: 0,
-      });
     }
 
-    if (nextProps.active !== this.props.active) {
-      /* Toggling active on another task during a break ends the
-      break. */
-      if (this.props.active && !nextProps.active) {
-        if (this.state.breaking && !nextProps.editing) {
-          this.onBreakEnd();
-        }
-      }
+    if (this.props.active !== nextProps.active) {
+      this.setState({ prevTime: Date.now() });
 
       if (nextProps.active) {
-        this.interval = setInterval(this.onTick, 1000);
-      }else {
-        clearInterval(this.interval);
-      }
-
+        this.interval = setInterval(this.onTick, this.delay);
+      }else
+        /* Don't update elapsed or reset the timer if we're going
+        to take a break. onBreakInit already does that. */
+        if (!nextProps.breaking) {
+          this.updateElapsed();
+          this.resetTimer();
+        }
     }
   }
 
@@ -50,6 +48,7 @@ class PomodoroTimer extends Component {
   render() {
     const {
       active,
+      breaking,
       complete,
       editing,
       elapsed,
@@ -60,18 +59,16 @@ class PomodoroTimer extends Component {
       onEdit,
       onEditComplete,
       removeTask,
+      toggleActive,
       toggleComplete,
+      updateTask,
     } = this.props;
 
-    const {
-      breaking,
-    } = this.state;
-
-    const totalElapsed = this.state.breaking
+    this.totalElapsed = breaking
       ? elapsed
       : this.state.elapsed + elapsed;
 
-    const completedPomodoros = Math.floor(totalElapsed / onePomodoroTime);
+    const completedPomodoros = Math.floor(this.totalElapsed / onePomodoroTime);
 
     return (
       <TaskItem
@@ -79,7 +76,7 @@ class PomodoroTimer extends Component {
         complete={ complete }
         completedPomodoros={ completedPomodoros }
         editingTask={ editing }
-        elapsed={ totalElapsed }
+        elapsed={ this.totalElapsed }
         pomodoroGoal={ pomodoroGoal }
         title={ title }
         breaking={ breaking }
@@ -91,65 +88,75 @@ class PomodoroTimer extends Component {
         onDelete={ removeTask }
         onEdit={ onEdit }
         onEditComplete={ onEditComplete }
-        toggleActive={ this.onActiveToggle }
-        toggleComplete={ toggleComplete }/>
+        toggleActive={ toggleActive }
+        toggleComplete={ toggleComplete }
+        updateTask={ updateTask }/>
     );
   }
 
-  onTick = () => {
-    const now = Date.now();
-    this.setState({
-      prevTime: now,
-      elapsed: this.state.elapsed + (now - this.state.prevTime),
-    });
+  updateElapsed = () => {
+    const updatedTask = {
+      elapsed: this.totalElapsed
+    };
+
+    this.props.updateTask(updatedTask);
   };
 
   onBreakEnd = () => {
-    clearInterval(this.interval);
-
-    this.setState({
+    const updatedTask = {
+      active: true,
       breaking: false,
-      elapsed: 0,
-    });
+    };
 
-    // Todo this is a problem. Breakend should not be starting an interval. Error prone.
-    this.interval = setInterval(this.onTick, 1000);
+    this.resetTimer();
+
+    this.props.updateTask(updatedTask);
   };
 
   onBreakInit = () => {
+    const updatedTask = {
+      active: false,
+      breaking: true,
+      elapsed: this.totalElapsed
+    };
+
+    this.resetTimer();
+
+    this.props.updateTask(updatedTask);
+  };
+
+  onTick = () => {
+    const now = Date.now();
+
+    this.setState({
+      prevTime: now,
+      elapsed:  this.state.elapsed + (now - this.state.prevTime),
+    });
+
+    if (this.props.active &&
+      this.totalElapsed % this.props.onePomodoroTime < this.delay) {
+        this.onBreakInit();
+    }
+
+    if (this.props.breaking &&
+      this.state.elapsed >= this.props.breakTime) {
+        this.onBreakEnd();
+    }
+  };
+
+  resetTimer = () => {
     clearInterval(this.interval);
 
     this.setState({
-      breaking: true,
-      breakSkipped: false,
       elapsed: 0,
+      prevTime: 0,
     });
-
-    this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
-
-    this.interval = setInterval(this.onTick, 1000)
-  };
-
-  onActiveToggle = () => {
-    if (this.props.active) {
-      clearInterval(this.interval);
-
-      this.props.updateElapsed(this.state.elapsed + this.props.elapsed);
-
-      this.setState({
-        elapsed: 0
-      })
-    }else {
-      this.setState({
-        prevTime: Date.now()
-      });
-    }
-    this.props.toggleActive(this.props.active);
   };
 }
 
 PomodoroTimer.propTypes = {
   active: PropTypes.bool,
+  breaking: PropTypes.bool,
   complete: PropTypes.bool,
   editing: PropTypes.bool,
   elapsed: PropTypes.number,
@@ -161,8 +168,9 @@ PomodoroTimer.propTypes = {
   onEditComplete: PropTypes.func,
   removeTask: PropTypes.func,
   toggleActive: PropTypes.func,
+  toggleBreaking: PropTypes.func,
   toggleComplete: PropTypes.func.isRequired,
-  updateElapsed: PropTypes.func,
+  updateTask: PropTypes.func.isRequired,
 };
 
 export default PomodoroTimer;
