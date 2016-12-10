@@ -17,7 +17,7 @@ const EditableTaskTitle = ({
   onEdit,
   onEditComplete,
   onEditTitle,
-  onKeyEnter,
+  handleKeyInput,
   updateNewElapsedPom,
   updateTitle,
 }) => {
@@ -32,7 +32,7 @@ const EditableTaskTitle = ({
           pomodoroGoal={ pomodoroGoal }
           pomodoros={ pomodoros }
           onEditComplete={ onEditComplete }
-          onKeyEnter={ onKeyEnter }
+          handleKeyInput={ handleKeyInput }
           updatePomodoros={ updateNewElapsedPom }
           updateTitle={ editingTitle ? onEditComplete : updateTitle }/>
 
@@ -60,10 +60,10 @@ EditableTaskTitle.propTypes = {
   editingTitle: PropTypes.bool,
   pomodoros: PropTypes.number,
   showEditIcon: PropTypes.bool,
+  handleKeyInput: PropTypes.func,
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func.isRequired,
   onEditTitle: PropTypes.func,
-  onKeyEnter: PropTypes.func,
   updateNewElapsedPom: PropTypes.func,
   updateTitle: PropTypes.func,
 };

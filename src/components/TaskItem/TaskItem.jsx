@@ -64,14 +64,15 @@ class TaskItem extends Component {
     /* Update state editingTask is toggled so checked in InputPomodoros
     can accurately represent the current elapsed time */
     if (this.props.editingTask !== nextProps.editingTask) {
-      this.title = this.props.title;
+      if (nextProps.editingTask) {
+        this.title = this.props.title;
 
-      this.setState({
-        newElapsed: this.props.elapsed,
-        showEditIcon: false,
-      });
+        this.setState({
+          newElapsed: this.props.elapsed,
+          showEditIcon: false,
+        });
 
-      if (!nextProps.editingTask) {
+      }else {
         this.setState({
           editingTitle: false
         });
@@ -94,9 +95,7 @@ class TaskItem extends Component {
       onBreakEnd,
       onDelete,
       onEdit,
-      onEditComplete,
       toggleActive,
-      updateTask,
     } = this.props;
 
     const {
@@ -107,7 +106,7 @@ class TaskItem extends Component {
 
     const editing = editingTask && !this.state.editingTitle;
 
-    const renderTimeBar = active || editing;
+    const renderTimeBar = active || editing || breaking;
 
     let elapsed = this.props.elapsed % onePomodoroTime;
     if (breaking && !editingTask || this.state.editingTitle) {
@@ -134,15 +133,16 @@ class TaskItem extends Component {
             pomodoros={ newElapsed/onePomodoroTime }
             showEditIcon={ showEditIcon }
             onEdit={ onEdit }
-            onEditComplete={ onEditComplete }
+            onEditComplete={ this.onTaskEditComplete }
             onEditTitle={ this.onEditTitle }
-            onKeyEnter={ this.onKeyEnter.bind(this) }
+            handleKeyInput={ this.handleKeyInput.bind(this) }
             updateNewElapsedPom={ this.updateNewElapsedPom }
             updateTitle={ this.updateTitle }/>
 
           {editing
             ? <ElapsedInput
                 hms={ msToHMS(this.state.newElapsed) }
+                handleKeyInput={ this.handleKeyInput.bind(this) }
                 updateNewElapsed={ this.updateNewElapsed }/>
             : <PrimaryButton
                 active={ active }
@@ -158,7 +158,7 @@ class TaskItem extends Component {
                 backgroundColor={ red500 }
                 iconStyle={ styles.button.icon }
                 onClick={ () =>
-                  this.onTaskEditComplete(this.title, this.state.newElapsed) }>
+                  this.onTaskEditComplete(this.title) }>
                 <Checkmark style={ {width: 24} }/>
               </FloatingActionButton>
 
@@ -182,36 +182,65 @@ class TaskItem extends Component {
   }
 
   onTaskMouseLeave = () => {
-    this.setState({ showEditIcon: false })
+    if (!this.props.editingTask) {
+      this.setState({ showEditIcon: false });
+    }
   };
 
   onTaskMouseOver = () => {
-    if (!this.state.showEditIcon) {
-      this.setState({ showEditIcon: true });
+    if (!this.state.showEditIcon &&
+      !this.props.editingTask) {
+        this.setState({ showEditIcon: true });
     }
   };
 
   toggleComplete = () => {
-    let elapsed = this.props.elapsed;
-    if (this.props.editingTask) {
-      elapsed = this.state.newElapsed;
-    }
+    const updatedTask = {
+      active: false,
+      breaking: false,
+      complete: !this.props.complete,
+      editing: false,
+      elapsed: this.props.editingTask
+        ? this.state.newElapsed
+        : this.props.elapsed,
+    };
 
-    this.props.toggleComplete(elapsed);
+    this.props.updateTask(updatedTask);
   };
 
   updateTitle = (title) => {
     this.title = title;
   };
 
-  onTaskEditComplete = (newTitle, newElapsed, pomodoroIndex) => {
-    if (pomodoroIndex) {
-      this.props.completedPomodoros === pomodoroIndex
-        ? newElapsed = 0
-        : newElapsed = this.props.onePomodoroTime * pomodoroIndex
+  onTaskEditComplete = (type, value) => {
+    let elapsed = this.state.newElapsed;
+    let title = this.title;
+
+    switch (type) {
+      case 'index':
+        value === Math.floor(this.state.newElapsed / this.props.onePomodoroTime)
+          ? elapsed = 0
+          : elapsed = value * this.props.onePomodoroTime;
+        break;
+
+      case 'title':
+        title = value;
+        break;
+
+      default:
+        break;
     }
 
-    this.props.onEditComplete(newTitle, newElapsed);
+    const updatedTask = {
+      editing: false,
+      elapsed,
+      title,
+    };
+
+    // console.log(this.props.elapsed);
+    // console.log(updatedTask.elapsed);
+
+    this.props.updateTask(updatedTask);
   };
 
   onEditTitle = () => {
@@ -223,14 +252,18 @@ class TaskItem extends Component {
   };
 
   updateNewElapsed = (newVal) => {
+    this.setState({
+      newElapsed: this.getNewElapsed(newVal)
+    })
+  };
+
+  getNewElapsed = (newVal) => {
     const newHMS = {
       ...msToHMS(this.state.newElapsed),
       ...newVal
     };
 
-    this.setState({
-      newElapsed: msFromHMS(newHMS)
-    });
+    return msFromHMS(newHMS);
   };
 
   updateNewElapsedPom = (pomodoroIndex) => {
@@ -245,13 +278,28 @@ class TaskItem extends Component {
     }
   };
 
-  onKeyEnter = (event, pomodoroIndex) => {
-    if (event.key === 'Enter') {
-      pomodoroIndex
-        ? this.onTaskEditComplete(this.title, null, pomodoroIndex)
-        : this.onTaskEditComplete(event.target.value, this.state.newElapsed);
+  handleKeyInput(event, type, value) {
+    switch (event.key) {
+      case 'ArrowDown':
+        console.log(type, value);
+        break;
+
+      case 'ArrowUp':
+        console.log(type, value);
+        break;
+
+      case 'Enter':
+        this.onTaskEditComplete(type, value);
+        break;
+
+      case 'Escape':
+        this.props.updateTask({editing: false});
+        break;
+
+      default:
+        break;
     }
-  };
+  }
 }
 
 TaskItem.propTypes = {

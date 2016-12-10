@@ -24,7 +24,7 @@ const EditablePomodoros = ({
   editingTask,
   pomodoroGoal,
   pomodoros,
-  onKeyEnter,
+  handleKeyInput,
   updatePomodoros,
 }) => {
   return (
@@ -38,7 +38,7 @@ const EditablePomodoros = ({
       <InputPomodoros
         rootStyles={ {} }
         pomodoros={ pomodoros }
-        onKeyEnter={ onKeyEnter }
+        handleKeyInput={ handleKeyInput }
         updatePomodoros={ updatePomodoros }/>
     </div>
   );
@@ -49,7 +49,7 @@ EditablePomodoros.propTypes = {
   editingTitle: PropTypes.bool,
   editingTask: PropTypes.bool,
   pomodoroGoal: PropTypes.number,
-  onKeyEnter: PropTypes.func,
+  handleKeyInput: PropTypes.func,
   updatePomodoros: PropTypes.func,
 };
 

@@ -42,7 +42,7 @@ class AddTask extends Component {
           pomodoros={ this.state.pomodoros }
           submitted={ this.state.submitted }
           textFieldPlaceHolder="New Task"
-          onKeyEnter={ this.onKeyEnter.bind(this) }
+          handleKeyInput={ this.handleKeyInput.bind(this) }
           updatePomodoros={ this.updatePomodoros }
           updateTitle={ this.updateTitle }/>
 
@@ -58,13 +58,22 @@ class AddTask extends Component {
     );
   }
 
-  onKeyEnter(event, pomodoros) {
+  handleKeyInput(event, type, value) {
     if (event.key === 'Enter') {
-      pomodoros
-        ? this.pomodoros = pomodoros
-        : this.title = event.target.value;
+      switch (type) {
+        case 'index':
+          this.pomodoros = value;
+          break;
 
-      this.createItem(event);
+        case 'title':
+          this.title = value;
+          break;
+
+        default:
+          break;
+      }
+
+      this.createItem();
     }
   }
 

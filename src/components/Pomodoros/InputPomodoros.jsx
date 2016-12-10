@@ -20,7 +20,7 @@ const styles = {
 const InputPomodoros = ({
   pomodoros,
   rootStyles,
-  onKeyEnter,
+  handleKeyInput,
   updatePomodoros,
 }) => {
   return (
@@ -41,7 +41,7 @@ const InputPomodoros = ({
               onCheck={ () =>
                 updatePomodoros(index+1) }
               onKeyUp={ event =>
-                onKeyEnter(event, index+1) }/>
+                handleKeyInput(event, 'index', index + 1) }/>
           </div>
         );
       }}
@@ -52,7 +52,7 @@ const InputPomodoros = ({
 InputPomodoros.propTypes = {
   pomodoros: PropTypes.number.isRequired,
   rootStyles: PropTypes.object,
-  onKeyEnter: PropTypes.func.isRequired,
+  handleKeyInput: PropTypes.func.isRequired,
   updatePomodoros: PropTypes.func.isRequired,
 };
 

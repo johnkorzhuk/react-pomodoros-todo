@@ -54,7 +54,7 @@ const TaskInput = ({
   submitted,
   textFieldPlaceHolder,
   onEditComplete,
-  onKeyEnter,
+  handleKeyInput,
   updatePomodoros,
   updateTitle,
 }) => {
@@ -62,16 +62,16 @@ const TaskInput = ({
   return (
       <div style={ styles.root }>
 
-        {editingTask && !editingTitle &&
-        <IconButton
-          style={ styles.cancelEdit.button }
-          tooltipStyles={ {top: -10, right: 25} }
-          tooltip="cancel"
-          tooltipPosition="bottom-left"
-          iconStyle={ styles.cancelEdit.icon }
-          onClick={ () => onEditComplete() }>
-          <CancelEdit />
-        </IconButton> }
+        {editingTask &&
+          <IconButton
+            style={ styles.cancelEdit.button }
+            tooltipStyles={ {top: -10, right: 25} }
+            tooltip="cancel"
+            tooltipPosition="bottom-left"
+            iconStyle={ styles.cancelEdit.icon }
+            onClick={ onEditComplete }>
+            <CancelEdit />
+          </IconButton> }
 
         <TextField
           ref={ textfield => {
@@ -93,7 +93,7 @@ const TaskInput = ({
           onBlur={ e =>
             updateTitle(e.target.value) }
           onKeyUp={ e =>
-            onKeyEnter(e) }/>
+            handleKeyInput(e, 'title', e.target.value) }/>
 
         {editingTask
           ? !editingTitle
@@ -103,7 +103,7 @@ const TaskInput = ({
                 editingTask={ editingTask }
                 pomodoroGoal={ pomodoroGoal }
                 pomodoros={ pomodoros }
-                onKeyEnter={ onKeyEnter }
+                handleKeyInput={ handleKeyInput }
                 updatePomodoros={ updatePomodoros }/>
 
             : <ProgressPomodoro
@@ -113,7 +113,7 @@ const TaskInput = ({
 
           : <InputPomodoros
               pomodoros={pomodoros}
-              onKeyEnter={ onKeyEnter }
+              handleKeyInput={ handleKeyInput }
               updatePomodoros={ updatePomodoros }/> }
       </div>
   );
@@ -129,7 +129,7 @@ TaskInput.propTypes = {
   submitted: PropTypes.bool,
   textFieldPlaceHolder: PropTypes.string,
   onEditComplete: PropTypes.func,
-  onKeyEnter: PropTypes.func,
+  handleKeyInput: PropTypes.func,
   updatePomodoros: PropTypes.func,
   updateTitle: PropTypes.func,
 };

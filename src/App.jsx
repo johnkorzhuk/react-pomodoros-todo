@@ -113,9 +113,7 @@ class App extends Component {
                   breakTime={ 300000 }
                   onePomodoroTime={ 1500000 }
                   onEdit={this.onEdit.bind(null, task.id) }
-                  onEditComplete={this.onEditComplete.bind(null, task.id) }
                   toggleActive={this.toggleActive.bind(null, task.id) }
-                  toggleBreaking={this.toggleBreaking.bind(null, task.id) }
                   toggleComplete={this.toggleComplete.bind(null, task.id) }
                   updateTask={this.updateTask.bind(null, task.id) }/> )}
             </TaskList>
@@ -128,6 +126,7 @@ class App extends Component {
                 <PomodoroTimer
                   key={ task.id }
                   active={ task.active }
+                  breaking={ task.breaking }
                   complete={ task.complete }
                   editing={ task.editing }
                   elapsed={ task.elapsed }
@@ -136,7 +135,6 @@ class App extends Component {
                   breakTime={ 300000 }
                   onePomodoroTime={ 1500000 }
                   onEdit={ this.onEdit.bind(null, task.id) }
-                  onEditComplete={ this.onEditComplete.bind(null, task.id) }
                   removeTask={ this.removeTask.bind(null, task.id) }
                   toggleComplete={ this.toggleComplete.bind(null, task.id) }
                   updateTask={this.updateTask.bind(null, task.id) }/> )}
@@ -205,6 +203,11 @@ class App extends Component {
         return task;
     });
 
+    if (typeof updatedTask.complete !== 'undefined' &&
+      !updatedTask.complete) {
+        this.checkCompletedTasks();
+    }
+
     this.editing = tasks.some(task =>
       task.editing
     );
@@ -225,20 +228,6 @@ class App extends Component {
     );
   };
 
-  onEditComplete = (id, title, elapsed) => {
-    this.editing = false;
-    this.setState(prevState =>
-      prevState.tasks.map(task => {
-        if (task.id === id) {
-          task.elapsed = elapsed;
-          task.title = title;
-          task.editing = false;
-        }
-        return task;
-      })
-    );
-  };
-
   toggleActive = (id) => {
     this.setState(prevState =>
       prevState.tasks.map(task => {
@@ -249,27 +238,6 @@ class App extends Component {
         }
         task.active = false;
         task.breaking = false;
-        return task;
-      })
-    );
-  };
-
-  toggleBreaking = (id) => {
-    this.setState(prevState =>
-      prevState.tasks.map(({
-        active,
-        breaking,
-        ...task
-      }) => {
-        if (task.id === id) {
-          if (active) {
-            active = false;
-            breaking = true;
-          }else {
-            active = true;
-            breaking = false;
-          }
-        }
         return task;
       })
     );

@@ -73,13 +73,13 @@ class PomodoroTimer extends Component {
     return (
       <TaskItem
         active={ active }
+        breaking={ breaking }
         complete={ complete }
         completedPomodoros={ completedPomodoros }
         editingTask={ editing }
         elapsed={ this.totalElapsed }
         pomodoroGoal={ pomodoroGoal }
         title={ title }
-        breaking={ breaking }
         breakElapsed={ this.state.elapsed }
         breakTime={ breakTime }
         onePomodoroTime={ onePomodoroTime }
