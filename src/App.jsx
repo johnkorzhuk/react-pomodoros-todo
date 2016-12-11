@@ -116,7 +116,6 @@ class App extends Component {
                   title={ task.title }
                   breakTime={ 300000 }
                   onePomodoroTime={ 1500000 }
-                  onEdit={this.onEdit.bind(null, task.id) }
                   toggleActive={this.toggleActive.bind(null, task.id) }
                   toggleComplete={this.toggleComplete.bind(null, task.id) }
                   updateTask={this.updateTask.bind(null, task.id) }/> )}
@@ -138,7 +137,6 @@ class App extends Component {
                   title={ task.title }
                   breakTime={ 300000 }
                   onePomodoroTime={ 1500000 }
-                  onEdit={ this.onEdit.bind(null, task.id) }
                   removeTask={ this.removeTask.bind(null, task.id) }
                   toggleComplete={ this.toggleComplete.bind(null, task.id) }
                   updateTask={this.updateTask.bind(null, task.id) }/> )}
@@ -219,18 +217,6 @@ class App extends Component {
     this.setState({ tasks })
   };
 
-  onEdit = (id) => {
-    this.editing = true;
-
-    this.setState(prevState =>
-      prevState.tasks.map(task => {
-        if (task.id === id) {
-          task.editing = true;
-        }
-        return task;
-      })
-    );
-  };
 
   toggleActive = (id) => {
     this.setState(prevState =>

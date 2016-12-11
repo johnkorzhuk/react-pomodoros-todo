@@ -36,6 +36,7 @@ const InputPomodoros = ({
               iconStyle={ styles.icon }
               checkedIcon={ <Lens /> }
               uncheckedIcon={ <RadioButtonUnchecked /> }
+              name="Pomodoroindex"
               checked={
                 index+1 <= completedPomodoros }
               onCheck={ () =>

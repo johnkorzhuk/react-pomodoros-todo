@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import NumericInput from 'react-numeric-input';
 import { red500 } from 'material-ui/styles/colors';
 
@@ -31,54 +31,62 @@ const styles = {
   }
 };
 
-class ElapsedInput extends Component {
-  shouldComponentUpdate(nextProps) {
-    if (this.props.hms === nextProps.hms) {
-      console.log('yo');
-    }
+const ElapsedInput = ({
+  hms,
+  handleKeyInput,
+  updateEditedElapsed,
+}) => {
+  let hhMax = 99;
+  let hhMin = hms.mm <= 0 && hms.ss <= 0
+    ? 0
+    : -1;
+  let mmMax = hms.hh === 99
+    ? 59
+    : 60;
+  let mmMin = hms.mm <= 0 && hms.ss <= 0
+    ? 0
+    : -1;
+  let ssMax = hms.hh === 99
+    ? 59
+    : 60;
+  let ssMin = hms.mm <= 0 && hms.hh <= 0
+    ? 0
+    : -1;
 
-    return true;
-  }
-
-  render() {
-    const {
-      hms,
-      handleKeyInput,
-      updateEditedElapsed
-    } = this.props;
-
-    return (
-      <div style={ styles.root }>
-        <NumericInput
-          style={ styles.numericInput }
-          max={ 99 }
-          min={ 0 }
-          size={ 2 }
-          value={ hms.hh }
-          onChange={ e => updateEditedElapsed({ hh: e }) }
-          onKeyUp={ handleKeyInput }/>
-        :
-        <NumericInput
-          style={ styles.numericInput }
-          max={ 60 }
-          min={ -1 }
-          size={ 2 }
-          value={ hms.mm }
-          onChange={ e => updateEditedElapsed({ mm: e }) }
-          onKeyUp={ handleKeyInput }/>
-        :
-        <NumericInput
-          style={ styles.numericInput }
-          max={ 60 }
-          min={ -1 }
-          size={ 2 }
-          value={ hms.ss }
-          onChange={ e => updateEditedElapsed({ ss: e }) }
-          onKeyUp={ handleKeyInput }/>
-      </div>
-    );
-  }
-}
+  return (
+    <div style={ styles.root }>
+      <NumericInput
+        style={ styles.numericInput }
+        max={ hhMax }
+        min={ hhMin }
+        size={ 2 }
+        value={ hms.hh }
+        name="elapsed input"
+        onChange={ e => updateEditedElapsed({ hh: e }) }
+        onKeyUp={ e => handleKeyInput(e, 'hms') }/>
+      :
+      <NumericInput
+        style={ styles.numericInput }
+        max={ mmMax }
+        min={ mmMin }
+        size={ 2 }
+        value={ hms.mm }
+        name="elapsed input"
+        onChange={ e => updateEditedElapsed({ mm: e }) }
+        onKeyUp={ e => handleKeyInput(e, 'hms') }/>
+      :
+      <NumericInput
+        style={ styles.numericInput }
+        max={ ssMax }
+        min={ ssMin }
+        size={ 2 }
+        value={ hms.ss }
+        name="elapsed input"
+        onChange={ e => updateEditedElapsed({ ss: e }) }
+        onKeyUp={ e => handleKeyInput(e, 'hms') }/>
+    </div>
+  );
+};
 
 ElapsedInput.propTypes = {
   hms: PropTypes.shape({
@@ -87,6 +95,7 @@ ElapsedInput.propTypes = {
     ss: PropTypes.number.isRequired,
   }).isRequired,
   handleKeyInput: PropTypes.func.isRequired,
+  updateEditedElapsed: PropTypes.func.isRequired,
 };
 
 export default ElapsedInput;

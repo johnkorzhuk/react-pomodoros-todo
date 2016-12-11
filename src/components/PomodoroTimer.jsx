@@ -74,7 +74,6 @@ class PomodoroTimer extends Component {
       title,
       breakTime,
       onePomodoroTime,
-      onEdit,
       onEditComplete,
       removeTask,
       toggleActive,
@@ -104,7 +103,6 @@ class PomodoroTimer extends Component {
         onBreakEnd={ this.onBreakEnd }
         onBreakInit={ this.onBreakInit }
         onDelete={ removeTask }
-        onEdit={ onEdit }
         onEditComplete={ onEditComplete }
         toggleActive={ toggleActive }
         toggleComplete={ toggleComplete }
@@ -182,7 +180,6 @@ PomodoroTimer.propTypes = {
   title: PropTypes.string.isRequired,
   breakTime: PropTypes.number.isRequired,
   onePomodoroTime: PropTypes.number.isRequired,
-  onEdit: PropTypes.func,
   onEditComplete: PropTypes.func,
   removeTask: PropTypes.func,
   toggleActive: PropTypes.func,
