@@ -42,15 +42,13 @@ const styles = {
   },
 };
 
-
-
 const TaskInput = ({
-  completedPomodoros,
+  active,
   editingTask,
+  completedPomodoros,
   title,
   editingTitle,
   pomodoroGoal,
-  pomodoros,
   submitted,
   textFieldPlaceHolder,
   onEditComplete,
@@ -102,17 +100,17 @@ const TaskInput = ({
                 editingTitle={ editingTitle }
                 editingTask={ editingTask }
                 pomodoroGoal={ pomodoroGoal }
-                pomodoros={ pomodoros }
                 handleKeyInput={ handleKeyInput }
                 updatePomodoros={ updatePomodoros }/>
 
             : <ProgressPomodoro
+                active={ active }
                 completedPomodoros={ completedPomodoros }
                 editing={ !editingTitle && editingTask }
                 pomodoroGoal={ pomodoroGoal }/>
 
           : <InputPomodoros
-              pomodoros={pomodoros}
+              completedPomodoros={ completedPomodoros }
               handleKeyInput={ handleKeyInput }
               updatePomodoros={ updatePomodoros }/> }
       </div>
@@ -120,12 +118,12 @@ const TaskInput = ({
 };
 
 TaskInput.propTypes = {
+  active: PropTypes.bool,
   completedPomodoros: PropTypes.number,
   editingTask: PropTypes.bool,
   title: PropTypes.string,
   editingTitle: PropTypes.bool,
   pomodoroGoal: PropTypes.number,
-  pomodoros: PropTypes.number,
   submitted: PropTypes.bool,
   textFieldPlaceHolder: PropTypes.string,
   onEditComplete: PropTypes.func,

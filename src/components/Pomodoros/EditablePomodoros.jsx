@@ -19,17 +19,18 @@ const styles = {
 };
 
 const EditablePomodoros = ({
+  active,
   completedPomodoros,
   editingTitle,
   editingTask,
   pomodoroGoal,
-  pomodoros,
   handleKeyInput,
   updatePomodoros,
 }) => {
   return (
     <div style={ styles.pomodoros.root }>
       <ProgressPomodoro
+        active={ active }
         rootStyles={ styles.pomodoros.progress }
         completedPomodoros={ completedPomodoros }
         editing={ !editingTitle && editingTask }
@@ -37,7 +38,7 @@ const EditablePomodoros = ({
 
       <InputPomodoros
         rootStyles={ {} }
-        pomodoros={ pomodoros }
+        completedPomodoros={ completedPomodoros }
         handleKeyInput={ handleKeyInput }
         updatePomodoros={ updatePomodoros }/>
     </div>
@@ -45,6 +46,7 @@ const EditablePomodoros = ({
 };
 
 EditablePomodoros.propTypes = {
+  active: PropTypes.bool,
   completedPomodoros: PropTypes.number,
   editingTitle: PropTypes.bool,
   editingTask: PropTypes.bool,

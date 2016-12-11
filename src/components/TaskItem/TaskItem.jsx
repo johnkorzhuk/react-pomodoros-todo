@@ -42,39 +42,60 @@ const styles = {
   },
 };
 
+/* Memoize {hms} for given index of an InputPomodor. */
+const pomodoroIndexToHMS = (index, onePomodoroTime) => {
+  if (!pomodoroIndexToHMS.pomodorosHMS) {
+    pomodoroIndexToHMS.pomodorosHMS = [];
+  }
+
+  if (pomodoroIndexToHMS.pomodorosHMS[index] !== undefined) {
+    return pomodoroIndexToHMS.pomodorosHMS[index];
+  }
+
+  return pomodoroIndexToHMS.pomodorosHMS[index] = msToHMS(
+    (index+1) * onePomodoroTime
+  );
+};
+
 class TaskItem extends Component {
   constructor(props) {
     super(props);
-
+    /* I chose to use the hh:mm:ss format for props.elapsed
+    instead of ms because changes in ElapsedInput are more expensive
+    than changes in InputPomodoros. Additionally, the user can use arrow
+    keys to change elapsed in ElapsedInput, which can cause >16 fps and
+    hangs. */
     this.state = {
-      newElapsed: 0,
+      hms: {},
       editingTitle: false,
       showEditIcon: false,
-    }
+    };
+
+    this.diff = 0;
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.active && this.props.editingTask) {
-      const diff = nextProps.elapsed - this.props.elapsed;
-      this.setState(prevState =>
-        prevState.newElapsed += diff
-      );
+    if (this.props.active) {
+      if (this.props.editingTask && !this.state.editingTitle) {
+        this.diff += nextProps.elapsed - this.props.elapsed;
+        this.setState(prevState =>
+          prevState.hms = {
+            ...prevState.hms,
+            ...msToHMS(this.diff)
+          }
+        );
+      }
     }
 
-    /* Update state editingTask is toggled so checked in InputPomodoros
-    can accurately represent the current elapsed time */
+    /* Set state.hms upon editingTask so that InputPomodoros
+    and Timebar can accurately represent the changes in state.hms */
     if (this.props.editingTask !== nextProps.editingTask) {
       if (nextProps.editingTask) {
         this.title = this.props.title;
 
         this.setState({
-          newElapsed: this.props.elapsed,
+          hms: msToHMS(this.props.elapsed),
           showEditIcon: false,
-        });
-
-      }else {
-        this.setState({
-          editingTitle: false
         });
       }
     }
@@ -83,14 +104,13 @@ class TaskItem extends Component {
   render() {
     const {
       active,
+      breaking,
       complete,
       editingTask,
       pomodoroGoal,
       title,
-      breaking,
       breakElapsed,
       breakTime,
-      completedPomodoros,
       onePomodoroTime,
       onBreakEnd,
       onDelete,
@@ -101,19 +121,23 @@ class TaskItem extends Component {
     const {
       showEditIcon,
       editingTitle,
-      newElapsed,
+      hms,
     } = this.state;
 
-    const editing = editingTask && !this.state.editingTitle;
+    const editing = editingTask && !editingTitle;
 
+    const completedPomodoros = editing
+      ? Math.floor(msFromHMS(hms) / onePomodoroTime)
+      : this.props.completedPomodoros;
+
+    // eslint-disable-next-line
     const renderTimeBar = active || editing || breaking;
 
-    let elapsed = this.props.elapsed % onePomodoroTime;
-    if (breaking && !editingTask || this.state.editingTitle) {
-      elapsed = breakElapsed;
-    }else if(editingTask) {
-      elapsed = this.state.newElapsed % onePomodoroTime;
-    }
+    let elapsed = breaking
+      ? breakElapsed
+      : editing
+        ? msFromHMS(hms) % onePomodoroTime
+        : this.props.elapsed % onePomodoroTime;
 
     return (
       <li className="task-item">
@@ -130,24 +154,23 @@ class TaskItem extends Component {
             title={ title }
             breaking={ breaking }
             editingTitle={ editingTitle }
-            pomodoros={ newElapsed/onePomodoroTime }
             showEditIcon={ showEditIcon }
             onEdit={ onEdit }
             onEditComplete={ this.onTaskEditComplete }
             onEditTitle={ this.onEditTitle }
             handleKeyInput={ this.handleKeyInput.bind(this) }
-            updateNewElapsedPom={ this.updateNewElapsedPom }
+            updateHMSPom={ this.updateHMSPom }
             updateTitle={ this.updateTitle }/>
 
           {editing
             ? <ElapsedInput
-                hms={ msToHMS(this.state.newElapsed) }
+                hms={ this.state.hms }
                 handleKeyInput={ this.handleKeyInput.bind(this) }
-                updateNewElapsed={ this.updateNewElapsed }/>
+                updateHMS={ this.updateHMS }/>
             : <PrimaryButton
                 active={ active }
                 complete={ complete }
-                breaking={ breaking }
+                breaking={ this.props.breaking }
                 onActiveToggle={ toggleActive }
                 onBreakEnd={ onBreakEnd }
                 onDelete={ onDelete }/> }
@@ -174,7 +197,7 @@ class TaskItem extends Component {
         {renderTimeBar &&
           <Timebar
             elapsed={ elapsed }
-            breaking={ breaking && !editingTask || this.state.editingTitle }
+            breaking={ breaking }
             breakTime={ breakTime }
             onePomodoroTime={ onePomodoroTime }/> }
       </li>
@@ -200,9 +223,7 @@ class TaskItem extends Component {
       breaking: false,
       complete: !this.props.complete,
       editing: false,
-      elapsed: this.props.editingTask
-        ? this.state.newElapsed
-        : this.props.elapsed,
+      elapsed: this.props.elapsed,
     };
 
     this.props.updateTask(updatedTask);
@@ -213,14 +234,16 @@ class TaskItem extends Component {
   };
 
   onTaskEditComplete = (type, value) => {
-    let elapsed = this.state.newElapsed;
+    let elapsed = msFromHMS(this.state.hms);
     let title = this.title;
 
     switch (type) {
       case 'index':
-        value === Math.floor(this.state.newElapsed / this.props.onePomodoroTime)
+        value === Math.floor(
+          msFromHMS(this.state.hms) / this.props.onePomodoroTime
+        )
           ? elapsed = 0
-          : elapsed = value * this.props.onePomodoroTime;
+          : elapsed = (value+1) * this.props.onePomodoroTime;
         break;
 
       case 'title':
@@ -231,16 +254,27 @@ class TaskItem extends Component {
         break;
     }
 
-    const updatedTask = {
-      editing: false,
-      elapsed,
-      title,
-    };
+    let updatedTask = {};
+      if (this.props.editingTask && !this.state.editingTitle) {
+        updatedTask = {
+          editing: false,
+          elapsed,
+          title,
+        };
 
-    // console.log(this.props.elapsed);
-    // console.log(updatedTask.elapsed);
+        this.diff = 0;
+      }else {
+        updatedTask = {
+          editing: false,
+          title,
+        };
+      }
 
     this.props.updateTask(updatedTask);
+
+    this.setState({
+      editingTitle: false
+    });
   };
 
   onEditTitle = () => {
@@ -251,42 +285,43 @@ class TaskItem extends Component {
     this.props.onEdit();
   };
 
-  updateNewElapsed = (newVal) => {
-    this.setState({
-      newElapsed: this.getNewElapsed(newVal)
-    })
-  };
-
-  getNewElapsed = (newVal) => {
-    const newHMS = {
-      ...msToHMS(this.state.newElapsed),
+  updateHMS = (newVal) => {
+    const hms = {
+      ...this.state.hms,
       ...newVal
     };
 
-    return msFromHMS(newHMS);
+    console.log(Object.values(hms));
+
+
+    this.setState({ hms })
   };
 
-  updateNewElapsedPom = (pomodoroIndex) => {
-    const pomodoros = Math.floor(this.state.newElapsed / this.props.onePomodoroTime);
+  updateHMSPom = (pomodoroIndex) => {
+    const elapsed = this.props.editingTask && !this.state.editingTitle
+      ? msFromHMS(this.state.hms)
+      : this.props.elapsed;
 
-    if (pomodoroIndex === pomodoros) {
-      this.setState({ newElapsed: 0 })
+    const pomodoros = Math.floor(
+      elapsed / this.props.onePomodoroTime
+    );
+
+    let hms;
+    if (pomodoroIndex+1 === pomodoros) {
+      hms = {
+        hh: 0,
+        mm: 0,
+        ss: 0,
+      };
     }else {
-      this.setState({
-        newElapsed: pomodoroIndex * this.props.onePomodoroTime
-      });
+      hms = pomodoroIndexToHMS(pomodoroIndex, this.props.onePomodoroTime);
     }
+
+    this.setState({ hms });
   };
 
   handleKeyInput(event, type, value) {
     switch (event.key) {
-      case 'ArrowDown':
-        console.log(type, value);
-        break;
-
-      case 'ArrowUp':
-        console.log(type, value);
-        break;
 
       case 'Enter':
         this.onTaskEditComplete(type, value);

@@ -70,7 +70,6 @@ const ProgressPomodoro = ({
   editing,
   rootStyles,
 }) => {
-
   return (
     <CreatePomodoros
       amount={ 5 }

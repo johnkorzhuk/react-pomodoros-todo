@@ -18,7 +18,7 @@ const styles = {
 };
 
 const InputPomodoros = ({
-  pomodoros,
+  completedPomodoros,
   rootStyles,
   handleKeyInput,
   updatePomodoros,
@@ -37,11 +37,11 @@ const InputPomodoros = ({
               checkedIcon={ <Lens /> }
               uncheckedIcon={ <RadioButtonUnchecked /> }
               checked={
-                index+1 <= (pomodoros) }
+                index+1 <= completedPomodoros }
               onCheck={ () =>
-                updatePomodoros(index+1) }
+                updatePomodoros(index) }
               onKeyUp={ event =>
-                handleKeyInput(event, 'index', index + 1) }/>
+                handleKeyInput(event, 'index', index) }/>
           </div>
         );
       }}
@@ -50,7 +50,7 @@ const InputPomodoros = ({
 };
 
 InputPomodoros.propTypes = {
-  pomodoros: PropTypes.number.isRequired,
+  completedPomodoros: PropTypes.number.isRequired,
   rootStyles: PropTypes.object,
   handleKeyInput: PropTypes.func.isRequired,
   updatePomodoros: PropTypes.func.isRequired,

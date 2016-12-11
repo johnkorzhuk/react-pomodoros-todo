@@ -45,6 +45,10 @@ class App extends Component {
     this.editing = false;
   }
 
+  /*
+   Todo: Store complete, elapsed, pomodoroGoal, and title for persistent state.
+   */
+
   render() {
     const {
       slideIndex,

@@ -12,12 +12,27 @@ class PomodoroTimer extends Component {
       prevTime: 0,
     };
 
-    /* delay between update of state.elapsed, this will cause a re-render
+    /* Delay between update of state.elapsed, this will cause a re-render
     by at least this time in ms */
     this.delay = 1000;
   }
 
   componentWillReceiveProps(nextProps) {
+    /* When we've completed editing in TaskItem, task.elapsed is updated.
+    state.elapsed needs to be set to 0. This is an implicit approach. It
+    likely would have been better to pass a fn down to TaskItem explicitly
+    resetting elapsed and prevTime*/
+    if (this.props.elapsed !== nextProps.elapsed) {
+      if (!nextProps.editing && !this.props.breaking) {
+        this.setState({
+          elapsed: 0,
+          prevTime: Date.now()
+        });
+      }
+    }
+
+    /* Toggling active on another task sets breaking to false. We need to
+    reset the timer. */
     if (this.props.breaking !== nextProps.breaking) {
       if (nextProps.breaking) {
         this.interval = setInterval(this.onTick, this.delay);
@@ -27,6 +42,9 @@ class PomodoroTimer extends Component {
     }
 
     if (this.props.active !== nextProps.active) {
+      /* Setting prevTime here takes care of setting it for task.breaking
+      since when a break is initialized, active is set to false,
+      triggering this code block. */
       this.setState({ prevTime: Date.now() });
 
       if (nextProps.active) {

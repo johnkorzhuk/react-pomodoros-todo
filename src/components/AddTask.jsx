@@ -39,7 +39,7 @@ class AddTask extends Component {
     return (
       <div style={ styles.root }>
         <TaskInput
-          pomodoros={ this.state.pomodoros }
+          completedPomodoros={ this.state.pomodoros }
           submitted={ this.state.submitted }
           textFieldPlaceHolder="New Task"
           handleKeyInput={ this.handleKeyInput.bind(this) }
@@ -62,7 +62,7 @@ class AddTask extends Component {
     if (event.key === 'Enter') {
       switch (type) {
         case 'index':
-          this.pomodoros = value;
+          this.pomodoros = value+1;
           break;
 
         case 'title':
@@ -77,12 +77,12 @@ class AddTask extends Component {
     }
   }
 
-  updatePomodoros = (pomodoros) => {
+  updatePomodoros = (pomodoroIndex) => {
     this.setState({ submitted: false });
 
-    pomodoros === this.state.pomodoros
+    pomodoroIndex+1 === this.state.pomodoros
       ? this.setState({ pomodoros: 0 })
-      : this.setState({ pomodoros });
+      : this.setState({ pomodoros: pomodoroIndex+1 });
   };
 
   updateTitle = (title) => {

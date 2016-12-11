@@ -34,7 +34,7 @@ const styles = {
 const ElapsedInput = ({
   hms,
   handleKeyInput,
-  updateNewElapsed,
+  updateHMS
 }) => {
   return (
     <div style={ styles.root }>
@@ -43,24 +43,27 @@ const ElapsedInput = ({
         max={ 99 }
         min={ 0 }
         size={ 2 }
-        defaultValue={ hms.hh }
-        onKeyUp={ (e) => handleKeyInput(e, 'hh', e.target.value) }/>
+        value={ hms.hh }
+        onChange={ e => updateHMS({ hh: e }) }
+        onKeyUp={ handleKeyInput }/>
       :
       <NumericInput
         style={ styles.numericInput }
-        max={ hms.hh === 99 ? 59 : 60 }
-        min={ hms.hh ? -1 : 0 }
+        max={ 59 }
+        min={ 0 }
         size={ 2 }
-        defaultValue={ hms.mm }
-        onKeyUp={ (e) => handleKeyInput(e, 'mm', e.target.value) }/>
+        value={ hms.mm }
+        onChange={ e => updateHMS({ mm: e }) }
+        onKeyUp={ handleKeyInput }/>
       :
       <NumericInput
         style={ styles.numericInput }
-        max={ hms.hh === 99 ? 59 : 60 }
-        min={ hms.mm ? -1 : 0 }
+        max={ 59 }
+        min={ 0 }
         size={ 2 }
-        defaultValue={ hms.ss }
-        onKeyUp={ (e) => handleKeyInput(e, 'ss', e.target.value) }/>
+        value={ hms.ss }
+        onChange={ e => updateHMS({ ss: e }) }
+        onKeyUp={ handleKeyInput }/>
     </div>
   );
 };
@@ -72,7 +75,6 @@ ElapsedInput.propTypes = {
     ss: PropTypes.number.isRequired,
   }).isRequired,
   handleKeyInput: PropTypes.func.isRequired,
-
 };
 
 export default ElapsedInput;
