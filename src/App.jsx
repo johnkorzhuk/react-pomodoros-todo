@@ -112,6 +112,7 @@ class App extends Component {
                   complete={ task.complete }
                   editing={ task.editing }
                   elapsed={ task.elapsed }
+                  intervalDelay={ 1000 }
                   pomodoroGoal={ task.pomodoroGoal }
                   title={ task.title }
                   breakTime={ 300000 }
@@ -133,6 +134,7 @@ class App extends Component {
                   complete={ task.complete }
                   editing={ task.editing }
                   elapsed={ task.elapsed }
+                  intervalDelay={ 1000 }
                   pomodoroGoal={ task.pomodoroGoal }
                   title={ task.title }
                   breakTime={ 300000 }

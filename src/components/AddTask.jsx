@@ -4,7 +4,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import { red500 } from 'material-ui/styles/colors';
 import uuid from 'uuid';
 
-import TaskInput from './TaskInput';
+import TaskInput from './TaskItem/TaskInput/TaskInput';
 
 
 const styles = {

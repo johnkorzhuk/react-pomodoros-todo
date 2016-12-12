@@ -4,9 +4,10 @@ import CancelEdit from 'material-ui/svg-icons/navigation/close'
 import TextField from 'material-ui/TextField';
 import { grey500 } from 'material-ui/styles/colors';
 
-import EditablePomodoros from './Pomodoros/EditablePomodoros';
-import ProgressPomodoro from './Pomodoros/ProgressPomodoro';
-import InputPomodoros from './Pomodoros/InputPomodoros';
+import EditablePomodoros from '../../Pomodoros/EditablePomodoros';
+import ProgressPomodoro from '../../Pomodoros/ProgressPomodoro';
+import InputPomodoros from '../../Pomodoros/InputPomodoros';
+import ElapsedInput from './ElapsedInput';
 
 
 const styles = {
@@ -45,15 +46,19 @@ const styles = {
 const TaskInput = ({
   active,
   editingTask,
+  editedElapsed,
   completedPomodoros,
   title,
   editingTitle,
   pomodoroGoal,
+  intervalDelay,
   submitted,
   textFieldPlaceHolder,
+  onEditCancel,
   onEditComplete,
   handleKeyInput,
   updatePomodoros,
+  updateEditedElapsed,
   updateTitle,
 }) => {
 
@@ -92,6 +97,15 @@ const TaskInput = ({
           onKeyUp={ e =>
             handleKeyInput(e, 'title', e.target.value) }/>
 
+        {editingTask &&
+          !editingTitle &&
+            <ElapsedInput
+              editedElapsed={ editedElapsed }
+              intervalDelay={ intervalDelay }
+              onEditCancel={ onEditCancel }
+              onEditComplete={ onEditComplete }
+              updateEditedElapsed={ updateEditedElapsed }/> }
+
         {editingTask
           ? !editingTitle
             ? <EditablePomodoros
@@ -116,6 +130,10 @@ const TaskInput = ({
   );
 };
 
+/*
+ active={ active }
+ editing={ editing }
+ */
 TaskInput.propTypes = {
   active: PropTypes.bool,
   completedPomodoros: PropTypes.number,
@@ -123,8 +141,10 @@ TaskInput.propTypes = {
   title: PropTypes.string,
   editingTitle: PropTypes.bool,
   pomodoroGoal: PropTypes.number,
+  intervalDelay: PropTypes.number,
   submitted: PropTypes.bool,
   textFieldPlaceHolder: PropTypes.string,
+  onEditCancel: PropTypes.func,
   onEditComplete: PropTypes.func,
   handleKeyInput: PropTypes.func,
   updatePomodoros: PropTypes.func,

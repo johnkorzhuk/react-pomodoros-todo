@@ -29,7 +29,7 @@ const styles = {
   },
 };
 
-const Task = ({
+const TaskInfo = ({
   active,
   editingTask,
   completedPomodoros,
@@ -68,7 +68,7 @@ const Task = ({
   );
 };
 
-Task.propTypes = {
+TaskInfo.propTypes = {
   active: PropTypes.bool,
   editingTask: PropTypes.bool,
   completedPomodoros: PropTypes.number,
@@ -81,4 +81,4 @@ Task.propTypes = {
   onEditTitle: PropTypes.func,
 };
 
-export default Task;
+export default TaskInfo;

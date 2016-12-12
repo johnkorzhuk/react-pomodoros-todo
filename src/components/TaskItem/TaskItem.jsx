@@ -7,10 +7,8 @@ import Checkbox from 'material-ui/svg-icons/toggle/check-box-outline-blank';
 import { grey600, red500 } from 'material-ui/styles/colors';
 
 import EditableTask from './EditableTask'
-import PrimaryButton from './PrimaryButton';
+import PrimaryButton from './TaskInput/PrimaryButton';
 import Timebar from '../Timebar';
-import ElapsedInput from './ElapsedInput';
-import { msToHMS, msFromHMS } from '../../helpers';
 
 
 const styles = {
@@ -82,6 +80,7 @@ class TaskItem extends Component {
       breaking,
       complete,
       editingTask,
+      intervalDelay,
       pomodoroGoal,
       title,
       breakElapsed,
@@ -90,6 +89,7 @@ class TaskItem extends Component {
       onBreakEnd,
       onDelete,
       toggleActive,
+      updateTask,
     } = this.props;
 
     const {
@@ -123,34 +123,32 @@ class TaskItem extends Component {
           <EditableTask
             active={ active }
             completedPomodoros={ completedPomodoros }
-            editingTask={ editingTask }
+            editedElapsed={ editedElapsed }
+            intervalDelay={ intervalDelay }
             pomodoroGoal={ pomodoroGoal }
             title={ title }
             breaking={ breaking }
             editingTitle={ editingTitle }
             showEditIcon={ showEditIcon }
+            onEditCancel={ () => updateTask({editing: false}) }
             onEdit={ this.onEdit }
             onEditComplete={ this.onTaskEditComplete }
             onEditTitle={ this.onEditTitle }
             handleKeyInput={ this.handleKeyInput.bind(this) }
             updateHMSPom={ this.updateHMSPom }
-            updateTitle={ this.updateTitle }/>
+            updateTitle={ this.updateTitle }
 
-          {editing
-            ? <ElapsedInput
-                editing={ editing }
-                editedElapsed={ this.state.editedElapsed }
-                hms={
-                  this.hms = msToHMS(this.state.editedElapsed) }
-                handleKeyInput={ this.handleKeyInput.bind(this) }
-                updateEditedElapsed={ this.updateEditedElapsed }/>
-            : <PrimaryButton
-                active={ active }
-                complete={ complete }
-                breaking={ this.props.breaking }
-                onActiveToggle={ toggleActive }
-                onBreakEnd={ onBreakEnd }
-                onDelete={ onDelete }/> }
+            editingTask={ editingTask }
+            updateEditedElapsed={ this.updateEditedElapsed }/>
+
+          {!editing &&
+            <PrimaryButton
+              active={ active }
+              complete={ complete }
+              breaking={ this.props.breaking }
+              onActiveToggle={ toggleActive }
+              onBreakEnd={ onBreakEnd }
+              onDelete={ onDelete }/> }
 
           {editing
             ? <FloatingActionButton
@@ -214,17 +212,6 @@ class TaskItem extends Component {
     let elapsed = this.state.editedElapsed;
     let title = this.title;
 
-    if (type === 'hms' || 'button') {
-      Object.keys(this.hms)
-        .filter(key =>
-          this.hms[key] < 0
-        ).map(key =>
-          this.hms[key] = 0
-      );
-
-      elapsed = msFromHMS(this.hms)
-    }
-
     switch (type) {
       case 'index':
         // use this.completedPomodoros calculated in render?
@@ -237,6 +224,12 @@ class TaskItem extends Component {
 
       case 'title':
         title = value;
+        break;
+
+      case 'hms':
+        isNaN(value) || value < 0
+          ? elapsed = 0
+          : elapsed = value;
         break;
 
       default:
@@ -259,7 +252,6 @@ class TaskItem extends Component {
     }
 
     this.props.updateTask(updatedTask);
-
 
     this.setState({
       editingTitle: false
@@ -286,26 +278,6 @@ class TaskItem extends Component {
     this.props.updateTask(updatedTask);
   };
 
-  updateEditedElapsed = (newVal) => {
-    this.hms = {
-      ...this.hms,
-      ...newVal,
-    };
-
-
-    const setEditedElapsed = Object.keys(this.hms)
-      .some(key =>
-        this.hms[key] === -1 ||
-        this.hms[key] === 60
-      );
-
-     if (setEditedElapsed) {
-       this.setState({
-         editedElapsed: msFromHMS(this.hms)
-       })
-     }
-  };
-
   // updateHMSPom = (pomodoroIndex) => {
   //   const elapsed = this.props.editingTask && !this.state.editingTitle
   //     ? msFromHMS(this.state.hms)
@@ -329,20 +301,18 @@ class TaskItem extends Component {
   //   this.setState({ hms });
   // };
 
+  updateEditedElapsed = (newVal) => {
+    if (isNaN(newVal) || newVal < 0) {
+      newVal = 0;
+    }
+
+    this.setState({
+      editedElapsed: newVal
+    });
+  };
+
   handleKeyInput = (event, type, value) => {
     switch (event.key) {
-      case 'ArrowUp':
-        this.setState({
-          editedElapsed: msFromHMS(this.hms)
-        });
-        break;
-
-      case 'ArrowDown':
-        this.setState({
-          editedElapsed: msFromHMS(this.hms)
-        });
-        break;
-
       case 'Enter':
         this.onTaskEditComplete(type, value);
         break;
@@ -363,6 +333,7 @@ TaskItem.propTypes = {
   completedPomodoros: PropTypes.number.isRequired,
   editingTask: PropTypes.bool,
   elapsed: PropTypes.number,
+  intervalDelay: PropTypes.number,
   pomodoroGoal: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   breaking: PropTypes.bool,

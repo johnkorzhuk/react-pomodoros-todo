@@ -11,10 +11,6 @@ class PomodoroTimer extends Component {
       elapsed: 0,
       prevTime: 0,
     };
-
-    /* Delay between update of state.elapsed, this will cause a re-render
-    by at least this time in ms */
-    this.delay = 1000;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -35,7 +31,7 @@ class PomodoroTimer extends Component {
     reset the timer. */
     if (this.props.breaking !== nextProps.breaking) {
       if (nextProps.breaking) {
-        this.interval = setInterval(this.onTick, this.delay);
+        this.interval = setInterval(this.onTick, this.props.intervalDelay);
       }else {
         this.resetTimer();
       }
@@ -48,7 +44,7 @@ class PomodoroTimer extends Component {
       this.setState({ prevTime: Date.now() });
 
       if (nextProps.active) {
-        this.interval = setInterval(this.onTick, this.delay);
+        this.interval = setInterval(this.onTick, this.props.intervalDelay);
       }else
         /* Don't update elapsed or reset the timer if we're going
         to take a break. onBreakInit already does that. */
@@ -70,6 +66,7 @@ class PomodoroTimer extends Component {
       complete,
       editing,
       elapsed,
+      intervalDelay,
       pomodoroGoal,
       title,
       breakTime,
@@ -95,6 +92,7 @@ class PomodoroTimer extends Component {
         completedPomodoros={ completedPomodoros }
         editingTask={ editing }
         elapsed={ this.totalElapsed }
+        intervalDelay={ intervalDelay }
         pomodoroGoal={ pomodoroGoal }
         title={ title }
         breakElapsed={ this.state.elapsed }
@@ -150,7 +148,7 @@ class PomodoroTimer extends Component {
     });
 
     if (this.props.active &&
-      this.totalElapsed % this.props.onePomodoroTime < this.delay) {
+      this.totalElapsed % this.props.onePomodoroTime < this.props.intervalDelay) {
         this.onBreakInit();
     }
 
@@ -176,6 +174,9 @@ PomodoroTimer.propTypes = {
   complete: PropTypes.bool,
   editing: PropTypes.bool,
   elapsed: PropTypes.number,
+  /* Delay between update of state.elapsed, this will cause a re-render
+  by at least this time in ms */
+  intervalDelay: PropTypes.number.isRequired,
   pomodoroGoal: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   breakTime: PropTypes.number.isRequired,

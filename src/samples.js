@@ -60,7 +60,7 @@ module.exports = [
     added: 6,
     complete: false,
     editing: false,
-    elapsed: 0,
+    elapsed: 400,
     id: 6,
     pomodoroGoal: 2,
     title: "Fix that other thing",

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
-import TaskInput from '../TaskInput';
-import Task from './Task';
+import TaskInput from './TaskInput/TaskInput';
+import TaskInfo from './TaskInfo';
 
 
 const EditableTaskTitle = ({
@@ -9,17 +9,22 @@ const EditableTaskTitle = ({
   completedPomodoros,
   editingTask,
   pomodoroGoal,
+  intervalDelay,
   title,
   breaking,
   editingTitle,
   pomodoros,
   showEditIcon,
   onEdit,
+  onEditCancel,
   onEditComplete,
   onEditTitle,
   handleKeyInput,
   updateHMSPom,
   updateTitle,
+
+  editedElapsed,
+  updateEditedElapsed,
 }) => {
 
   return (
@@ -29,15 +34,20 @@ const EditableTaskTitle = ({
           completedPomodoros={ completedPomodoros }
           editingTask={ editingTask }
           title={ title }
+          editedElapsed={ editedElapsed }
           editingTitle={ editingTitle }
           pomodoroGoal={ pomodoroGoal }
+          intervalDelay={ intervalDelay }
           pomodoros={ pomodoros }
+          onEditCancel={ onEditCancel }
           onEditComplete={ onEditComplete }
           handleKeyInput={ handleKeyInput }
           updatePomodoros={ updateHMSPom }
+          updateEditedElapsed={ updateEditedElapsed }
           updateTitle={ editingTitle ? onEditComplete : updateTitle }/>
 
-      : <Task
+
+      : <TaskInfo
           active={ active }
           editingTask={ editingTask }
           completedPomodoros={ completedPomodoros }
@@ -56,6 +66,7 @@ EditableTaskTitle.propTypes = {
   completedPomodoros: PropTypes.number,
   editingTask: PropTypes.bool,
   pomodoroGoal: PropTypes.number,
+  intervalDelay: PropTypes.number,
   title: PropTypes.string.isRequired,
   breaking: PropTypes.bool,
   editingTitle: PropTypes.bool,
@@ -63,6 +74,7 @@ EditableTaskTitle.propTypes = {
   showEditIcon: PropTypes.bool,
   handleKeyInput: PropTypes.func,
   onEdit: PropTypes.func,
+  onEditCancel: PropTypes.func,
   onEditComplete: PropTypes.func.isRequired,
   onEditTitle: PropTypes.func,
   updateHMSPom: PropTypes.func,
