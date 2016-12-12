@@ -137,16 +137,7 @@ class ElapsedInput extends Component {
 
   handleKeyInput = (event) => {
     switch (event.key) {
-      case 'ArrowDown':
-        this.updateEditedElapsed(msFromHMS(this.state.hms));
-        break;
-
-      case 'ArrowUp':
-        this.updateEditedElapsed(msFromHMS(this.state.hms));
-        break;
-
       case 'Enter':
-        console.log(this.state.hms);
         this.props.onEditComplete('hms', msFromHMS(this.state.hms));
         break;
 
@@ -159,25 +150,13 @@ class ElapsedInput extends Component {
     }
   };
 
-  updateEditedElapsed = (newVal) => {
-    this.props.updateEditedElapsed(newVal);
-  };
-
   updateHMS = (newVal) => {
     const hms = {
       ...this.state.hms,
       ...newVal,
     };
 
-    const setEditedElapsed = Object.keys(hms)
-      .some(key =>
-        hms[key] === -1 ||
-        hms[key] === 60
-      );
-
-    setEditedElapsed
-      ? this.updateEditedElapsed(msFromHMS(hms))
-      : this.setState({ hms });
+    this.props.updateEditedElapsed(msFromHMS(hms));
   };
 }
 

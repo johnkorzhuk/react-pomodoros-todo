@@ -49,7 +49,6 @@ class TaskItem extends Component {
       editingTitle: false,
       showEditIcon: false,
     };
-
   }
 
   componentWillReceiveProps(nextProps) {
