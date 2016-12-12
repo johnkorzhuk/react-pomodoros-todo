@@ -12,6 +12,7 @@ const EditableTaskTitle = ({
   intervalDelay,
   title,
   breaking,
+  editedElapsed,
   editingTitle,
   pomodoros,
   showEditIcon,
@@ -20,11 +21,9 @@ const EditableTaskTitle = ({
   onEditComplete,
   onEditTitle,
   handleKeyInput,
-  updateHMSPom,
-  updateTitle,
-
-  editedElapsed,
+  updateElapsedPom,
   updateEditedElapsed,
+  updateTitle,
 }) => {
 
   return (
@@ -42,10 +41,9 @@ const EditableTaskTitle = ({
           onEditCancel={ onEditCancel }
           onEditComplete={ onEditComplete }
           handleKeyInput={ handleKeyInput }
-          updatePomodoros={ updateHMSPom }
           updateEditedElapsed={ updateEditedElapsed }
+          updatePomodoros={ updateElapsedPom }
           updateTitle={ editingTitle ? onEditComplete : updateTitle }/>
-
 
       : <TaskInfo
           active={ active }
@@ -77,7 +75,7 @@ EditableTaskTitle.propTypes = {
   onEditCancel: PropTypes.func,
   onEditComplete: PropTypes.func.isRequired,
   onEditTitle: PropTypes.func,
-  updateHMSPom: PropTypes.func,
+  updateElapsedPom: PropTypes.func,
   updateTitle: PropTypes.func,
 };
 

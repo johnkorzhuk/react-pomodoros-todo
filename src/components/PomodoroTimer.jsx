@@ -30,6 +30,7 @@ class PomodoroTimer extends Component {
     /* Toggling active on another task sets breaking to false. We need to
     reset the timer. */
     if (this.props.breaking !== nextProps.breaking) {
+      console.log(this.props.editing);
       if (nextProps.breaking) {
         this.interval = setInterval(this.onTick, this.props.intervalDelay);
       }else {
@@ -145,8 +146,9 @@ class PomodoroTimer extends Component {
       elapsed:  this.state.elapsed + (now - this.state.prevTime),
     });
 
-    if (this.props.active &&
+    if (this.props.active && !this.props.editing &&
       this.totalElapsed % this.props.onePomodoroTime < this.props.intervalDelay) {
+        console.log(this.totalElapsed % this.props.onePomodoroTime);
         this.onBreakInit();
     }
 

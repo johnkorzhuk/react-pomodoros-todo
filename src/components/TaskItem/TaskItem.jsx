@@ -123,6 +123,7 @@ class TaskItem extends Component {
             active={ active }
             completedPomodoros={ completedPomodoros }
             editedElapsed={ editedElapsed }
+            editingTask={ editingTask }
             intervalDelay={ intervalDelay }
             pomodoroGoal={ pomodoroGoal }
             title={ title }
@@ -134,11 +135,10 @@ class TaskItem extends Component {
             onEditComplete={ this.onTaskEditComplete }
             onEditTitle={ this.onEditTitle }
             handleKeyInput={ this.handleKeyInput.bind(this) }
-            updateHMSPom={ this.updateHMSPom }
-            updateTitle={ this.updateTitle }
+            updateElapsedPom={ this.updateElapsedPom }
+            updateEditedElapsed={ this.updateEditedElapsed }
+            updateTitle={ this.updateTitle }/>
 
-            editingTask={ editingTask }
-            updateEditedElapsed={ this.updateEditedElapsed }/>
 
           {!editing &&
             <PrimaryButton
@@ -212,13 +212,8 @@ class TaskItem extends Component {
     let title = this.title;
 
     switch (type) {
-      case 'index':
-        // use this.completedPomodoros calculated in render?
-        value === Math.floor(
-          this.state.editedElapsed / this.props.onePomodoroTime
-        )
-          ? elapsed = 0
-          : elapsed = (value+1) * this.props.onePomodoroTime;
+      case 'pomodoros':
+        elapsed = value * this.props.onePomodoroTime;
         break;
 
       case 'title':
@@ -277,28 +272,24 @@ class TaskItem extends Component {
     this.props.updateTask(updatedTask);
   };
 
-  // updateHMSPom = (pomodoroIndex) => {
-  //   const elapsed = this.props.editingTask && !this.state.editingTitle
-  //     ? msFromHMS(this.state.hms)
-  //     : this.props.elapsed;
-  //
-  //   const pomodoros = Math.floor(
-  //     elapsed / this.props.onePomodoroTime
-  //   );
-  //
-  //   let hms;
-  //   if (pomodoroIndex+1 === pomodoros) {
-  //     hms = {
-  //       hh: 0,
-  //       mm: 0,
-  //       ss: 0,
-  //     };
-  //   }else {
-  //     hms = pomodoroIndexToHMS(pomodoroIndex, this.props.onePomodoroTime);
-  //   }
-  //
-  //   this.setState({ hms });
-  // };
+  updateElapsedPom = (pomodoroIndex) => {
+    const elapsed = this.props.editingTask && !this.state.editingTitle
+      ? this.state.editedElapsed
+      : this.props.elapsed;
+
+    const pomodoros = Math.floor(
+      elapsed / this.props.onePomodoroTime
+    );
+
+    let editedElapsed;
+    if (pomodoroIndex === pomodoros) {
+      editedElapsed = 0;
+    }else {
+      editedElapsed = pomodoroIndex * this.props.onePomodoroTime;
+    }
+
+    this.setState({ editedElapsed });
+  };
 
   updateEditedElapsed = (newVal) => {
     if (isNaN(newVal) || newVal < 0) {

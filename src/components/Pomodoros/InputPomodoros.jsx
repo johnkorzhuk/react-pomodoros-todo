@@ -40,9 +40,9 @@ const InputPomodoros = ({
               checked={
                 index+1 <= completedPomodoros }
               onCheck={ () =>
-                updatePomodoros(index) }
+                updatePomodoros(index+1) }
               onKeyUp={ event =>
-                handleKeyInput(event, 'index', index) }/>
+                handleKeyInput(event, 'pomodoros', index+1) }/>
           </div>
         );
       }}

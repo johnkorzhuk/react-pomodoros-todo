@@ -61,8 +61,8 @@ class AddTask extends Component {
   handleKeyInput(event, type, value) {
     if (event.key === 'Enter') {
       switch (type) {
-        case 'index':
-          this.pomodoros = value+1;
+        case 'pomodoros':
+          this.pomodoros = value;
           break;
 
         case 'title':
@@ -80,9 +80,9 @@ class AddTask extends Component {
   updatePomodoros = (pomodoroIndex) => {
     this.setState({ submitted: false });
 
-    pomodoroIndex+1 === this.state.pomodoros
+    pomodoroIndex === this.state.pomodoros
       ? this.setState({ pomodoros: 0 })
-      : this.setState({ pomodoros: pomodoroIndex+1 });
+      : this.setState({ pomodoros: pomodoroIndex });
   };
 
   updateTitle = (title) => {
