@@ -32,9 +32,10 @@ const styles = {
 };
 
 class ElapsedInput extends React.Component {
-  shouldComponentUpdate() {
-    return !this.props.editing;
+  shouldComponentUpdate(nextProps) {
+    return !(this.props.editing);
   }
+
   render() {
     const {
       hms,

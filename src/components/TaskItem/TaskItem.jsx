@@ -52,7 +52,6 @@ class TaskItem extends Component {
       showEditIcon: false,
     };
 
-    this.active = false;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -67,10 +66,6 @@ class TaskItem extends Component {
     /* Set state.editedElapsed upon editingTask so that InputPomodoros
     and Timebar can accurately represent the changes in state.editedElapsed */
     if (this.props.editingTask !== nextProps.editingTask) {
-      if (this.props.active) {
-        this.active = true;
-      }
-
       this.title = this.props.title;
       if (nextProps.editingTask) {
         this.setState({
@@ -144,6 +139,7 @@ class TaskItem extends Component {
           {editing
             ? <ElapsedInput
                 editing={ editing }
+                editedElapsed={ this.state.editedElapsed }
                 hms={
                   this.hms = msToHMS(this.state.editedElapsed) }
                 handleKeyInput={ this.handleKeyInput.bind(this) }
@@ -248,13 +244,13 @@ class TaskItem extends Component {
     }
 
     let updatedTask = {};
-    if (this.props.editingTask && !this.state.editingTitle) {
-      updatedTask = {
-        active: this.active,
-        editing: false,
-        elapsed,
-        title,
-      };
+    if (this.props.editingTask && !this.state.editingTitle &&
+      this.props.elapsed !== elapsed) {
+        updatedTask = {
+          editing: false,
+          elapsed,
+          title,
+        };
     }else {
       updatedTask = {
         editing: false,
@@ -264,7 +260,6 @@ class TaskItem extends Component {
 
     this.props.updateTask(updatedTask);
 
-    this.active = false;
 
     this.setState({
       editingTitle: false
@@ -273,7 +268,6 @@ class TaskItem extends Component {
 
   onEdit = () => {
     const updatedTask = {
-      active: false,
       editing: true,
     };
 
@@ -297,6 +291,7 @@ class TaskItem extends Component {
       ...this.hms,
       ...newVal,
     };
+
 
     const setEditedElapsed = Object.keys(this.hms)
       .some(key =>
