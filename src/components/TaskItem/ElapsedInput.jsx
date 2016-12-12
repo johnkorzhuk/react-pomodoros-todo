@@ -31,7 +31,67 @@ const styles = {
   }
 };
 
-const ElapsedInput = ({
+class ElapsedInput extends React.Component {
+  shouldComponentUpdate() {
+    return !this.props.editing;
+  }
+  render() {
+    const {
+      hms,
+      handleKeyInput,
+      updateEditedElapsed,
+    } = this.props;
+
+    let hhMax = 99;
+    let hhMin = hms.mm <= 0 && hms.ss <= 0
+      ? 0
+      : -1;
+    let mmssMax = hms.hh === hhMax
+      ? 59
+      : 60;
+    let mmMin = hms.mm <= 0 && hms.ss <= 0
+      ? 0
+      : -1;
+    let ssMin = hms.mm <= 0 && hms.hh <= 0
+      ? 0
+      : -1;
+    return (
+      <div style={ styles.root }>
+        <NumericInput
+          style={ styles.numericInput }
+          max={ hhMax }
+          min={ hhMin }
+          size={ 2 }
+          value={ hms.hh }
+          name="elapsed input"
+          onChange={ e => updateEditedElapsed({ hh: e }) }
+          onKeyUp={ e => handleKeyInput(e, 'hms') }/>
+        :
+        <NumericInput
+          style={ styles.numericInput }
+          max={ mmssMax }
+          min={ mmMin }
+          size={ 2 }
+          value={ hms.mm }
+          name="elapsed input"
+          onChange={ e => updateEditedElapsed({ mm: e }) }
+          onKeyUp={ e => handleKeyInput(e, 'hms') }/>
+        :
+        <NumericInput
+          style={ styles.numericInput }
+          max={ mmssMax }
+          min={ ssMin }
+          size={ 2 }
+          value={ hms.ss }
+          name="elapsed input"
+          onChange={ e => updateEditedElapsed({ ss: e }) }
+          onKeyUp={ e => handleKeyInput(e, 'hms') }/>
+      </div>
+    );
+  }
+}
+
+const ElapsedInput2 = ({
   hms,
   handleKeyInput,
   updateEditedElapsed,
@@ -40,15 +100,12 @@ const ElapsedInput = ({
   let hhMin = hms.mm <= 0 && hms.ss <= 0
     ? 0
     : -1;
-  let mmMax = hms.hh === 99
+  let mmssMax = hms.hh === hhMax
     ? 59
     : 60;
   let mmMin = hms.mm <= 0 && hms.ss <= 0
     ? 0
     : -1;
-  let ssMax = hms.hh === 99
-    ? 59
-    : 60;
   let ssMin = hms.mm <= 0 && hms.hh <= 0
     ? 0
     : -1;
@@ -67,7 +124,7 @@ const ElapsedInput = ({
       :
       <NumericInput
         style={ styles.numericInput }
-        max={ mmMax }
+        max={ mmssMax }
         min={ mmMin }
         size={ 2 }
         value={ hms.mm }
@@ -77,7 +134,7 @@ const ElapsedInput = ({
       :
       <NumericInput
         style={ styles.numericInput }
-        max={ ssMax }
+        max={ mmssMax }
         min={ ssMin }
         size={ 2 }
         value={ hms.ss }

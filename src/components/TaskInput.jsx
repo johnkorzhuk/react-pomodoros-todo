@@ -59,7 +59,6 @@ const TaskInput = ({
 
   return (
       <div style={ styles.root }>
-
         {editingTask &&
           <IconButton
             style={ styles.cancelEdit.button }

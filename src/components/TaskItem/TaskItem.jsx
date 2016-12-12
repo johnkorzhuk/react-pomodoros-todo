@@ -143,6 +143,7 @@ class TaskItem extends Component {
 
           {editing
             ? <ElapsedInput
+                editing={ editing }
                 hms={
                   this.hms = msToHMS(this.state.editedElapsed) }
                 handleKeyInput={ this.handleKeyInput.bind(this) }
@@ -161,7 +162,7 @@ class TaskItem extends Component {
                 backgroundColor={ red500 }
                 iconStyle={ styles.button.icon }
                 onClick={ () =>
-                  this.onTaskEditComplete(this.title) }>
+                  this.onTaskEditComplete('button') }>
                 <Checkmark style={ {width: 24} }/>
               </FloatingActionButton>
 
@@ -217,7 +218,7 @@ class TaskItem extends Component {
     let elapsed = this.state.editedElapsed;
     let title = this.title;
 
-    if (type === 'hms') {
+    if (type === 'hms' || 'button') {
       Object.keys(this.hms)
         .filter(key =>
           this.hms[key] < 0
@@ -348,11 +349,6 @@ class TaskItem extends Component {
         break;
 
       case 'Enter':
-        // if (event.target.name === "elapsed input") {
-        //   this.setState({
-        //     editedElapsed: msFromHMS(this.hms)
-        //   });
-        // }
         this.onTaskEditComplete(type, value);
         break;
 
