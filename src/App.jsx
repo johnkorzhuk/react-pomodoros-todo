@@ -190,7 +190,7 @@ class App extends Component {
 
     this.setState({ tasks });
 
-    if (!this.checkCompletedTasks()) {
+    if (this.checkCompletedTasks()) {
       this.onSwip(0);
     }
   };
