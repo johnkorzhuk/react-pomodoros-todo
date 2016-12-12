@@ -345,7 +345,6 @@ TaskItem.propTypes = {
   onEdit: PropTypes.func,
   onEditComplete: PropTypes.func,
   toggleActive: PropTypes.func,
-  toggleComplete: PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
 };
 

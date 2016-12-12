@@ -118,7 +118,6 @@ class App extends Component {
                   breakTime={ 300000 }
                   onePomodoroTime={ 1500000 }
                   toggleActive={this.toggleActive.bind(null, task.id) }
-                  toggleComplete={this.toggleComplete.bind(null, task.id) }
                   updateTask={this.updateTask.bind(null, task.id) }/> )}
             </TaskList>
 
@@ -140,7 +139,6 @@ class App extends Component {
                   breakTime={ 300000 }
                   onePomodoroTime={ 1500000 }
                   removeTask={ this.removeTask.bind(null, task.id) }
-                  toggleComplete={ this.toggleComplete.bind(null, task.id) }
                   updateTask={this.updateTask.bind(null, task.id) }/> )}
             </TaskList>
           </BindKeyboardSwipeableViews>
@@ -192,7 +190,9 @@ class App extends Component {
 
     this.setState({ tasks });
 
-    this.checkCompletedTasks();
+    if (!this.checkCompletedTasks()) {
+      this.onSwip(0);
+    }
   };
 
   updateTask = (id, updatedTask) => {
@@ -207,9 +207,10 @@ class App extends Component {
         return task;
     });
 
+
     if (typeof updatedTask.complete !== 'undefined' &&
-      !updatedTask.complete) {
-        this.checkCompletedTasks();
+      !updatedTask.complete && !this.checkCompletedTasks()) {
+        this.onSwip(0);
     }
 
     this.editing = tasks.some(task =>
@@ -218,7 +219,6 @@ class App extends Component {
 
     this.setState({ tasks })
   };
-
 
   toggleActive = (id) => {
     this.setState(prevState =>
@@ -235,26 +235,6 @@ class App extends Component {
     );
   };
 
-  toggleComplete = (id, elapsed) => {
-    this.setState(prevState => {
-      prevState.tasks
-        .filter(task =>
-          task.id === id
-        ).map(task => {
-          if (!task.complete) {
-            task.active = false;
-            if (elapsed) {
-              task.elapsed = elapsed;
-            }
-          }
-          task.editing = false;
-          task.complete = !task.complete;
-          return task;
-        })
-    });
-    this.checkCompletedTasks();
-  };
-
   addTask = (task) => {
     const tasks = [...this.state.tasks, task];
 
@@ -266,25 +246,11 @@ class App extends Component {
   };
 
   checkCompletedTasks = () => {
-    this.setState(prevState => {
-      if (!prevState.tasks.some(({
+    return this.state.tasks
+      .some(({
         complete
-      }) => complete)) {
-        prevState.slideIndex = 0;
-      }
-    });
+      }) => complete);
   };
-
-  updateElapsed = (id, elapsed) => {
-    this.setState(prevState => {
-      prevState.map(task => {
-        if (task.id === id) {
-          task.elapsed = elapsed;
-        }
-        return task;
-      })
-    });
-  }
 }
 
 export default App;
