@@ -100,8 +100,8 @@ class AddTask extends Component {
       elapsed: 0,
       id: uuid.v4(),
       pomodoroGoal:
-        this.state.pomodoros ||
         this.pomodoros ||
+        this.state.pomodoros ||
         0,
       title: this.title || "",
     };

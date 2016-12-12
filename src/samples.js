@@ -38,7 +38,7 @@ module.exports = [
     added: 5,
     complete: false,
     editing: false,
-    elapsed: 2999000,
+    elapsed: 2998000,
     id: 4,
     pomodoroGoal: 1,
     title: "one second short of two pomodoros",

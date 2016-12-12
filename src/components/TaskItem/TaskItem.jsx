@@ -273,7 +273,7 @@ class TaskItem extends Component {
   };
 
   updateElapsedPom = (pomodoroIndex) => {
-    const elapsed = this.props.editingTask && !this.state.editingTitle
+    const elapsed = this.props.editingTask
       ? this.state.editedElapsed
       : this.props.elapsed;
 
@@ -304,7 +304,9 @@ class TaskItem extends Component {
   handleKeyInput = (event, type, value) => {
     switch (event.key) {
       case 'Enter':
-        this.onTaskEditComplete(type, value);
+        type === 'pomodoros'
+          ? this.updateElapsedPom(value)
+          : this.onTaskEditComplete(type, value);
         break;
 
       case 'Escape':
