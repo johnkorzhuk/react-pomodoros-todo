@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import NumericInput from 'react-numeric-input';
 import { red500 } from 'material-ui/styles/colors';
 
-import { msFromHMS, msToHMS } from '../../../helpers';
+import { humanizeFromMS, deHumanizeToMS } from '../../../helpers';
 
 const styles = {
   root: {
@@ -57,7 +57,8 @@ class ElapsedInput extends Component {
     };
 
     if (editedElapsed >= intervalDelay) {
-      hms = msToHMS(editedElapsed);
+      hms = humanizeFromMS(editedElapsed);
+      console.log(hms);
     }
 
     this.setState({ hms })
@@ -66,14 +67,10 @@ class ElapsedInput extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.editedElapsed !== nextProps.editedElapsed) {
       this.setState({
-        hms: msToHMS(nextProps.editedElapsed)
+        hms: humanizeFromMS(nextProps.editedElapsed)
       });
     }
   }
-
-  // shouldComponentUpdate(nextProps) {
-  //   return !this.props.editing && this.props.active;
-  // }
 
   render() {
     const {
@@ -138,7 +135,7 @@ class ElapsedInput extends Component {
   handleKeyInput = (event) => {
     switch (event.key) {
       case 'Enter':
-        this.props.onEditComplete('hms', msFromHMS(this.state.hms));
+        this.props.onEditComplete('hms', deHumanizeToMS(this.state.hms));
         break;
 
       case 'Escape':
@@ -156,7 +153,7 @@ class ElapsedInput extends Component {
       ...newVal,
     };
 
-    this.props.updateEditedElapsed(msFromHMS(hms));
+    this.props.updateEditedElapsed(deHumanizeToMS(hms));
   };
 }
 
