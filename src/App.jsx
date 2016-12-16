@@ -188,11 +188,11 @@ class App extends Component {
         task.id !== id
     );
 
-    this.setState({ tasks });
-
-    if (!this.checkCompletedTasks()) {
+    if (!this.checkCompletedTasks(tasks)) {
       this.onSwip(0);
     }
+
+    this.setState({ tasks });
   };
 
   updateTask = (id, updatedTask) => {
@@ -207,9 +207,8 @@ class App extends Component {
         return task;
     });
 
-
     if (typeof updatedTask.complete !== 'undefined' &&
-      !updatedTask.complete && !this.checkCompletedTasks()) {
+      !updatedTask.complete && !this.checkCompletedTasks(tasks)) {
         this.onSwip(0);
     }
 
@@ -245,8 +244,8 @@ class App extends Component {
     this.onSwip(0);
   };
 
-  checkCompletedTasks = () => {
-    return this.state.tasks
+  checkCompletedTasks = (updatedTasks) => {
+    return updatedTasks
       .some(({
         complete
       }) => complete);
